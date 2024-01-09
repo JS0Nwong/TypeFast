@@ -1,0 +1,213 @@
+{
+    "themes": {
+        "default": {
+            "backgroundPrimary": "#242423",
+            "backgroundSecondary": "#333533",
+            "textPrimary": "#cfdbd5",
+            "textSecondary": "#f5cb5c",
+            "errorColor": "#E63946",
+            "textCaret": "#E8EDDF",
+            "select": "#FFB7B7",
+            "themeType": "dark"
+        },
+        "aqua": {
+            "backgroundPrimary": "#416788",
+            "backgroundSecondary": "#7389AE",
+            "textPrimary": "#E0E0E2",
+            "textSecondary": "#B5BAD0",
+            "errorColor": "#E63946",
+            "textCaret": "#81D2C7",
+            "select": "#FFB7B7",
+            "themeType": "light"
+        },
+        "olivia": {
+            "backgroundPrimary": "#333232",
+            "backgroundSecondary": "#CEB7B3",
+            "textPrimary": "#F7B2AD",
+            "textSecondary": "#B7B7B7",
+            "errorColor": "#E63946",
+            "textCaret": "#9ABCA7",
+            "select": "#FFB7B7",
+            "themeType": "dark"
+        },
+        "plum": {
+            "backgroundPrimary": "#474954",
+            "backgroundSecondary": "#7284A8",
+            "textPrimary": "#9E788F",
+            "textSecondary": "#7CDEDC",
+            "errorColor": "#E63946",
+            "textCaret": "#A9B3CE",
+            "select": "#FFB7B7",
+            "themeType": "dark"
+        },
+        "varsity": {
+            "backgroundPrimary": "#EEF4ED",
+            "backgroundSecondary": "#8DA9C4",
+            "textPrimary": "#134074",
+            "textSecondary": "#0B2545",
+            "errorColor": "#E63946",
+            "textCaret": "#13315C",
+            "select": "#FFB7B7",
+            "themeType": "light"
+        },
+        "melon": {
+            "backgroundPrimary": "#6D6875",
+            "backgroundSecondary": "#B5838D",
+            "textPrimary": "#FFCDB2",
+            "textSecondary": "#E5989B",
+            "errorColor": "#E63946",
+            "textCaret": "#FFB4A2",
+            "select": "#FFB7B7",
+            "themeType": "dark"
+        },
+        "creamsicle": {
+            "backgroundPrimary": "#ffd8be",
+            "backgroundSecondary": "#ffeedd",
+            "textPrimary": "#9381ff",
+            "textSecondary": "#f8f7ff",
+            "errorColor": "#E63946",
+            "textCaret": "#b8b8ff",
+            "select": "#FFB7B7",
+            "themeType": "light"
+        },
+        "autumn": {
+            "backgroundPrimary": "#472D30",
+            "backgroundSecondary": "#723D46",
+            "textPrimary": "#C9CBA3",
+            "textSecondary": "#E26D5C",
+            "errorColor": "#E63946",
+            "textCaret": "#ffe1a8",
+            "select": "#FFB7B7",
+            "themeType": "dark"
+        },
+        "kraken": {
+            "backgroundPrimary": "#2f3e46",
+            "backgroundSecondary": "#354f52",
+            "textPrimary": "#cad2c5",
+            "textSecondary": "#52796f",
+            "errorColor": "#E63946",
+            "textCaret": "#84a98c",
+            "select": "#FFB7B7",
+            "themeType": "dark"
+        },
+        "summer": {
+            "backgroundPrimary": "#f76c5e",
+            "backgroundSecondary": "#f68e5f",
+            "textPrimary": "#586ba4",
+            "textSecondary": "#f5dd90",
+            "errorColor": "#E63946",
+            "textCaret": "#324376",
+            "select": "#FFB7B7",
+            "themeType": "light"
+        },
+        "contrast": {
+            "backgroundPrimary": "#0c090d",
+            "backgroundSecondary": "#e01a4f",
+            "textPrimary": "#53b3cb",
+            "textSecondary": "#f9c22e",
+            "errorColor": "#E63946",
+            "textCaret": "#f15946",
+            "select": "#FFB7B7",
+            "themeType": "dark"
+        },
+        "frost": {
+            "backgroundPrimary": "#5fa8d3",
+            "backgroundSecondary": "#cae9ff",
+            "textPrimary": "#bee9e8",
+            "textSecondary": "#1b4965",
+            "errorColor": "#E63946",
+            "textCaret": "#62b6cb",
+            "select": "#FFB7B7",
+            "themeType": "light"
+        },
+        "coffee": {
+            "backgroundPrimary": "#ffe6a7",
+            "backgroundSecondary": "#99582a",
+            "textPrimary": "#6f1d1b",
+            "textSecondary": "#432818",
+            "errorColor": "#E63946",
+            "textCaret": "#bb9457",
+            "select": "#FFB7B7",
+            "themeType": "light"
+        },
+        "formula": {
+            "backgroundPrimary": "#FFFFFF",
+            "backgroundSecondary": "#FF6B6B",
+            "textPrimary": "#292F36",
+            "textSecondary": "#4ECDC4",
+            "errorColor": "#E63946",
+            "textCaret": "#FFFFFF",
+            "select": "#FFB7B7",
+            "themeType": "light"
+        },
+        "eggplant": {
+            "backgroundPrimary": "#3B252C",
+            "backgroundSecondary": "#8F6593",
+            "textPrimary": "#E3E4DB",
+            "textSecondary": "#AEA4BF",
+            "errorColor": "#E63946",
+            "textCaret": "#CDCDCD",
+            "select": "#FFB7B7",
+            "themeType": "dark"
+        },
+        "moss": {
+            "backgroundPrimary": "#2A6041",
+            "backgroundSecondary": "#28965A",
+            "textPrimary": "#7CFEF0",
+            "textSecondary": "#2CEAA3",
+            "errorColor": "#E63946",
+            "textCaret": "#6BFFB8",
+            "select": "#FFB7B7",
+            "themeType": "light"
+        },
+        "seafoam": {
+            "backgroundPrimary": "#A5F8D3",
+            "backgroundSecondary": "#A0B9C6",
+            "textPrimary": "#802392",
+            "textSecondary": "#9A98B5",
+            "errorColor": "#E63946",
+            "textCaret": "#995FA3",
+            "select": "#FFB7B7",
+            "themeType": "light"
+        },
+        "roses": {
+            "backgroundPrimary": "#ff686b",
+            "backgroundSecondary": "#ffa69e",
+            "textPrimary": "#ffffff",
+            "textSecondary": "#a5ffd6",
+            "errorColor": "#E63946",
+            "textCaret": "#84dcc6",
+            "select": "#FFB7B7",
+            "themeType": "light"
+        },
+        "pudding": {
+            "backgroundPrimary": "#FAF2A1",
+            "backgroundSecondary": "#759AAB",
+            "textPrimary": "#401F3E",
+            "textSecondary": "#453F78",
+            "errorColor": "#E63946",
+            "textCaret": "#3F2E56",
+            "select": "#FFB7B7",
+            "themeType": "light"
+        },
+        "witch": {
+            "backgroundPrimary": "#321325",
+            "backgroundSecondary": "#5F0F40",
+            "textPrimary": "#CB793A",
+            "textSecondary": "#FCDC4D",
+            "errorColor": "#E63946",
+            "textCaret": "#9A031E",
+            "select": "#FFB7B7",
+            "themeType": "dark"
+        },
+        "custom": {
+            "backgroundPrimary": "#242423",
+            "backgroundSecondary": "#333533",
+            "textPrimary": "#cfdbd5",
+            "textSecondary": "#f5cb5c",
+            "errorColor": "#E63946",
+            "textCaret": "#E8EDDF",
+            "select": "#FFB7B7"
+        }
+    }
+}
