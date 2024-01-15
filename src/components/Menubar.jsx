@@ -8,15 +8,13 @@ import {
 } from "@mui/material"
 import NumbersIcon from '@mui/icons-material/Numbers';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
-
 import TimelapseIcon from '@mui/icons-material/Timelapse';
 import TitleIcon from '@mui/icons-material/Title';
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 import SelfImprovementIcon from '@mui/icons-material/SelfImprovement';
-
 import TuneIcon from '@mui/icons-material/Tune';
 
-import { useGameSettings } from '../hooks/useGameSettings';
+import useStore from "../utils/store"
 
 const MenuBox = styled("div", {
   name: "MuiDiv",
@@ -26,18 +24,9 @@ const MenuBox = styled("div", {
 })``;
 
 const timeValues = [15, 30, 60, 120]
-const modes = ['time', 'words', 'quote', 'zen']
 
 export default function Menubar() {
-  const {
-    time,
-    textOptions,
-    mode,
-    modeOptions,
-    setTime,
-    changeMode,
-    setModeOptions, } =
-    useGameSettings()
+  const { mode, time, setTime, setMode, hideElements} = useStore()
 
   return (
     <>
@@ -47,6 +36,7 @@ export default function Menubar() {
         justifyContent: 'center',
         mt: 9,
         width: "100%",
+        opacity: hideElements ? "0" : "1"
       }}>
         <MenuBox
           sx={{
@@ -102,14 +92,14 @@ export default function Menubar() {
                 variant="text"
                 startIcon={<TimelapseIcon />}
                 sx={{ mr: 1, ml: 1, opacity: mode === 'time' ? "1" : "0.55"}}
-                onClick={() => changeMode('time')}
+                onClick={() => setMode('time')}
               >
                 time
               </Button>
               <Button variant="text"
                 startIcon={<TitleIcon />}
                 sx={{ mr: 1, ml: 1, opacity: mode === 'words' ? "1" : "0.55"}}
-                onClick={() => changeMode('words')}
+                onClick={() => setMode('words')}
 
               >
                 words
@@ -117,7 +107,7 @@ export default function Menubar() {
               <Button variant="text"
                 startIcon={<FormatQuoteIcon />}
                 sx={{ mr: 1, ml: 1, opacity: mode === 'quote' ? "1" : "0.55"}}
-                onClick={() => changeMode('quote')}
+                onClick={() => setMode('quote')}
 
               >
                 quote
@@ -125,7 +115,7 @@ export default function Menubar() {
               <Button variant="text"
                 startIcon={<SelfImprovementIcon />}
                 sx={{ mr: 1, ml: 1, opacity: mode === 'zen' ? "1" : "0.55"}}
-                onClick={() => changeMode('zen')}
+                onClick={() => setMode('zen')}
               >
                 zen
               </Button>

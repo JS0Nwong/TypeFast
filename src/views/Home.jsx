@@ -7,29 +7,7 @@ import Footer from '../components/Footer'
 import Menubar from '../components/Menubar'
 import GameScreenWrapper from '../components/GameScreenWrapper'
 
-import { useGame } from '../hooks/useGame'
-import { useGameState } from '../hooks/useGameState'
-import useStore from '../utils/store'
-
 export default function Home() {
-    const {
-        text,
-        charPressed,
-        charTyped,
-        keyPressed,
-        timeInterval,
-        restartGame,
-        handleInputChange,
-        handleKeyDown,
-        incorrectExtraUserInputs,
-    } = useGame()
-
-    const {inputRef, handleInputFocus} = useGameState()
-
-    const { currentUserInput } = useStore()
-
-    // const { restartGame } = useGameState()
-
     useEffect(() => {
         document.title = document.hidden ? "🥺 Come back" : "type.fast";
     }, [document.hidden])
@@ -54,20 +32,7 @@ export default function Home() {
                     }}>
                         <Header />
                         <Menubar />
-                        <GameScreenWrapper
-                            keyPressed={keyPressed}
-                            words={text}
-                            charPressed={charPressed}
-                            charsTyped={charTyped}
-                            
-                            timeInterval={timeInterval}
-                            restartGame={restartGame}
-                            handleInputChange={handleInputChange}
-                            inputRef={inputRef}
-                            handleKeyDown={handleKeyDown}
-                            currentUserInput={currentUserInput}
-                            incorrectExtraUserInputs={incorrectExtraUserInputs}
-                        />
+                        <GameScreenWrapper />
                         <Footer />
                     </Box>
                     <Box sx={{ width: { sm: "0%", md: '25%' } }} />

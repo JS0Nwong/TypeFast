@@ -17,7 +17,8 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 
 import ThemeSelect from './ThemeSelect';
 import FontSelect from './FontSelect';
-import { useGame } from '../hooks/useGame';
+
+import useStore from '../utils/store';
 
 export default function Header() {
   const [anchor, setAnchor] = useState(null)
@@ -29,7 +30,7 @@ export default function Header() {
     setAnchor(null)
   }
 
-  const { restartGame } = useGame()
+  const { regenerateText, hideElements } = useStore()
 
   return (
     <Box sx={{
@@ -38,7 +39,9 @@ export default function Header() {
       justifyContent: "space-between",
       alignItems: "center",
       width: "100%",
-      mt: 5
+      mt: 5,
+      transition: "0.35s ease",
+      opacity: hideElements ? "0" : "1"
     }}>
       <Box sx={{
         display: "flex",
@@ -51,8 +54,10 @@ export default function Header() {
           variant='h6'
           sx={{
             mr: 2,
-            cursor: 'pointer'
+            cursor: 'pointer',
+            userSelect: 'none'
           }}
+          onClick={() => regenerateText()}
         >type.fast</Typography>
         <Stack
           direction="row"
@@ -97,10 +102,10 @@ export default function Header() {
       >
         <ThemeSelect />
         <FontSelect />
-        <IconButton>
+        <IconButton aria-label="notifications">
           <NotificationsNoneIcon style={{ m: 0, p: 0, }} />
         </IconButton>
-        <IconButton>
+        <IconButton  aria-label="profile">
           <PersonOutlineIcon style={{ m: 0, p: 0, }} />
         </IconButton>
       </Stack>

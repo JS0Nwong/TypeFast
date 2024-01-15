@@ -85,32 +85,44 @@ const UserTheme = ({ children }) => {
                         width: "32px",
                     },
 
+                    // Word styling
                     ".word": {
-                        color: themes[webTheme]?.textPrimary,
+                        color: themes[webTheme]?.textSub,
+                        fontSize: "1.5rem",
+                        fontFamily: font
                     },
-                    ".active": {
+                    '.active-word': {
                         color: themes[webTheme]?.textPrimary,
-                        opacity: 1
+                        fontFamily: font
                     },
-                    ".incorrect-word": {
+                    '.correct-word': {
+                        color: themes[webTheme]?.textPrimary,
+                        fontFamily: font
+                    },
+                    '.incorrect-word': {
                         color: themes[webTheme]?.errorColor,
-                        opacity: 1,
                         textDecoration: "underline",
                         textDecorationColor: themes[webTheme]?.errorColor,
-                        scrollMargin: '4px'
+                        textUnderlineOffset: '5px',
+                        fontFamily: font
                     },
-                    ".correct-char": {
+
+                    // Character styling
+                    '.char': {
+                        color: themes[webTheme]?.textSub,
+                        fontFamily: font
+                    },
+                    '.correct-char': {
                         color: themes[webTheme]?.textPrimary,
-                        opacity: 1
+                        fontFamily: font
                     },
-                    ".incorrect-char": {
+                    '.incorrect-char': {
                         color: themes[webTheme]?.errorColor,
-                        opacity: 1,
+                        textDecoration: "underline",
+                        textDecorationColor: themes[webTheme]?.errorColor,
+                        textUnderlineOffset: '5px',
+                        fontFamily: font,
                     },
-                    ".char": {
-                        color: themes[webTheme]?.textPrimary,
-                        opacity: 0.55
-                    }
                 }
             },
             MuiAccordion: {
@@ -438,14 +450,6 @@ const UserTheme = ({ children }) => {
                     }
                 }
             },
-            MuiSpan: {
-                styleOverrides: {
-                    root: {
-                        fontSize: "1.5rem",
-                        fontFamily: font
-                    }
-                }
-            },
             MuiGameInfo: {
                 styleOverrides: {
                     root:{ 
@@ -469,7 +473,10 @@ const UserTheme = ({ children }) => {
                 primary: themes[webTheme]?.textPrimary,
                 secondary: themes[webTheme]?.textSecondary,
                 error: themes[webTheme]?.errorColor,
-            }
+            },
+            background: {
+                main: convertHex(themes[webTheme]?.backgroundSecondary, 0.45)
+            },
         },
         typography: {
             fontFamily: [
@@ -527,7 +534,6 @@ const UserTheme = ({ children }) => {
         if (window.localStorage.getItem('theme') === "custom" &&
             window.localStorage.getItem('custom-theme') !== null) {
             const themeValues = JSON.parse(localStorage.getItem('custom-theme'))
-            console.log(themeValues)
         }
     }, [])
 

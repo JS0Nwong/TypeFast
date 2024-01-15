@@ -10,8 +10,10 @@ import EmailIcon from '@mui/icons-material/Email';
 import CodeIcon from '@mui/icons-material/Code';
 import InfoIcon from '@mui/icons-material/Info';
 import { IoMdGitBranch } from "react-icons/io";
+import useStore from '../utils/store';
 
 export default function Footer() {
+  const {hideElements} = useStore()
   return (
     <Box sx={{
       mt: 10,
@@ -20,28 +22,32 @@ export default function Footer() {
       display: 'flex',
       flexDirection: "row",
       justifyContent: 'space-between',
+      opacity: hideElements ? "0" : "1"
     }}>
       <Box sx={{
         display: 'flex',
         flexDirection: "row",
         justifyContent: 'space-between'
       }}>
-        <Button
-          variant="text"
-          startIcon={<GitHubIcon />}
-
-        >
-          Github
-        </Button>
-        <Button
-          variant="text"
-          startIcon={<EmailIcon />}
-          sx={{
-            ml: 2,
-          }}
-        >
-          Email
-        </Button>
+        <Link href="https://github.com/JS0Nwong/">
+          <Button
+            variant="text"
+            startIcon={<GitHubIcon />}
+          >
+            Github
+          </Button>
+        </Link>
+        <Link href="mailto:Jason.Wong47@myhunter.cuny.edu">
+          <Button
+            variant="text"
+            startIcon={<EmailIcon />}
+            sx={{
+              ml: 2,
+            }}
+          >
+            Email
+          </Button>
+        </Link>
       </Box>
       <Box sx={{
         display: 'flex',
@@ -66,15 +72,17 @@ export default function Footer() {
         >
           v0.0.01
         </Button>
-        <Button
-          variant="text"
-          startIcon={<InfoIcon />}
-          sx={{
-            ml: 2
-          }}
-        >
-          inspired by @monkeytype
-        </Button>
+        <Link href="https://monkeytype.com/">
+          <Button
+            variant="text"
+            startIcon={<InfoIcon />}
+            sx={{
+              ml: 2
+            }}
+          >
+            inspired by @monkeytype
+          </Button>
+        </Link>
       </Box>
     </Box>
   )

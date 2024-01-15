@@ -7,12 +7,6 @@ const useGameState = () => {
     const [text, setText] = useState(() => generateWords())
     const [time, setTime] = useState(60)
     const [timeInterval, setTimeInterval] = useState(null)
-    const {} = useStore()
-
-    const inputRef = useRef(null)
-    const handleInputFocus = () => {
-        inputRef.current && inputRef.current.focus()
-    }
 
     const regenerateText = useCallback(() => {
         return setText(generateWords())
@@ -42,14 +36,12 @@ const useGameState = () => {
     }, [regenerateText])
 
     return {
-        inputRef,
         gameStatus,
         text,
         timeInterval,
         startGame,
         restartGame,
         regenerateText,
-        handleInputFocus
     }
 
 }

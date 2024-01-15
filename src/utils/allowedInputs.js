@@ -1,8 +1,6 @@
 const allowedInputs = (code) => {
     return (
-        code.startsWith('Key') ||
-        code === 'Backspace' ||
-        code === 'Space'
+        code === "Tab"
     )
 }
 export { allowedInputs };

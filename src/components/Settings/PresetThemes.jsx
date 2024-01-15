@@ -20,7 +20,7 @@ export default function PresetThemes() {
                 sx={{
                     m: 1,
                     p: 1,
-                    width: "210px",
+                    width: {sm: "170px",  md: "210px"},
                     opacity: '1',
                     background: themes[theme]?.backgroundPrimary,
                     color: themes[theme]?.textPrimary,

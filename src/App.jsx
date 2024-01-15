@@ -12,6 +12,8 @@ import Settings from './views/Settings'
 import Leaderboard from './views/Leaderboard'
 import Error from './views/404'
 import Rooms from './views/Rooms';
+import Profile from './views/Profile'
+import UserAuth from './views/UserAuth';
 import PageLayout from './views/PageLayout';
 
 function App() {
@@ -21,12 +23,14 @@ function App() {
         <div className='App'>
           <AnimatePresence>
             <Routes>
-                <Route index path="/" element={<Home />} />
-                <Route path="/leaderboard" element={<Leaderboard />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/games" element={<Rooms />}/>
-                <Route path="/*" element={<Error />} />
+              <Route index path="/" element={<Home />} />
+              <Route path="/leaderboard" element={<Leaderboard />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/games" element={<Rooms />} />
+              <Route path="/login" element={<UserAuth />}/>
+              <Route path="/u/*" element={<Profile />} />
+              <Route path="/*" element={<Error />} />
             </Routes>
           </AnimatePresence>
         </div>

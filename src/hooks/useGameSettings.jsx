@@ -6,9 +6,9 @@ const useGameSettings = () => {
   const [modeOptions, setModeOptions] = useState('time')
   const [time, setTime] = useState(60)
 
-  const changeMode = useCallback((param) => {
+  const changeMode = (param) => {
     setMode(param)
-  }, [setMode])
+  }
 
   return {
     textOptions,

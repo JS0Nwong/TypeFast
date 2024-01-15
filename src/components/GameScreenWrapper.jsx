@@ -1,56 +1,37 @@
-import React, { useCallback } from 'react'
 import { Box, Button } from "@mui/material"
 import TypeDisplay from './TypeDisplay'
 import UserInputDisplay from './UserInputDisplay';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+
 import TimeDisplay from './TimeDisplay';
+import useStore from '../utils/store';
 
-import { useGameSettings } from '../hooks/useGameSettings';
+export default function GameScreenWrapper() {
+    const { mode, text, regenerateText, currentUserInput, hideElements } = useStore()
 
-export default function GameScreenWrapper({ 
-    inputRef,
-    words, 
-    charsTyped, 
-    restartGame,
-    handleInputChange,
-    handleKeyDown,
-    currentUserInput,
-    incorrectExtraUserInputs,
-    timeInterval,
-}) {
-    const { mode } = useGameSettings()
     return (
         <Box sx={{
             display: 'flex',
             flexDirection: "column",
             width: '100%',
-            height: "100%",
             justifyContent: 'space-evenly',
             alignItems: 'center',
             mt: 10,
-            position: 'relative'
+            height: "100%",    
+            position: 'relative',
         }}>
-            <TimeDisplay timeInterval={timeInterval}/>
+            <TimeDisplay />
             {mode !== 'zen' ?
                 <TypeDisplay
-                    words={words}
-                    incorrectExtraUserInputs={incorrectExtraUserInputs}
+                    words={text}
                 />
                 : <UserInputDisplay
-                    words={words}
-                    charsTyped={charsTyped}
-                    isCorrectCharacter={isCorrectCharacter}
+                    words={text}
+                    charsTyped={currentUserInput}
                 />}
-                <textarea 
-                    ref={inputRef}
-                    type="text"
-                    onKeyDown={(e) => handleKeyDown(e)}
-                    onChange={(e) => handleInputChange(e.target.value)}
-                    value={currentUserInput}
-                />
             <Button
-                sx={{}}
-                onClick={restartGame}
+                sx={{opacity: hideElements ? "0" : "1"}}
+                onClick={regenerateText}
             >
                 <RestartAltIcon />
             </Button>
