@@ -10,7 +10,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import CodeIcon from '@mui/icons-material/Code';
 import InfoIcon from '@mui/icons-material/Info';
 import { IoMdGitBranch } from "react-icons/io";
-import useStore from '../utils/store';
+import useStore from '../../utils/store';
 
 export default function Footer() {
   const {hideElements} = useStore()
@@ -70,7 +70,7 @@ export default function Footer() {
             ml: 2
           }}
         >
-          v0.0.01
+          v0.7.50
         </Button>
         <Link href="https://monkeytype.com/">
           <Button

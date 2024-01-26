@@ -1,36 +1,47 @@
 import { useMemo, createRef, useEffect } from 'react'
-import { Box, Typography } from "@mui/material"
+import { Box } from "@mui/material"
 
 import { applyStyles } from '../utils/applyStyles';
 import { useInput } from '../hooks/useInput';
 import useStore from '../utils/store';
-import Character from './Character';
 import useFocus from '../hooks/useFocus';
+import Caret from "../components/Caret"
 
-export default function TypeDisplay({ words }) {
+export default function TypeDisplay() {
   const { applyWordStyles, applyCharStyles } = applyStyles()
-  const { focusedTextBox, setInputFocus, currentWordIndex } = useStore()
+  const { currentWordIndex, text } = useStore()
 
   // needed to initialize user input handler
-  const { handleUserInput } = useInput()
+  const { handleUserInput, displayExtraCharacters } = useInput()
 
   const wordsDict = useMemo(() => {
-    return words
-  }, [words])
+    return text
+  }, [text])
 
   const wordsRef = useMemo(() => {
     return Array.from({
-      length: words.length
-    }).fill(0).map((i) => createRef())  
-  }, [words])
+      length: text.length
+    }).fill(0).map((i) => createRef())
+  }, [text])
+
+  const charRef = useMemo(() => {
+    return wordsDict.map(
+      (str) => str.split('').map((char) => createRef())
+    )
+  }, [])
+
 
   useEffect(() => {
-    if(currentWordIndex !==0 &&
-        wordsRef[currentWordIndex].current.offsetLeft < 
-        wordsRef[currentWordIndex - 1].current.offsetLeft
-      )
-    wordsRef[currentWordIndex - 1].current.scrollIntoView()
+    if (currentWordIndex !== 0 &&
+      wordsRef[currentWordIndex].current.offsetLeft <
+      wordsRef[currentWordIndex - 1].current.offsetLeft
+    )
+      wordsRef[currentWordIndex - 1].current.scrollIntoView()
   }, [currentWordIndex, wordsRef])
+
+  useEffect(() => {
+    console.log(charRef)
+  }, [])
 
   return (
     <>
@@ -46,7 +57,8 @@ export default function TypeDisplay({ words }) {
           // filter: focusedTextBox ? "none" : "blur(6.5px)",
           transition: "0.15s ease",
         }}
-      > 
+      >          
+        <Caret />
         {wordsDict.map((word, index) =>
           <div
             key={index}
@@ -62,15 +74,13 @@ export default function TypeDisplay({ words }) {
             {word.split('').map((char, idx) =>
               <span
                 key={char + idx}
-                className={applyCharStyles(index, idx, char, word)}>
+                className={applyCharStyles(index, idx, char, word)}
+                ref={charRef[index][idx]}
+              >
                 {char}
               </span>
-              // <Character
-              //   key={char + idx}
-              //   char={char}
-              //   className={applyCharStyles(index, idx, char, word)}
-              // />
             )}
+            {displayExtraCharacters(word, index)}
           </div>
         )}
       </Box>

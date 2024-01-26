@@ -1,31 +1,33 @@
 import { useEffect } from "react";
 import useStore from "./store";
-import { updateWordsCorrect } from "./store";
-import { updateWordsIncorrect } from "./store";
+// import { updateWordsCorrect } from "./store";
+// import { updateWordsIncorrect } from "./store";
 import { useUpdateHistory } from "./store";
 
 const isCorrect = () => {
   const {
-    gameStatus,
     keyPressed,
+    gameStatus,
     text,
     currentWordIndex,
-    currentCharIndex,
     currentUserInput,
-    wordsCorrect,
-    wordsIncorrect,
     prevInput,
     userInputWordHistory,
     setUserInputWordHistory,
     setPrevInput,    
+    increaseRawWordsPerMinuteKeys,
   } = useStore();
-
-  //checks if user is active
+  
+  const {
+    updateWordsCorrect,
+    updateWordsIncorrect,
+  } = useUpdateHistory();
 
   const checkWord = () => {
-    // Gets the current word to check
+    // checks if user is active, return early if not
     if (gameStatus !== "ready") return
-
+    
+    // Gets the current word to check
     const wordToCompare = text[currentWordIndex];
     const userInput = currentUserInput.trim();
     const isCorrect = wordToCompare === userInput;
@@ -34,32 +36,15 @@ const isCorrect = () => {
       return null;
     }
     if (isCorrect) {
-      // useUpdateHistory.setState((prev) => ({
-      //   wordsCorrect: new Set(prev.wordsCorrect).add(currentWordIndex),
-      //   wordsIncorrect: new Set(prev.wordsIncorrect).delete(currentWordIndex),
-      // }))
-      // updateWordsCorrect(currentWordIndex)
-
-      useStore.setState((prev) => ({
-        wordsCorrect: new Set(prev.wordsCorrect).add(currentWordIndex),
-        wordsIncorrect: new Set(prev.wordsIncorrect).delete(currentWordIndex)
-      }))
+      updateWordsCorrect(currentWordIndex)
       let inputWordHistoryUpdate = { ...userInputWordHistory };
       inputWordHistoryUpdate[currentWordIndex] = userInput;
       setUserInputWordHistory(inputWordHistoryUpdate);
       setPrevInput("");
+      increaseRawWordsPerMinuteKeys()
       return true;
     } else {
-      // useUpdateHistory.setState((prev) => ({
-      //   wordsIncorrect: new Set(prev.wordsIncorrect).add(currentWordIndex),
-      //   wordsCorrect: new Set(prev.wordsCorrect).delete(currentWordIndex),
-      // }))
-      // updateWordsIncorrect(currentWordIndex)
-
-      useStore.setState((prev) => ({
-        wordsIncorrect: new Set(prev.wordsIncorrect).add(currentWordIndex),
-        wordsCorrect: new Set(prev.wordsCorrect).delete(currentWordIndex),
-      }))
+      updateWordsIncorrect(currentWordIndex)
       let inputWordHistoryUpdate = { ...userInputWordHistory };
       setUserInputWordHistory(inputWordHistoryUpdate);
       setPrevInput(prevInput + " " + userInput);

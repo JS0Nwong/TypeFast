@@ -1,7 +1,8 @@
 import { Box } from "@mui/material"
-import Header from '../components/Header'
-import Footer from '../components/Footer'
+import Header from '../components/static/Header'
+import Footer from '../components/static/Footer'
 import { motion } from "framer-motion"
+import Gutter from "../components/Gutter"
 
 import RoomsDisplay from "../components/Multiplayer/RoomsDisplay"
 
@@ -14,9 +15,7 @@ export default function Rooms() {
             transition={{ delay: 0.2, ease: 'easeInOut' }}
         >
             <Box sx={{ display: "flex", flexDirection: "row" }}>
-                <Box sx={{
-                    width: { sm: "0%", md: '25%' },
-                }}></Box>
+                <Gutter />
                 <Box sx={{
                     maxWidth: { sm: "100%", md: "1440px" },
                     width: "100%",
@@ -29,10 +28,7 @@ export default function Rooms() {
                     <RoomsDisplay />
                     <Footer />
                 </Box>
-                <Box sx={{
-                    width: { sm: "0%", md: '25%' },
-                }}>
-                </Box>
+                <Gutter />
             </Box>
         </motion.div>
     )

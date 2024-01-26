@@ -2,9 +2,9 @@ import { useEffect } from 'react'
 import { Box } from "@mui/material"
 import { motion } from "framer-motion"
 
-import Header from '../components/Header'
-import Footer from '../components/Footer'
-import Menubar from '../components/Menubar'
+import Header from '../components/static/Header'
+import Footer from '../components/static/Footer'
+import Gutter from '../components/Gutter'
 import GameScreenWrapper from '../components/GameScreenWrapper'
 
 export default function Home() {
@@ -21,7 +21,7 @@ export default function Home() {
                 transition={{ delay: 0.2, ease: 'easeInOut' }}
             >
                 <Box sx={{ display: "flex", flexDirection: "row" }}>
-                    <Box sx={{ width: { sm: "0%", md: '25%' } }} />
+                    <Gutter/>
                     <Box sx={{
                         maxWidth: { sm: "100%", md: "1440px" },
                         width: "100%",
@@ -31,11 +31,10 @@ export default function Home() {
                         alignItems: "center"
                     }}>
                         <Header />
-                        <Menubar />
                         <GameScreenWrapper />
                         <Footer />
                     </Box>
-                    <Box sx={{ width: { sm: "0%", md: '25%' } }} />
+                    <Gutter/>
                 </Box>
             </motion.div>
         </>

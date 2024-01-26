@@ -1,25 +1,20 @@
 import useStore from "../utils/store";
+import { useUpdateHistory } from "./store";
 
-const applyStyles =() => {
-  const {
-    text,
-    keyPressed,
-    wordsCorrect,
-    wordsIncorrect,
-    currentWordIndex,
-    currentCharIndex,
-    history,
-  } = useStore();
+const applyStyles = () => {
+  const { keyPressed, currentWordIndex, currentCharIndex, history } =
+    useStore();
+  const { wordsIncorrect } = useUpdateHistory();
 
   //Apply char style based on if the inputted char is correct or not
   /*
-  * 
-  *
-  * 
-  * 
-  * 
-  * 
-  */
+   *
+   *
+   *
+   *
+   *
+   *
+   */
   const applyCharStyles = (wordIndex, charIndex, char, word) => {
     const keyString = wordIndex + "." + charIndex;
     if (history[keyString] === true) {
@@ -52,7 +47,7 @@ const applyStyles =() => {
       if (currentWordIndex === index) {
         return "word incorrect-word active-word";
       }
-      return "word incorrect-word"
+      return "word incorrect-word";
     } else {
       if (currentWordIndex === index) {
         return "word active-word";

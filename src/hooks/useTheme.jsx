@@ -3,6 +3,7 @@ import { createTheme, ThemeProvider, CssBaseline } from '@mui/material'
 import { themes } from "../static/themes/themes.json"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { convertHex } from "../utils/convertHexToRGB";
+import { pSBC } from "../utils/adjustColor"
 
 const ThemeContext = createContext();
 
@@ -10,7 +11,7 @@ const UserTheme = ({ children }) => {
     const setInitalFont = () => {
         let currentFont = "Fira Code"
         if (typeof window !== 'undefined' && window.localStorage) {
-            let storedFont = localStorage.getItem('preferred-font')        
+            let storedFont = localStorage.getItem('preferred-font')
             currentFont = storedFont ? storedFont : 'Fira Code'
 
             if (storedFont) {
@@ -31,14 +32,24 @@ const UserTheme = ({ children }) => {
     const setInitialState = () => {
         let currentTheme = "default";
         if (typeof window !== 'undefined' && window.localStorage) {
-            let storedTheme = localStorage.getItem('theme')    
+            let storedTheme = localStorage.getItem('theme')
             currentTheme = storedTheme ? storedTheme : 'default'
         }
         return currentTheme
     }
+    const setIntitalView = () => {
+        let defaultView = "25%"
+        if (typeof window !== 'undefined' && window.localStorage) {
+            let storedView = localStorage.getItem('preferred-view')
+            defaultView = storedView ? storedView : '25%'
+        }
+        return defaultView
+    }
+
     const [webTheme, setWebTheme] = useState(setInitialState)
     const [userCreatedTheme, setUserCreatedTheme] = useState(themes['custom'])
     const [font, setFont] = useState(setInitalFont)
+    const [viewValue, setViewValue] = useState(setIntitalView)
 
     const theme = useMemo(() => createTheme({
         components: {
@@ -87,7 +98,7 @@ const UserTheme = ({ children }) => {
 
                     // Word styling
                     ".word": {
-                        color: themes[webTheme]?.textSub,
+                        color: pSBC(-0.60, themes[webTheme]?.textPrimary, false, true),
                         fontSize: "1.5rem",
                         fontFamily: font
                     },
@@ -109,7 +120,7 @@ const UserTheme = ({ children }) => {
 
                     // Character styling
                     '.char': {
-                        color: themes[webTheme]?.textSub,
+                        color: pSBC(-0.60, themes[webTheme]?.textPrimary, false, true),
                         fontFamily: font
                     },
                     '.correct-char': {
@@ -118,9 +129,6 @@ const UserTheme = ({ children }) => {
                     },
                     '.incorrect-char': {
                         color: themes[webTheme]?.errorColor,
-                        textDecoration: "underline",
-                        textDecorationColor: themes[webTheme]?.errorColor,
-                        textUnderlineOffset: '5px',
                         fontFamily: font,
                     },
                 }
@@ -200,8 +208,19 @@ const UserTheme = ({ children }) => {
                             borderRadius: "4px",
                             "&:hover": {
                                 opacity: '1',
-                                backgroundColor: themes[webTheme]?.backgroundSecondary,
+                                backgroundColor: convertHex(themes[webTheme]?.textPrimary, 0.55),
                             },
+                        }
+                    }
+                }
+            },
+            MuiCheckbox: {
+                styleOverrides: {
+                    root: {
+                        opacity: 0.55,
+                        '&.Mui-checked': {
+                            opacity: 1,
+                            color: themes[webTheme]?.textSecondary
                         }
                     }
                 }
@@ -302,6 +321,15 @@ const UserTheme = ({ children }) => {
                 styleOverrides: {
                     root: {
                         background: convertHex(themes[webTheme]?.backgroundSecondary, 0.45),
+                    }
+                }
+            },
+            MuiFormControlLabel: {
+                styleOverrides: {
+                    root: {
+                        ".MuiFormControlLabel-label": {
+                            opacity: 0.55
+                        }
                     }
                 }
             },
@@ -452,7 +480,7 @@ const UserTheme = ({ children }) => {
             },
             MuiGameInfo: {
                 styleOverrides: {
-                    root:{ 
+                    root: {
                         background: convertHex(themes[webTheme]?.backgroundSecondary, 0.45),
                         borderRadius: "4px",
                         width: "100%",
@@ -465,6 +493,40 @@ const UserTheme = ({ children }) => {
                         }
                     }
                 }
+            },
+            MuiGutter: {
+                styleOverrides: {
+                    root: {
+                        width: viewValue,
+                        transition: "0.15s ease",
+                    }
+                }
+            },
+            MuiCaret: {
+                styleOverrides: {
+                    root: {
+                        width: "2px",
+                        borderRadius: "99px",
+                        height: '24px',
+                        background: themes[webTheme].textSecondary,
+                        position: 'absolute',
+                    }
+                }
+            },
+            MuiTooltip: {
+                defaultProps: {
+                    arrow: true,
+                },
+                styleOverrides: {
+                    tooltip: {
+                      fontSize: "1em",
+                      color: themes[webTheme].textPrimary,
+                      backgroundColor: "#0a0908",
+                    },
+                    arrow: {
+                        color: '#0a0908',
+                      },
+                  }
             }
         },
         palette: {
@@ -484,6 +546,9 @@ const UserTheme = ({ children }) => {
                 'monospace',
                 'sans-serif',
             ].join(','),
+            subtitle1: {
+                color: themes[webTheme]?.textSecondary
+            },
             h4: {
                 color: themes[webTheme]?.textSecondary
             },
@@ -501,6 +566,12 @@ const UserTheme = ({ children }) => {
     const toggleFont = (fontValue) => {
         setFont(fontValue)
         localStorage.setItem('preferred-font', fontValue)
+    }
+
+    const toggleViewSettings = (viewValue) => {
+        console.log(viewValue)
+        setViewValue(viewValue)
+        localStorage.setItem('preferred-view', viewValue)
     }
 
     const setCustomTheme = (
@@ -526,7 +597,7 @@ const UserTheme = ({ children }) => {
         // console.log(userCreatedTheme)
         localStorage.setItem('custom-theme', JSON.stringify(customTheme))
     }
- 
+
     useEffect(() => {
         if (window.localStorage.getItem('theme') !== null) {
             setWebTheme(window.localStorage.getItem('theme'))
@@ -540,6 +611,7 @@ const UserTheme = ({ children }) => {
     return (
         <ThemeContext.Provider
             value={{
+                viewValue,
                 theme,
                 webTheme,
                 font,
@@ -548,6 +620,7 @@ const UserTheme = ({ children }) => {
                 toggleFont,
                 setCustomTheme,
                 setUserCreatedTheme,
+                toggleViewSettings,
             }}>
             <ThemeProvider theme={theme}>
                 <CssBaseline />

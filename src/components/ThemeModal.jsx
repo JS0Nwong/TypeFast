@@ -46,7 +46,7 @@ export default function ThemeModal({ open, onClose }) {
             <DialogTitle>themes</DialogTitle>
             <DialogContent sx={{ height: "100%", mb: -2 }}>
                 <TextField
-                    autoComplete='false'
+                    autoComplete='off'
                     InputProps={{
                         startAdornment:
                             <InputAdornment position="start" >

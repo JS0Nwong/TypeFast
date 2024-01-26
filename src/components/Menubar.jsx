@@ -34,7 +34,7 @@ export default function Menubar() {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center',
-        mt: 9,
+        mt: 7,
         width: "100%",
         opacity: hideElements ? "0" : "1"
       }}>

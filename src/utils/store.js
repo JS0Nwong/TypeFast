@@ -1,46 +1,31 @@
 import { createRef, useRef } from "react";
 import { create } from "zustand";
-import { devtools } from "zustand/middleware";
+import { devtools, persist } from "zustand/middleware";
 import generateWords from "./generateWords";
+import useCountdown from "../hooks/useCountdown";
 
-let startTime = Date.now(),
-  diff,
-  minutes,
-  seconds;
-
-const timer = setInterval((time) => {
-  diff = time - (((Date.now() - startTime) / 1000) | 0);
-  minutes = (diff / 60) | 0;
-  seconds = diff % 60 | 0;
-
-  minutes = minutes < 10 ? "0" + minutes : minutes;
-  seconds = seconds < 10 ? "0" + seconds : seconds;
-
-  if (diff <= 0) {
-    startTime = Date.now() + 1000;
-  }
-}, 1000);
-
-export const useUpdateHistory = create(() => ({
+export const useUpdateHistory = create((set) => ({
   wordsCorrect: new Set(),
   wordsIncorrect: new Set(),
+  updateWordsCorrect: (wordIndex) => {
+    return useUpdateHistory.setState((prev) => ({
+      wordsCorrect: new Set(prev.wordsCorrect).add(wordIndex),
+    }));
+  },
+  updateWordsIncorrect: (wordIndex) => {
+    return useUpdateHistory.setState((prev) => ({
+      wordsIncorrect: new Set(prev.wordsIncorrect).add(wordIndex),
+    }));
+  },
+  resetHistory: () => {
+    set({ wordsCorrect: new Set(), wordsIncorrect: new Set() });
+  },
 }));
 
-export const updateWordsCorrect = (currentWordIndex) => {
-  return useUpdateHistory.setState((prev) => ({
-    wordsCorrect: new Set(prev.wordsCorrect).add(currentWordIndex),
-  }));
-};
-
-export const updateWordsIncorrect = (currentWordIndex) => {
-  return useUpdateHistory.setState((prev) => ({
-    wordsIncorrect: new Set(prev.wordsIncorrect).add(currentWordIndex),
-  }));
-};
-
 const store = (set) => ({
-  // user details
-  isLoggedIn: false,
+  // user information & data
+  isAuthenticated: false,
+  userData: {},
   // game state
   gameStatus: "unready",
   typeDisplayFocused: "focused",
@@ -50,6 +35,7 @@ const store = (set) => ({
   // game setting options
   textOptions: [],
   mode: "time",
+  selectedTime: 60,
   time: 60,
   // user input state
   keyPressed: "",
@@ -57,17 +43,28 @@ const store = (set) => ({
   userInputKeyHistory: {},
   currentWordIndex: 0,
   currentCharIndex: -1,
-  wordsCorrect: new Set(),
-  wordsIncorrect: new Set(),
   userInputWordHistory: {},
   prevInput: "",
   history: {},
-  // user stats
+  // user stats for after the game ends
   rawKeysPerMinute: 0,
   wordsPerMinute: 0,
   wordAccuracy: 0,
   charAccuracy: 0,
+  rawWordsPerMinuteKeys: 0,
+  rawWpm: 0,
 
+  // user information
+  setIsAuthenticated: (status) =>
+    set(
+      {
+        isAuthenticated: status,
+      },
+      false,
+      "setIsAuthenticated"
+    ),
+
+  // game state
   setGameStatus: (status) =>
     set(
       {
@@ -156,8 +153,8 @@ const store = (set) => ({
       (state) => ({
         userInputWordHistory: {
           ...state.userInputWordHistory,
-          [state.currentWordIndex]: state.currentUserInput.trim()
-        }
+          [state.currentWordIndex]: state.currentUserInput.trim(),
+        },
       }),
       false,
       "setUserInputWordHistory"
@@ -174,9 +171,6 @@ const store = (set) => ({
     set({
       history: char,
     }),
-  // setTimer: () => set({
-  //   time:
-  // }),
 
   //set game options
   setMode: (mode) =>
@@ -191,6 +185,7 @@ const store = (set) => ({
   setTime: (option) =>
     set(
       {
+        selectedTime: option,
         time: option,
       },
       false,
@@ -216,8 +211,15 @@ const store = (set) => ({
     })),
   resetUserInput: () => set({ currentUserInput: "" }),
   resetKeyPressed: () => set({ keyPressed: "" }),
+  previousUserInput: () =>
+    set((state) => ({
+      currentUserInput: state.currentUserInput.slice(
+        0,
+        state.currentCharIndex + 1
+      ),
+    })),
   regenerateText: () =>
-    set({
+    set((state) => ({
       keyPressed: "",
       currentUserInput: "",
       userInputKeyHistory: {},
@@ -230,7 +232,61 @@ const store = (set) => ({
       history: {},
       text: generateWords(),
       hideElements: false,
-    }),
+      gameStatus: "unready",
+      time: state.selectedTime,
+      rawKeysPerMinute: 0,
+      wordsPerMinute: 0,
+      wordAccuracy: 0,
+      charAccuracy: 0,
+      rawWordsPerMinuteKeys: 0,
+      rawWpm: 0,
+    })),
+  nextTest: () =>
+    set((state) => ({
+      keyPressed: "",
+      currentUserInput: "",
+      userInputKeyHistory: {},
+      currentWordIndex: 0,
+      currentCharIndex: -1,
+      wordsCorrect: new Set(),
+      wordsIncorrect: new Set(),
+      userInputWordHistory: {},
+      prevInput: "",
+      history: {},
+      text: generateWords(),
+      hideElements: false,
+      gameStatus: "unready",
+      time: state.selectedTime,
+      rawKeysPerMinute: 0,
+      wordsPerMinute: 0,
+      wordAccuracy: 0,
+      charAccuracy: 0,
+      rawWordsPerMinuteKeys: 0,
+      rawWpm: 0,
+    })),
+  repeatTest: () =>
+    set((state) => ({
+      text: state.text,
+      keyPressed: "",
+      currentUserInput: "",
+      userInputKeyHistory: {},
+      currentWordIndex: 0,
+      currentCharIndex: -1,
+      wordsCorrect: new Set(),
+      wordsIncorrect: new Set(),
+      userInputWordHistory: {},
+      prevInput: "",
+      history: {},
+      hideElements: false,
+      gameStatus: "unready",
+      time: state.selectedTime,
+      rawKeysPerMinute: 0,
+      wordsPerMinute: 0,
+      wordAccuracy: 0,
+      charAccuracy: 0,
+      rawWordsPerMinuteKeys: 0,
+      rawWpm: 0,
+    })),
   resetCurrentCharIndex: () => set({ currentCharIndex: -1 }),
   unhideElements: () => set((state) => ({ hideElements: !state.hideElements })),
 
@@ -243,6 +299,14 @@ const store = (set) => ({
     set((state) => ({
       rawKeysPerMinute: state.rawKeysPerMinute + 1,
     })),
+  increaseRawWordsPerMinuteKeys: () =>
+    set((state) => ({
+      rawWordsPerMinuteKeys: state.rawWordsPerMinuteKeys + 1,
+    })),
+  updateOverallWPM: () =>
+    set((state) => ({
+      rawWpm: (state.rawWordsPerMinuteKeys / 5 / state.selectedTime) * 60,
+    })),
 
   //text display focus handler
   setInputFocus: (boolean) =>
@@ -253,7 +317,33 @@ const store = (set) => ({
       false,
       "setInputFocus"
     ),
+
+  // time utility functions
+  updateTimer: () => {
+    set((state) => ({
+      time: state.time - 1,
+    }));
+  },
+  endGame: () => {
+    set((state) => ({
+      gameStatus: "finished",
+      mode: state.mode,
+      hideElements: false,
+    }));
+  },
 });
 
-const useStore = create(devtools(store));
+const useStore = create(
+  persist(devtools(store), {
+    name: "game-state-storage",
+    partialize: (state) => ({
+      // persists game settings through local storage
+      // for users even on reload or going to new url
+      mode: state.mode,
+      time: state.selectedTime,
+      selectedTime: state.selectedTime,
+      textOptions: state.textOptions,
+    }),
+  })
+);
 export default useStore;

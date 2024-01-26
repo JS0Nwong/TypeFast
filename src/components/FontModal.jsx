@@ -77,7 +77,7 @@ export default function FontModal({ open, onClose }) {
             <DialogTitle>fonts</DialogTitle>
             <DialogContent sx={{ height: "100%", mb: -2 }}>
                 <TextField
-                    autoComplete='false'
+                    autoComplete='off'
                     InputProps={{
                         startAdornment:
                             <InputAdornment position="start" >

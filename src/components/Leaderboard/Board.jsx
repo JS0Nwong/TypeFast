@@ -12,7 +12,7 @@ export default function Board() {
 
     return (
         <Box sx={{ height: '100%', width: '100%' }}>
-            <Box sx={{ mt: 5 }}>
+            <Box sx={{ mt: 6 }}>
                 <Typography variant="h4">Leaderboard</Typography>
                 <Tabs
                     value={tabIndex}
