@@ -1,8 +1,9 @@
 import { Box } from "@mui/material"
 import { motion } from "framer-motion"
 
-import Header from '../components/Header'
-import Footer from '../components/Footer'
+import Header from '../components/static/Header'
+import Footer from '../components/static/Footer'
+import Gutter from "../components/Gutter"
 
 import AboutInformation from "../components/About/About"
 
@@ -17,9 +18,8 @@ export default function About() {
                  transition={{ delay: 0.2, ease: 'easeInOut' }}
                  >
                 <Box sx={{ display: "flex", flexDirection: "row" }}>
-                    <Box sx={{
-                        width: { sm: "0%", md: '25%' },
-                    }}></Box>
+                <Gutter/>
+
                     <Box sx={{
                         maxWidth: { sm: "100%", md: "1440px" },
                         width: "100%",
@@ -32,11 +32,8 @@ export default function About() {
                         <AboutInformation />
                         <Footer />
                     </Box>
-                    <Box sx={{
-                        width: { sm: "0%", md: '25%' },
-                    }}>
+                    <Gutter/>
 
-                    </Box>
                 </Box>
             </motion.div>
         </>

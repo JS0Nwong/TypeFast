@@ -17,7 +17,7 @@ import ThemePicker from './ThemePicker';
 
 export default function Settings() {
     const [presetTheme, setPresetTheme] = useState(true)
-    const { toggleTheme } = useContext(ThemeContext)
+    const { toggleTheme, toggleViewSettings, viewValue } = useContext(ThemeContext)
     const {
         closeInput,
         closeBehavior,
@@ -32,6 +32,7 @@ export default function Settings() {
     } = useClientSettings()
 
     const options = ['behavior', 'input', 'caret', 'theme', 'apperance']
+    const viewOptions = ['normal', 'compact', 'exploded']
     const Box = styled("div", {
         name: "MuiPanel",
         overridesResolver: (props, styles) => {
@@ -42,6 +43,18 @@ export default function Settings() {
     const handleSetCustomTheme = () => {
         toggleTheme('custom')
         setPresetTheme(false)
+    }
+
+    const handleViewSettings = (option) => {
+        if(option === 'compact') {
+            toggleViewSettings('45%')
+        }
+        if(option === 'exploded') {
+            toggleViewSettings('15%')
+        }
+        if(option === 'normal') {
+            toggleViewSettings('30%')
+        }
     }
 
     return (
@@ -150,7 +163,8 @@ export default function Settings() {
                                 direction="row"
                                 flexWrap="wrap"
                                 sx={{
-                                    mt: 5
+                                    mt: 5,
+                                    width: '100%'
                                 }}>
                                 {presetTheme ? <PresetThemes /> : <ThemePicker />}
                             </Stack>
@@ -165,7 +179,33 @@ export default function Settings() {
                             <Typography variant='h3'>apperance</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
-
+                            <Box sx={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                            }}>
+                                <Typography>view</Typography>
+                            </Box>
+                            <Stack
+                                direction="row"
+                                justifyContent='space-between'
+                                sx={{
+                                    mt: 5
+                                }}>
+                                {viewOptions.map((option) =>
+                                    <Button
+                                        key={option}
+                                        variant='contained'
+                                        sx={{
+                                            width: "100%",
+                                            p: 1,
+                                            m: 1,
+                                        }}
+                                        onClick={() => handleViewSettings(option)}
+                                    >
+                                        {option}
+                                    </Button>)}
+                            </Stack>
                         </AccordionDetails>
                     </Accordion>
                 </Box>

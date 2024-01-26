@@ -5,7 +5,7 @@ import { ThemeContext } from "../hooks/useTheme"
 
 export default function UserInputDisplay({ charsTyped }) {
     const char = useMemo(() => {
-        return charsTyped.split('');
+        return charsTyped?.split('');
     }, [charsTyped]);
 
     const theme = useContext(ThemeContext)

@@ -1,12 +1,12 @@
-import { Box } from "@mui/material"
-import { motion } from "framer-motion"
-
+import React from 'react'
 import Header from '../components/static/Header'
 import Footer from '../components/static/Footer'
-import Board from "../components/Leaderboard/Board"
-import Gutter from "../components/Gutter"
+import Auth from '../components/Auth/Auth'
+import { Box } from '@mui/material'
+import { motion } from 'framer-motion'
+import Gutter from '../components/Gutter'
 
-export default function Leaderboard() {
+export default function UserAuth() {
   return (
     <>
       <motion.div
@@ -26,8 +26,7 @@ export default function Leaderboard() {
             alignItems: "center"
           }}>
             <Header />
-            <Board />
-
+            <Auth />
             <Footer />
           </Box>
           <Gutter />

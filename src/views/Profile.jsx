@@ -1,12 +1,12 @@
-import { Box } from "@mui/material"
-import { motion } from "framer-motion"
-
+import React from 'react'
+import { Box, Typography } from '@mui/material'
 import Header from '../components/static/Header'
 import Footer from '../components/static/Footer'
-import Board from "../components/Leaderboard/Board"
-import Gutter from "../components/Gutter"
+import User from '../components/Profile/User'
+import Gutter from '../components/Gutter'
+import { motion } from "framer-motion"
 
-export default function Leaderboard() {
+export default function Profile() {
   return (
     <>
       <motion.div
@@ -16,7 +16,7 @@ export default function Leaderboard() {
         transition={{ delay: 0.2, ease: 'easeInOut' }}
       >
         <Box sx={{ display: "flex", flexDirection: "row" }}>
-          <Gutter />
+        <Gutter/>
           <Box sx={{
             maxWidth: { sm: "100%", md: "1440px" },
             width: "100%",
@@ -26,11 +26,10 @@ export default function Leaderboard() {
             alignItems: "center"
           }}>
             <Header />
-            <Board />
-
+            <User />
             <Footer />
           </Box>
-          <Gutter />
+          <Gutter/>
         </Box>
       </motion.div>
     </>

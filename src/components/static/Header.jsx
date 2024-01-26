@@ -5,8 +5,6 @@ import {
   Typography,
   Stack,
   Link,
-  Menu,
-  MenuItem,
 } from "@mui/material"
 import KeyboardIcon from '@mui/icons-material/Keyboard';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -14,22 +12,21 @@ import LeaderboardIcon from '@mui/icons-material/Leaderboard';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import InfoIcon from '@mui/icons-material/Info';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import VideogameAssetIcon from '@mui/icons-material/VideogameAsset';
 
-import ThemeSelect from './ThemeSelect';
-import FontSelect from './FontSelect';
-import { useGame } from '../hooks/useGame';
+import ThemeSelect from '../ThemeSelect';
+import FontSelect from '../FontSelect';
+
+import useStore from '../../utils/store';
+import { useAuth } from '../../hooks/AuthProvider';
 
 export default function Header() {
-  const [anchor, setAnchor] = useState(null)
-  const open = Boolean(anchor)
   const handleMenuOpen = (e) => {
     setAnchor(e.currentTarget)
   }
-  const handleMenuClose = () => {
-    setAnchor(null)
-  }
 
-  const { restartGame } = useGame()
+  const { regenerateText, hideElements } = useStore()
+  const { isLoggedIn } = useAuth()
 
   return (
     <Box sx={{
@@ -38,7 +35,9 @@ export default function Header() {
       justifyContent: "space-between",
       alignItems: "center",
       width: "100%",
-      mt: 5
+      mt: 4,
+      transition: "0.35s ease",
+      opacity: hideElements ? "0" : "1"
     }}>
       <Box sx={{
         display: "flex",
@@ -51,24 +50,39 @@ export default function Header() {
           variant='h6'
           sx={{
             mr: 2,
-            cursor: 'pointer'
+            cursor: 'pointer',
+            userSelect: 'none'
           }}
+          onClick={() => regenerateText()}
         >type.fast</Typography>
         <Stack
           direction="row"
           spacing={2}
           alignItems="center"
         >
-          <IconButton
-            aria-label="start-type-test"
-            onClick={handleMenuOpen}
-          >
-            <KeyboardIcon style={{ m: 0, p: 0 }} />
-          </IconButton>
+          <Link href='/'>
+            <IconButton
+              aria-label="start-type-test"
+              tabIndex={0}
+            >
+              <KeyboardIcon style={{ m: 0, p: 0 }} />
+            </IconButton>
+          </Link>
+
+          <Link href='/games'>
+            <IconButton
+              aria-label="multiplayer"
+              tabIndex={1}
+            >
+              <VideogameAssetIcon style={{ m: 0, p: 0, }} />
+            </IconButton>
+          </Link>
+
 
           <Link href='/leaderboard'>
             <IconButton
               aria-label="leaderboard"
+              tabIndex={1}
             >
               <LeaderboardIcon style={{ m: 0, p: 0, }} />
             </IconButton>
@@ -97,27 +111,15 @@ export default function Header() {
       >
         <ThemeSelect />
         <FontSelect />
-        <IconButton>
+        <IconButton aria-label="notifications">
           <NotificationsNoneIcon style={{ m: 0, p: 0, }} />
         </IconButton>
-        <IconButton>
+        <Link href={isLoggedIn ? '/account' : "/login"}>
+        <IconButton  aria-label="profile">
           <PersonOutlineIcon style={{ m: 0, p: 0, }} />
         </IconButton>
+        </Link>
       </Stack>
-
-      <Menu
-        anchorEl={anchor}
-        open={open}
-        onClose={handleMenuClose}
-      >
-        <Link href='/'>
-          <MenuItem>singleplayer</MenuItem>
-        </Link>
-        <Link href='/games'>
-          <MenuItem>multiplayer</MenuItem>
-        </Link>
-      </Menu>
-
 
     </Box>
   )

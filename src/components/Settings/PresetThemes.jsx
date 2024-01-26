@@ -20,7 +20,7 @@ export default function PresetThemes() {
                 sx={{
                     m: 1,
                     p: 1,
-                    width: "210px",
+                    width: {sm: "170px",  md: "200px"},
                     opacity: '1',
                     background: themes[theme]?.backgroundPrimary,
                     color: themes[theme]?.textPrimary,
@@ -30,7 +30,7 @@ export default function PresetThemes() {
                         background: themes[theme]?.backgroundPrimary,
                         transform: "scale(1.1)"
                     },
-                    transition: ".15s"
+                    transition: ".15s ease"
                 }}
                 onClick={(e) => handleThemeChange(e, theme)}
             >{theme}

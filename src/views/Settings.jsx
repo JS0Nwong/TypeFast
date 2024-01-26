@@ -2,8 +2,9 @@ import { useEffect } from 'react'
 import { Box } from "@mui/material"
 import { motion } from "framer-motion"
 
-import Header from '../components/Header'
-import Footer from '../components/Footer'
+import Header from '../components/static/Header'
+import Footer from '../components/static/Footer'
+import Gutter from '../components/Gutter'
 import SettingsPanel from "../components/Settings/Settings"
 
 export default function Settings() {
@@ -16,13 +17,10 @@ export default function Settings() {
                 transition={{ delay: 0.2, ease: 'easeInOut' }}
             >
                 <Box sx={{ display: "flex", flexDirection: "row" }}>
-                    <Box sx={{
-                        width: { sm: "0%", md: '25%' },
-                    }}></Box>
+                    <Gutter />
                     <Box sx={{
                         maxWidth: { sm: "100%", md: "1440px" },
                         width: "100%",
-                        height: '100dvh',
                         display: 'flex',
                         flexDirection: "column",
                         alignItems: "center"
@@ -31,11 +29,7 @@ export default function Settings() {
                         <SettingsPanel />
                         <Footer />
                     </Box>
-                    <Box sx={{
-                        width: { sm: "0%", md: '25%' },
-                    }}>
-
-                    </Box>
+                    <Gutter />
                 </Box>
             </motion.div>
         </>

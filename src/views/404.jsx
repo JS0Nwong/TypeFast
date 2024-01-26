@@ -1,7 +1,8 @@
 import React from 'react'
 import { Box, Typography } from '@mui/material'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
+import Header from '../components/static/Header'
+import Footer from '../components/static/Footer'
+import Gutter from '../components/Gutter'
 
 export default function Error() {
   return (
@@ -11,9 +12,7 @@ export default function Error() {
         flexDirection: "row", 
         height: '100dvh',
       }}>
-            <Box sx={{
-                width: { sm: "0%", md: '25%' },
-            }}></Box>
+            <Gutter/>
             <Box sx={{
                 maxWidth: { sm: "100%", md: "1440px" },
                 width: "100%",
@@ -30,11 +29,7 @@ export default function Error() {
                 </Typography>
                 <Footer />
             </Box>
-            <Box sx={{
-                width: { sm: "0%", md: '25%' },
-            }}>
-
-            </Box>
+            <Gutter/>
         </Box>
     </>
 )

@@ -9,7 +9,7 @@ export default function About() {
                 display: 'flex',
                 flexDirection: 'column',
                 width: "100%",
-                mt: 10,
+                mt: 6,
             }}>
                 <Box>
                     <Typography variant='h4'>about</Typography>
