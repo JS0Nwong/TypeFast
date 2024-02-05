@@ -1,10 +1,11 @@
-import { useState, useContext, useEffect } from 'react'
+import { useState, useContext } from 'react'
 import { Box, TextField, Typography, Button, Divider } from '@mui/material'
 import { themes } from "../../static/themes/themes.json"
 import { ThemeContext } from '../../hooks/useTheme'
+import PaletteIcon from '@mui/icons-material/Palette';
 
 export default function ThemePicker() {
-    const { setCustomTheme, setUserCreatedTheme } = useContext(ThemeContext)
+    const { setCustomTheme, setUserCreatedTheme, viewValue } = useContext(ThemeContext)
     const [backgroundColor, setBackgroundColor] = useState(themes['custom']?.backgroundPrimary)
     const [backgroundAltColor, setBackgroundAltColor] = useState(themes['custom']?.backgroundSecondary)
     const [caretColor, setCaretColor] = useState(themes['custom']?.textCaret)
@@ -13,18 +14,6 @@ export default function ThemePicker() {
     const [errorColor, setErrorColor] = useState(themes['custom']?.errorColor)
     const [selectColor, setSelectColor] = useState(themes['custom']?.select)
     const [errorAltColor, setErrorAltColor] = useState()
-
-    // useEffect(() => {
-    //     setCustomTheme(
-    //         backgroundColor,
-    //         backgroundAltColor,
-    //         caretColor,
-    //         textColor,
-    //         textAltColor,
-    //         errorColor,
-    //         selectColor
-    //     )
-    // }, [])
 
     const handleBackgroundChange = (color) => {
         setBackgroundColor(color)
@@ -39,16 +28,18 @@ export default function ThemePicker() {
         )
     }
     const handleBackgroundAltChange = (color) => {
-        setBackgroundAltColor(color)
-        setCustomTheme(
-            backgroundColor,
-            color,
-            caretColor,
-            textColor,
-            textAltColor,
-            errorColor,
-            selectColor
-        )
+        console.log(color.toUpperCase())
+        themes.custom.backgroundSecondary = color.toUpperCase()
+        // setBackgroundAltColor(color)
+        // setCustomTheme(
+        //     backgroundColor,
+        //     color,
+        //     caretColor,
+        //     textColor,
+        //     textAltColor,
+        //     errorColor,
+        //     selectColor
+        // )
     }
     const handleCaretChange = (color) => {
 
@@ -76,7 +67,7 @@ export default function ThemePicker() {
             }}>
                 <Box sx={{
                     display: 'flex',
-                    flexDirection: " row",
+                    flexDirection: viewValue === "50%" ? 'column' : "row",
                     width: '100%',
                     justifyContent: 'space-between'
                 }}>
@@ -85,12 +76,13 @@ export default function ThemePicker() {
                         flexDirection: "column",
                         width: "100%"
                     }}>
+                        {/* Background color picker */}
                         <Box sx={{
                             display: 'flex',
                             flexDirection: "row",
                             width: "100%",
                             justifyContent: "space-between",
-                            alignItems: "center"
+                            alignItems: "center",
                         }}>
                             <Typography variant='h5'>background</Typography>
                             <Box>
@@ -188,8 +180,8 @@ export default function ThemePicker() {
                                     name="" 
                                     id=""
                                     style={{
-                                        marginRight: '48px', 
-                                        border: 'none', 
+                                        marginRight: '48px',
+                                        border: 'none',
                                         outline: 'none',
                                         width: '32px',
                                         height: '32px',
@@ -200,10 +192,14 @@ export default function ThemePicker() {
                         </Box>
 
                     </Box>
+
+                    {/* Text, text alt and select color picker */}
+
                     <Box sx={{
                         display: "flex", 
                         flexDirection: "column", 
-                        width: "100%"
+                        width: "100%",
+                        mt: viewValue === "50%" ? 2 : 0,
                     }}>
                         <Box sx={{
                             display: 'flex',
@@ -212,7 +208,7 @@ export default function ThemePicker() {
                             justifyContent: "space-between",
                             alignItems: "center",
                         }}>
-                            <Typography variant='h5' sx={{ml: 4,}}>text</Typography>
+                            <Typography variant='h5' sx={{ml: viewValue === "50%" ? 0 : 4}}>text</Typography>
                             <Box>
                                 <TextField
                                     value={textColor}
@@ -250,7 +246,7 @@ export default function ThemePicker() {
                             mt: 2
 
                         }}>
-                            <Typography variant='h5' sx={{ml: 4,}}>text alt</Typography>
+                            <Typography variant='h5' sx={{ml: viewValue === "50%" ? 0 : 4}}>text alt</Typography>
                             <Box>
                                 <TextField
                                     value={textAltColor}
@@ -286,7 +282,7 @@ export default function ThemePicker() {
                             alignItems: "center",
                             mt: 2
                         }}>
-                            <Typography variant='h5' sx={{ml: 4,}}>select</Typography>
+                            <Typography variant='h5' sx={{ml: viewValue === "50%" ? 0 : 4}}>select</Typography>
                             <Box>
                                 <TextField
                                     value={selectColor}
@@ -319,8 +315,9 @@ export default function ThemePicker() {
 
                 <Divider sx={{ width: "100%", mt: 3, height: '2px' }} />
 
+                {/* Error Colors */}
                 <Box sx={{ mt: 3 }}>
-                    <Box sx={{ display: 'flex', flexDirection: "row", width: "100%", }}>
+                    <Box sx={{ display: 'flex', flexDirection: viewValue === "50%" ? 'column' : "row", width: "100%", }}>
                         <Box sx={{
                             display: 'flex',
                             flexDirection: "row",
@@ -363,8 +360,9 @@ export default function ThemePicker() {
                             width: "100%",
                             justifyContent: "space-between",
                             alignItems: "center",
+                            mt: viewValue === "50%" ? 2 : 0
                         }}>
-                            <Typography variant='h5' sx={{ml: 4}}>error alt</Typography>
+                            <Typography variant='h5' sx={{ml: viewValue === "50%" ? 0 : 4}}>error alt</Typography>
                             <Box>
                                 <TextField
                                     value={errorColor}

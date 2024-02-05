@@ -32,7 +32,9 @@ export default function ThemeModal({ open, onClose }) {
     }
 
     const handleSearchByFilter = (query) => {
-        searchByFilter(query, themes)
+        query === 'all' 
+        ? setSearchData(null) 
+        : setSearchData(searchByFilter(query, themes))
     }
 
     return (

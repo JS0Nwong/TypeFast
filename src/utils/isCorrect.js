@@ -1,12 +1,9 @@
 import { useEffect } from "react";
 import useStore from "./store";
-// import { updateWordsCorrect } from "./store";
-// import { updateWordsIncorrect } from "./store";
 import { useUpdateHistory } from "./store";
 
 const isCorrect = () => {
   const {
-    keyPressed,
     gameStatus,
     text,
     currentWordIndex,
@@ -16,7 +13,17 @@ const isCorrect = () => {
     setUserInputWordHistory,
     setPrevInput,    
     increaseRawWordsPerMinuteKeys,
-  } = useStore();
+  } = useStore((state) => ({
+    gameStatus: state.gameStatus ,
+    text: state.text ,
+    currentWordIndex: state.currentWordIndex ,
+    currentUserInput: state.currentUserInput ,
+    prevInput: state.prevInput ,
+    userInputWordHistory: state.userInputWordHistory,
+    setUserInputWordHistory: state. setUserInputWordHistory,
+    setPrevInput: state. setPrevInput,    
+    increaseRawWordsPerMinuteKeys: state.increaseRawWordsPerMinuteKeys ,
+  }));
   
   const {
     updateWordsCorrect,

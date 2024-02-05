@@ -115,7 +115,6 @@ const UserTheme = ({ children }) => {
                         textDecoration: "underline",
                         textDecorationColor: themes[webTheme]?.errorColor,
                         textUnderlineOffset: '5px',
-                        fontFamily: font
                     },
 
                     // Character styling
@@ -196,7 +195,7 @@ const UserTheme = ({ children }) => {
                         textTransform: "lowercase",
                         color: themes[webTheme]?.textPrimary,
                         transition: "0.35s ease",
-                        opacity: "0.55",
+                        opacity: 0.55,
                         "&:hover": {
                             opacity: '1',
                             backgroundColor: 'transparent'
@@ -204,8 +203,8 @@ const UserTheme = ({ children }) => {
                         '&.MuiButton-contained': {
                             background: themes[webTheme]?.backgroundSecondary,
                             boxShadow: "none",
-                            opacity: "0.55",
                             borderRadius: "4px",
+                            opacity: 0.55,
                             "&:hover": {
                                 opacity: '1',
                                 backgroundColor: convertHex(themes[webTheme]?.textPrimary, 0.55),
@@ -232,14 +231,18 @@ const UserTheme = ({ children }) => {
                 styleOverrides: {
                     root: {
                         padding: 0,
-                        margin: 0,
+                        borderRadius: 0,
                         fontSize: "32px",
                         color: themes[webTheme]?.textSecondary,
-                        opacity: "0.55",
-                        transition: "0.35s ease",
+                        transition: '0.25s ease',
                         "&:hover": {
-                            opacity: '1'
-                        }
+                            color: themes[webTheme]?.textPrimary,
+                        },
+                        "&:focus-visible": {
+                            outline: `2px solid ${themes[webTheme]?.textSecondary}`,
+                            outlineOffset: '10px',
+                            borderRadius: '1px'
+                        },
                     }
                 }
             },
@@ -510,6 +513,7 @@ const UserTheme = ({ children }) => {
                         height: '24px',
                         background: themes[webTheme].textSecondary,
                         position: 'absolute',
+                        transition: "0.15s ease-in-out",
                     }
                 }
             },
@@ -519,14 +523,13 @@ const UserTheme = ({ children }) => {
                 },
                 styleOverrides: {
                     tooltip: {
-                      fontSize: "1em",
-                      color: themes[webTheme].textPrimary,
-                      backgroundColor: "#0a0908",
+                        fontSize: "1em",
+                        backgroundColor: "#0a0908",
                     },
                     arrow: {
                         color: '#0a0908',
-                      },
-                  }
+                    },
+                }
             }
         },
         palette: {
@@ -537,7 +540,7 @@ const UserTheme = ({ children }) => {
                 error: themes[webTheme]?.errorColor,
             },
             background: {
-                main: convertHex(themes[webTheme]?.backgroundSecondary, 0.45)
+                main: themes[webTheme]?.backgroundPrimary
             },
         },
         typography: {
@@ -569,7 +572,6 @@ const UserTheme = ({ children }) => {
     }
 
     const toggleViewSettings = (viewValue) => {
-        console.log(viewValue)
         setViewValue(viewValue)
         localStorage.setItem('preferred-view', viewValue)
     }
@@ -590,10 +592,13 @@ const UserTheme = ({ children }) => {
             textColor: textColor.toUpperCase(),
             textAltColor: textAltColor.toUpperCase(),
             errorColor: errorColor.toUpperCase(),
-            selectColor: selectColor.toUpperCase()
+            selectColor: selectColor.toUpperCase(),
+            themeType: null
         }
-        // themes.custom = customTheme
+        
+        // themes['custom'] = customTheme
         // setUserCreatedTheme(customTheme)
+        themes['custom'].backgroundPrimary = backgroundColor
         // console.log(userCreatedTheme)
         localStorage.setItem('custom-theme', JSON.stringify(customTheme))
     }
@@ -605,8 +610,10 @@ const UserTheme = ({ children }) => {
         if (window.localStorage.getItem('theme') === "custom" &&
             window.localStorage.getItem('custom-theme') !== null) {
             const themeValues = JSON.parse(localStorage.getItem('custom-theme'))
+            setWebTheme('custom')
+            setUserCreatedTheme(themeValues)
         }
-    }, [])
+    }, [themes.custom])
 
     return (
         <ThemeContext.Provider

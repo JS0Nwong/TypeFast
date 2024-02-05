@@ -29,7 +29,7 @@ export default function Footer() {
         flexDirection: "row",
         justifyContent: 'space-between'
       }}>
-        <Link href="https://github.com/JS0Nwong/">
+        <Link href="https://github.com/JS0Nwong/" tabIndex={-1}>
           <Button
             variant="text"
             startIcon={<GitHubIcon />}
@@ -37,7 +37,7 @@ export default function Footer() {
             Github
           </Button>
         </Link>
-        <Link href="mailto:Jason.Wong47@myhunter.cuny.edu">
+        <Link href="mailto:Jason.Wong47@myhunter.cuny.edu" tabIndex={-1}> 
           <Button
             variant="text"
             startIcon={<EmailIcon />}
@@ -72,7 +72,7 @@ export default function Footer() {
         >
           v0.7.50
         </Button>
-        <Link href="https://monkeytype.com/">
+        <Link href="https://monkeytype.com/"  tabIndex={-1}>
           <Button
             variant="text"
             startIcon={<InfoIcon />}

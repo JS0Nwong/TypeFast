@@ -13,5 +13,4 @@ const useModal = () => {
 
     return { openModal, handleCloseModal, handleOpenModal }
 }
-
 export { useModal }

@@ -1,4 +1,3 @@
-import React, { useState } from 'react'
 import {
   Box,
   IconButton,
@@ -16,15 +15,12 @@ import VideogameAssetIcon from '@mui/icons-material/VideogameAsset';
 
 import ThemeSelect from '../ThemeSelect';
 import FontSelect from '../FontSelect';
+import Logo from  "./Logo"
 
 import useStore from '../../utils/store';
 import { useAuth } from '../../hooks/AuthProvider';
 
 export default function Header() {
-  const handleMenuOpen = (e) => {
-    setAnchor(e.currentTarget)
-  }
-
   const { regenerateText, hideElements } = useStore()
   const { isLoggedIn } = useAuth()
 
@@ -37,7 +33,7 @@ export default function Header() {
       width: "100%",
       mt: 4,
       transition: "0.35s ease",
-      opacity: hideElements ? "0" : "1"
+      opacity: hideElements ? "0" : "1",
     }}>
       <Box sx={{
         display: "flex",
@@ -45,59 +41,64 @@ export default function Header() {
         alignItems: 'center',
         justifyContent: 'center',
       }}>
+        <Logo />
         <Typography
+          fontFamily="League Spartan"
           fontSize="2rem"
           variant='h6'
           sx={{
+            ml: 1,
             mr: 2,
             cursor: 'pointer',
-            userSelect: 'none'
+            userSelect: 'none',
           }}
           onClick={() => regenerateText()}
-        >type.fast</Typography>
+        >typefast_</Typography>
         <Stack
           direction="row"
           spacing={2}
           alignItems="center"
         >
-          <Link href='/'>
+          <Link href='/'  tabIndex={-1}>
             <IconButton
               aria-label="start-type-test"
-              tabIndex={0}
+              tabIndex={-1}
             >
               <KeyboardIcon style={{ m: 0, p: 0 }} />
             </IconButton>
           </Link>
 
-          <Link href='/games'>
+          <Link href='/games'  tabIndex={-1}>
             <IconButton
               aria-label="multiplayer"
-              tabIndex={1}
+              tabIndex={-1}
             >
               <VideogameAssetIcon style={{ m: 0, p: 0, }} />
             </IconButton>
           </Link>
 
 
-          <Link href='/leaderboard'>
+          <Link href='/leaderboard' tabIndex={-1}>
             <IconButton
               aria-label="leaderboard"
-              tabIndex={1}
+              tabIndex={-1}
             >
-              <LeaderboardIcon style={{ m: 0, p: 0, }} />
+              <LeaderboardIcon style={{ m: 0, p: 0, }}  tabIndex={-1}/>
             </IconButton>
           </Link>
 
-          <Link href='/about'>
+          <Link href='/about'  tabIndex={-1}>
             <IconButton
               aria-label="information"
+              tabIndex={-1}
+
             >
               <InfoIcon style={{ m: 0, p: 0, }} />
             </IconButton>
           </Link>
 
-          <Link href='/settings'>
-            <IconButton aria-label="settings">
+          <Link href='/settings'  tabIndex={-1}>
+            <IconButton aria-label="settings"  tabIndex={-1}>
               <SettingsIcon style={{ m: 0, p: 0, }} />
             </IconButton>
           </Link>
@@ -111,11 +112,12 @@ export default function Header() {
       >
         <ThemeSelect />
         <FontSelect />
-        <IconButton aria-label="notifications">
+        <IconButton aria-label="notifications"  tabIndex={-1}>
           <NotificationsNoneIcon style={{ m: 0, p: 0, }} />
         </IconButton>
-        <Link href={isLoggedIn ? '/account' : "/login"}>
-        <IconButton  aria-label="profile">
+        <Link href={isLoggedIn ? '/account' : "/login"}  tabIndex={-1}>
+          <IconButton aria-label="profile" tabIndex={-1}
+>
           <PersonOutlineIcon style={{ m: 0, p: 0, }} />
         </IconButton>
         </Link>

@@ -1,25 +1,59 @@
-import React from 'react'
+import { useContext } from "react"
 import { Box, Stack, Typography, IconButton, Tooltip } from '@mui/material'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import PanoramaIcon from '@mui/icons-material/Panorama';
 import { motion } from "framer-motion"
+import FeedbackSnackbar from "./FeedbackSnackbar";
+
+import useScreenCapture from '../hooks/useScreenCapture';
+import { ThemeContext } from "../hooks/useTheme"
 import useStore from '../utils/store';
 import { useUpdateHistory } from '../utils/store';
 
 export default function Results() {
     const {
         rawKeysPerMinute,
-        wordsPerMinute,
-        wordAccuracy,
-        charAccuracy,
-        nextTest,
-        repeatTest,
         selectedTime,
         rawWpm,
-    } = useStore()
+        history,   
+        userInputWordHistory,   
+        hideElements,  
+        nextTest,
+        repeatTest,
+        unhideElements,
+        setSnackbar,
+    } = useStore((state) => ({
+        rawKeysPerMinute: state.rawKeysPerMinute,
+        rawWpm: state.rawWpm,
+        selectedTime: state.selectedTime,
+        userInputWordHistory: state.userInputWordHistory,
+        history: state.history,
+        hideElements: state.hideElements,
+        nextTest: state.nextTest,
+        repeatTest: state.repeatTest,
+        unhideElements: state.unhideElements,
+        setSnackbar: state.setSnackbar,
+    }))
+
+    const totalChars = Object.values(history).length
+    const charsCorrect = Object.values(history).reduce((v, item) => v + (item === true ? 1 : 0), 0)
+    const charsIncorrect = totalChars - charsCorrect
+    const extraChars = Object.values(history).reduce((count, item) => count + (typeof item === 'number' ? item : 0), 0)
 
     const { wordsCorrect, wordsIncorrect, resetHistory } = useUpdateHistory()
+    const { capture } = useScreenCapture()
+    const { theme } = useContext(ThemeContext)
+
+    const handleScreenshot = async () => {
+        unhideElements()
+        setTimeout(async () => {
+            await capture().then((res) => (
+                res ? unhideElements() : unhideElements()
+            ))
+            setSnackbar('Sucessfully copied screenshot to clipboard!')
+        }, 350)
+    }
 
     return (
         <motion.div
@@ -28,6 +62,7 @@ export default function Results() {
             exit={{ opacity: 0, ease: 'easeOut' }}
             transition={{ delay: 0.2, ease: 'easeInOut' }}
         >
+            <FeedbackSnackbar />
             <Box
                 sx={{
                     height: '100%',
@@ -35,7 +70,10 @@ export default function Results() {
                     p: 4,
                     transition: '0.15s ease',
                     flexDirection: "column",
-                }}>
+                    background: theme.palette.background.main
+                }}
+                id="results"
+            >
                 <Stack direction="row" spacing={6}>
                     <Box
                         sx={{
@@ -45,12 +83,16 @@ export default function Results() {
                         <Typography variant='h4' sx={{ opacity: ".65" }}>wpm</Typography>
                         <Tooltip 
                             title={
-                                (rawWpm * (wordsCorrect.size / (wordsCorrect.size + wordsIncorrect.size))).toPrecision(4) + ' wpm'
+                                (rawWpm * 
+                                    (wordsCorrect.size / 
+                                    (wordsCorrect.size + wordsIncorrect.size)
+                                    )
+                                ).toPrecision(4) ?? 0 + ' wpm'
                         }>
                         <Typography variant='h2'>
                             {Math.floor(
                                 rawWpm * (wordsCorrect.size / (wordsCorrect.size + wordsIncorrect.size)))
-                            }
+                            ?? 0}
                         </Typography>
                         </Tooltip>
                         <Typography variant='h4' sx={{ opacity: ".65" }}>acc</Typography>
@@ -86,7 +128,10 @@ export default function Results() {
                                     <Typography variant='subtitle1' sx={{ opacity: ".65" }}>characters</Typography>
                                     <Tooltip title={'total/correct/incorrect/extra/missed'}>
                                         <Typography sx={{ mt: 0.5, fontSize: '2rem' }}>
-                                            {rawKeysPerMinute}/{}/{}/{}
+                                            {totalChars}/
+                                            {charsCorrect}/
+                                            {charsIncorrect}/
+                                            {extraChars}/
                                         </Typography>
                                     </Tooltip>
                                 </Box>
@@ -100,9 +145,9 @@ export default function Results() {
                     </Box>
                 </Stack>
 
-                <Stack direction='row' sx={{ mt: 3, justifyContent: 'center' }}>
+                <Stack direction='row' sx={{ mt: 5, justifyContent: 'center', opacity: hideElements ? 0 : 1 }}>
                     <Tooltip title="next test">
-                        <IconButton sx={{ mr: 5, ml: 5 }} onClick={() => {
+                        <IconButton sx={{ mr: 10, ml: 10 }} tabIndex={0} onClick={() => {
                             nextTest()
                             resetHistory()
                         }}>
@@ -110,7 +155,7 @@ export default function Results() {
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="repeat test">
-                        <IconButton sx={{ mr: 5, ml: 5 }} onClick={() => {
+                        <IconButton sx={{ mr: 10, ml: 10 }} tabIndex={0} onClick={() => {
                             repeatTest()
                             resetHistory()
                         }}>
@@ -118,7 +163,7 @@ export default function Results() {
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="copy screenshot to clipboard">
-                        <IconButton sx={{ mr: 5, ml: 5 }}>
+                        <IconButton sx={{ mr: 10, ml: 10 }} tabIndex={0} onClick={() => handleScreenshot()}>
                             <PanoramaIcon />
                         </IconButton>
                     </Tooltip>

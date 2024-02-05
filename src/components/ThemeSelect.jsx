@@ -1,20 +1,19 @@
 import { useContext } from 'react'
 import { Box, Button } from "@mui/material"
 import { ThemeContext } from '../hooks/useTheme';
-import { useModal } from '../hooks/useModal';
 
 import ThemeModal from './ThemeModal';
-
 import { themes } from "../static/themes/themes.json"
+import useStore from '../utils/store';
 
 export default function ThemeSelect() {
-
-    const { toggleTheme, webTheme } = useContext(ThemeContext)
-    const { openModal, handleCloseModal, handleOpenModal } = useModal()
+    const { webTheme } = useContext(ThemeContext)
+    const { openThemeModal, setThemeModal } = useStore()
 
     return (
         <Box sx={{
             width: "98px",
+
         }}>
             <Button
                 variant='contained'
@@ -24,7 +23,8 @@ export default function ThemeSelect() {
                     width: '100%',
                     p: 0.25
                 }}
-                onClick={handleOpenModal}
+                tabIndex={-1}
+                onClick={() => setThemeModal(!openThemeModal)}
             >
                 <Box sx={{
                     display: 'flex',
@@ -64,7 +64,7 @@ export default function ThemeSelect() {
                 </Box>
 
             </Button>
-            {openModal && <ThemeModal open={openModal} onClose={handleCloseModal}/>}
+            {openThemeModal && <ThemeModal open={openThemeModal} onClose={() => setThemeModal(!openThemeModal)} />}
         </Box>
     )
 }

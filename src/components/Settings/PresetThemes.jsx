@@ -6,7 +6,7 @@ import { ThemeContext } from '../../hooks/useTheme'
 export default function PresetThemes() {
     const themeKeys = Object.keys(themes)
 
-    const { toggleTheme, webTheme } = useContext(ThemeContext)
+    const { toggleTheme, webTheme, viewValue } = useContext(ThemeContext)
 
     const handleThemeChange = (e, theme) => {
         e.stopPropagation()
@@ -20,7 +20,14 @@ export default function PresetThemes() {
                 sx={{
                     m: 1,
                     p: 1,
-                    width: {sm: "170px",  md: "200px"},
+                    width: { 
+                        sm: "170px", 
+                        md: viewValue === '30%' 
+                            ? '250px' 
+                            : viewValue === '50%' 
+                            ? '260px' 
+                            : '310px'
+                    },
                     opacity: '1',
                     background: themes[theme]?.backgroundPrimary,
                     color: themes[theme]?.textPrimary,

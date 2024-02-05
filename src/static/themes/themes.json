@@ -209,7 +209,8 @@
             "textSub": "#525252",
             "errorColor": "#E63946",
             "textCaret": "#E8EDDF",
-            "select": "#FFB7B7"
+            "select": "#FFB7B7",
+            "themeType": null
         }
     }
 }

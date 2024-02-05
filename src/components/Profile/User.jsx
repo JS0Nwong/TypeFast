@@ -36,8 +36,8 @@ export default function User() {
               <Box
                 component="img"
                 sx={{
-                  height: 320,
-                  width: 320,
+                  height: 300,
+                  width: 300,
 
                   borderRadius: "999px"
                 }}
@@ -55,14 +55,14 @@ export default function User() {
                   variant='h6'
                   sx={{ opacity: 0.45 }}
                 >bio</Typography>
-                <Typography variant='body2'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam laborum, numquam expedita possimus obcaecati et dolorum aut eveniet, exercitationem assumenda porro cumque adipisci accusantium, ex ratione harum nesciunt ut ipsum.</Typography>
+                <Typography variant='body2'>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</Typography>
               </Box>
               <Box sx={{ mt: 2 }}>
                 <Typography variant='h6'
                   sx={{ opacity: 0.45 }}>
                   keyboard
                 </Typography>
-                <Typography variant='body2'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam laborum, numquam expedita possimus obcaecati et dolorum aut eveniet, exercitationem assumenda porro cumque adipisci accusantium, ex ratione harum nesciunt ut ipsum.</Typography>
+                <Typography variant='body2'>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</Typography>
               </Box>
 
               <Stack
