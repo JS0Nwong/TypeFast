@@ -4,11 +4,13 @@ import { useModal } from "../hooks/useModal"
 import FontModal from "./FontModal"
 import { ThemeContext } from '../hooks/useTheme'
 
+import useStore from '../utils/store'
+
 export default function FontSelect() {
-    const {font} = useContext(ThemeContext)
- 
+    const { font } = useContext(ThemeContext)
     const [fontName, setFontName] = useState(font)
-    const { openModal, handleOpenModal, handleCloseModal } = useModal()
+    const { openFontModal, setFontModal } = useStore()
+
     return (
         <>
             <Box sx={{
@@ -23,12 +25,13 @@ export default function FontSelect() {
                         p: 0.25,
                         textOverflow: "ellipsis"
                     }}
-                    onClick={handleOpenModal}
+                    tabIndex={-1}                    
+                    onClick={() => setFontModal(!openFontModal)}
                 >
                     {fontName}
                 </Button>
             </Box>
-            {openModal && <FontModal open={openModal} onClose={handleCloseModal}/>}
+            {openFontModal && <FontModal open={openFontModal} onClose={() => setFontModal(!openFontModal)}/>}
         </>
     )
 }

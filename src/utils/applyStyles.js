@@ -1,9 +1,16 @@
+import { useCallback } from "react";
 import useStore from "../utils/store";
 import { useUpdateHistory } from "./store";
 
 const applyStyles = () => {
-  const { keyPressed, currentWordIndex, currentCharIndex, history } =
-    useStore();
+  const { keyPressed, currentWordIndex, currentCharIndex, history } = useStore(
+    (state) => ({
+      keyPressed: state.keyPressed,
+      currentWordIndex: state.currentWordIndex,
+      currentCharIndex: state.currentCharIndex,
+      history: state.history,
+    })
+  );
   const { wordsIncorrect } = useUpdateHistory();
 
   //Apply char style based on if the inputted char is correct or not
@@ -11,17 +18,14 @@ const applyStyles = () => {
    *
    *
    *
-   *
-   *
-   *
    */
   const applyCharStyles = (wordIndex, charIndex, char, word) => {
     const keyString = wordIndex + "." + charIndex;
     if (history[keyString] === true) {
-      return "correct-char";
+      return "correct-char char";
     }
     if (history[keyString] === false) {
-      return "incorrect-char";
+      return "incorrect-char char";
     }
     if (
       wordIndex === currentWordIndex &&
@@ -30,10 +34,10 @@ const applyStyles = () => {
     ) {
       if (char === keyPressed) {
         history[keyString] = true;
-        return "correct-char";
+        return "correct-char char";
       } else {
         history[keyString] = false;
-        return "error-char";
+        return "error-char char";
       }
     } else {
       if (wordIndex < currentWordIndex) {

@@ -1,10 +1,9 @@
-import { createRef, useRef } from "react";
-import { create } from "zustand";
+import { createWithEqualityFn } from "zustand/traditional";
 import { devtools, persist } from "zustand/middleware";
+import { shallow } from "zustand/shallow";
 import generateWords from "./generateWords";
-import useCountdown from "../hooks/useCountdown";
 
-export const useUpdateHistory = create((set) => ({
+export const useUpdateHistory = createWithEqualityFn((set) => ({
   wordsCorrect: new Set(),
   wordsIncorrect: new Set(),
   updateWordsCorrect: (wordIndex) => {
@@ -22,16 +21,18 @@ export const useUpdateHistory = create((set) => ({
   },
 }));
 
-const store = (set) => ({
+const store = (set, get) => ({
   // user information & data
   isAuthenticated: false,
   userData: {},
+  userStatus: "typing", //user statuses: "typing, idle"
   // game state
-  gameStatus: "unready",
-  typeDisplayFocused: "focused",
+  gameStatus: "unready", //game statuses: "unready, ready, finished"
   text: generateWords(),
   focusedTextBox: true,
   hideElements: false,
+  cursorPositionLeft: 5,
+  cursorPositionTop: 5,
   // game setting options
   textOptions: [],
   mode: "time",
@@ -53,120 +54,106 @@ const store = (set) => ({
   charAccuracy: 0,
   rawWordsPerMinuteKeys: 0,
   rawWpm: 0,
+  extraCharsCount: 0,
+  // modal states
+  openFontModal: false,
+  openThemeModal: false,
+  // snackbar state
+  snackbarMessage: "",
+
+  // modal state setter
+  setThemeModal: (boolean) =>
+    set({
+      openThemeModal: boolean,
+      userStatus: "searching",
+      focusedTextBox: false,
+    }),
+  setFontModal: (boolean) =>
+    set({
+      openFontModal: boolean,
+      userStatus: "searching",
+      focusedTextBox: false,
+    }),
+  //snackbar state setter
+  setSnackbar: (text) => set({
+    snackbarMessage: text,
+  }),
 
   // user information
   setIsAuthenticated: (status) =>
-    set(
-      {
-        isAuthenticated: status,
-      },
-      false,
-      "setIsAuthenticated"
-    ),
+    set({
+      isAuthenticated: status,
+    }),
+  setUserStatus: (status) =>
+    set({
+      userStatus: status,
+    }),
 
   // game state
   setGameStatus: (status) =>
-    set(
-      {
-        gameStatus: status,
-      },
-      false,
-      "setGameStatus"
-    ),
+    set({
+      gameStatus: status,
+    }),
   setText: (text) =>
-    set(
-      {
-        text: text,
-      },
-      false,
-      "setText"
-    ),
+    set({
+      text: text,
+    }),
   startGame: (status) =>
-    set(
-      {
-        gameStatus: status,
-        hideElements: true,
-      },
-      false,
-      "startGame"
-    ),
+    set({
+      gameStatus: status,
+      hideElements: true,
+    }),
+
+  // setters for cursor position
+  setCursorLeftPosition: (pos) =>
+    set({
+      cursorPositionLeft: pos,
+    }),
+  setCursorTopPosition: (pos) =>
+    set({
+      cursorPositionTop: pos,
+    }),
 
   // setters for user input state
   setKeyPressed: (key) =>
-    set(
-      {
-        keyPressed: key,
-      },
-      false,
-      "setKeyPressed"
-    ),
+    set({
+      keyPressed: key,
+    }),
   setCurrentUserInput: (input) =>
-    set(
-      (state) => ({
-        currentUserInput: state.currentUserInput + input,
-      }),
-      false,
-      "setCurrentUserInput"
-    ),
+    set({
+      currentUserInput: get().currentUserInput + input,
+    }),
   setUserInputKeyHistory: () =>
-    set(
-      {
-        // TODO: need to add setter values
-      },
-      false,
-      "setUserInputHistory"
-    ),
+    set({
+      // TODO: need to add setter values
+    }),
   setCurrentWordIndex: (index) =>
-    set(
-      {
-        currentWordIndex: index,
-      },
-      false,
-      "setCurrentWordIndex"
-    ),
+    set({
+      currentWordIndex: index,
+    }),
   setCurrentCharIndex: (index) =>
-    set(
-      {
-        currentCharIndex: index,
-      },
-      false,
-      "setCurrentCharIndex"
-    ),
+    set({
+      currentCharIndex: index,
+    }),
   setWordsCorrect: (word) =>
-    set(
-      {
-        wordsCorrect: word,
-      },
-      false,
-      "setWordsCorrect"
-    ),
+    set({
+      wordsCorrect: word,
+    }),
   setWordsIncorrect: (word) =>
-    set(
-      {
-        wordsIncorrect: word,
-      },
-      false,
-      "setWordsIncorrect"
-    ),
+    set({
+      wordsIncorrect: word,
+    }),
   setUserInputWordHistory: () =>
-    set(
-      (state) => ({
-        userInputWordHistory: {
-          ...state.userInputWordHistory,
-          [state.currentWordIndex]: state.currentUserInput.trim(),
-        },
-      }),
-      false,
-      "setUserInputWordHistory"
-    ),
-  setPrevInput: (input) =>
-    set(
-      {
-        prevInput: input,
+    set((state) => ({
+      userInputWordHistory: {
+        ...state.userInputWordHistory,
+        [state.currentWordIndex]: state.currentUserInput.trim(),
       },
-      false,
-      "setPrevInput"
-    ),
+    })),
+  setPrevInput: (input) =>
+    set({
+      prevInput: input,
+    }),
   setHistory: (char) =>
     set({
       history: char,
@@ -174,41 +161,33 @@ const store = (set) => ({
 
   //set game options
   setMode: (mode) =>
-    set(
-      {
-        mode: mode,
-      },
-      false,
-      "setMode"
-    ),
+    set({
+      mode: mode,
+    }),
 
   setTime: (option) =>
-    set(
-      {
-        selectedTime: option,
-        time: option,
-      },
-      false,
-      "setTime"
-    ),
+    set({
+      selectedTime: option,
+      time: option,
+    }),
 
   // input utility setters
   increaseCharIndex: () =>
-    set((state) => ({
-      currentCharIndex: state.currentCharIndex + 1,
-    })),
+    set({
+      currentCharIndex: get().currentCharIndex + 1,
+    }),
   decreaseCharIndex: () =>
-    set((state) => ({
-      currentCharIndex: state.currentCharIndex - 1,
-    })),
+    set({
+      currentCharIndex: get().currentCharIndex - 1,
+    }),
   increaseWordIndex: () =>
-    set((state) => ({
-      currentWordIndex: state.currentWordIndex + 1,
-    })),
+    set({
+      currentWordIndex: get().currentWordIndex + 1,
+    }),
   decreaseWordIndex: () =>
-    set((state) => ({
-      currentWordIndex: state.currentWordIndex - 1,
-    })),
+    set({
+      currentWordIndex: get().currentWordIndex - 1,
+    }),
   resetUserInput: () => set({ currentUserInput: "" }),
   resetKeyPressed: () => set({ keyPressed: "" }),
   previousUserInput: () =>
@@ -218,8 +197,12 @@ const store = (set) => ({
         state.currentCharIndex + 1
       ),
     })),
+
+  // game options
   regenerateText: () =>
     set((state) => ({
+      userStatus: "typing",
+      focusedTextBox: true,
       keyPressed: "",
       currentUserInput: "",
       userInputKeyHistory: {},
@@ -240,6 +223,9 @@ const store = (set) => ({
       charAccuracy: 0,
       rawWordsPerMinuteKeys: 0,
       rawWpm: 0,
+      extraCharsCount: 0,
+      cursorPositionLeft: 5,
+      cursorPositionTop: 5,
     })),
   nextTest: () =>
     set((state) => ({
@@ -263,6 +249,9 @@ const store = (set) => ({
       charAccuracy: 0,
       rawWordsPerMinuteKeys: 0,
       rawWpm: 0,
+      extraCharsCount: 0,
+      cursorPositionLeft: 5,
+      cursorPositionTop: 5,
     })),
   repeatTest: () =>
     set((state) => ({
@@ -286,6 +275,9 @@ const store = (set) => ({
       charAccuracy: 0,
       rawWordsPerMinuteKeys: 0,
       rawWpm: 0,
+      extraCharsCount: 0,
+      cursorPositionLeft: 5,
+      cursorPositionTop: 5,
     })),
   resetCurrentCharIndex: () => set({ currentCharIndex: -1 }),
   unhideElements: () => set((state) => ({ hideElements: !state.hideElements })),
@@ -331,9 +323,55 @@ const store = (set) => ({
       hideElements: false,
     }));
   },
+
+  // cursor function
+  updateCursorPosition: () => {
+    const { currentUserInput } = get();
+
+    const currentWordsLetterList = document
+      .querySelector("#words .active-word")
+      .querySelectorAll(".char");
+
+    const caretWidth = Math.round(
+      document.querySelector("#caret")?.getBoundingClientRect().width ?? 0
+    );
+    const inputLen = currentUserInput.length;
+    const currentLetterIndex = inputLen;
+
+    if (!currentWordsLetterList) return;
+
+    // current letter where the cursor will be
+    const currentLetter = currentWordsLetterList[currentLetterIndex];
+
+    const previousLetter =
+      currentWordsLetterList[
+        Math.min(currentLetterIndex - 1, currentWordsLetterList.length - 1)
+      ];
+
+    // need to fix cursor backspace behavior
+    const letterPosLeft =
+      (currentLetter
+        ? currentLetter.offsetLeft
+        : previousLetter?.offsetLeft + previousLetter?.offsetWidth) +
+      (currentLetter
+        ? currentLetter?.offsetWidth
+        : previousLetter?.offsetWidth);
+
+    const lettePosTop = currentLetter
+      ? currentLetter?.offsetTop
+      : previousLetter?.offsetTop;
+
+    const newTop = lettePosTop;
+    const newLeft = letterPosLeft - caretWidth / 2;
+
+    set({
+      cursorPositionLeft: newLeft,
+      cursorPositionTop: newTop,
+    });
+  },
 });
 
-const useStore = create(
+const useStore = createWithEqualityFn(
   persist(devtools(store), {
     name: "game-state-storage",
     partialize: (state) => ({
@@ -344,6 +382,9 @@ const useStore = create(
       selectedTime: state.selectedTime,
       textOptions: state.textOptions,
     }),
-  })
+  }, shallow)
 );
+
+export const useStoreActions = () => useStore((state) => state.actions)
+
 export default useStore;

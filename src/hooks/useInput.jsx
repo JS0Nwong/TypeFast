@@ -1,13 +1,17 @@
 import { useCallback, useEffect } from 'react'
+
 import useStore from '../utils/store'
 import { allowedInputs } from '../utils/allowedInputs'
+import { allowedIdleInputs } from '../utils/allowedIdleInputs'
 import { allowedGameInputs } from '../utils/allowedGameInputs'
 import { isCorrect } from '../utils/isCorrect'
 import { useUpdateHistory } from '../utils/store'
-import useCountdown from './useCountdown'
+import { useCursor } from "./useCursor"
+import { useStoreActions } from '../utils/store'
 
 function useInput() {
     const {
+        userStatus,
         currentWordIndex,
         currentCharIndex,
         gameStatus,
@@ -16,6 +20,8 @@ function useInput() {
         prevInput,
         history,
         rawWordsPerMinuteKeys,
+        cursorPositionLeft,
+        cursorPositionTop,
         setKeyPressed,
         setGameStatus,
         increaseWordIndex,
@@ -35,8 +41,47 @@ function useInput() {
         increaseRawWordsPerMinuteKeys,
         increaseKPM,
         updateOverallWPM,
-    } = useStore()
-
+        setInputFocus,
+        setUserStatus,
+        updateCursorPosition,
+        increaseExtraChars,
+    } = useStore((state) => ({
+        userStatus: state.userStatus,
+        currentWordIndex: state.currentWordIndex,
+        currentCharIndex: state.currentCharIndex,
+        gameStatus: state.gameStatus,
+        currentUserInput: state.currentUserInput,
+        userInputWordHistory: state.userInputWordHistory,
+        prevInput: state.prevInput,
+        history: state.history,
+        rawWordsPerMinuteKeys: state.rawKeysPerMinute,
+        cursorPositionLeft: state.cursorPositionLeft,
+        cursorPositionTop: state.cursorPositionTop,
+        setKeyPressed: state.setKeyPressed,
+        setGameStatus: state.setGameStatus,
+        increaseWordIndex: state.increaseWordIndex,
+        increaseCharIndex: state.increaseCharIndex,
+        resetKeyPressed: state.resetKeyPressed,
+        resetCurrentCharIndex: state.resetCurrentCharIndex,
+        decreaseCharIndex: state.decreaseCharIndex,
+        decreaseWordIndex: state.decreaseWordIndex,
+        setCurrentUserInput: state.setCurrentUserInput,
+        setCurrentCharIndex: state.setCurrentCharIndex,
+        resetUserInput: state.resetUserInput,
+        setPrevInput: state.setPrevInput,
+        startGame: state.startGame,
+        unhideElements: state.unhideElements,
+        setUserInputWordHistory: state.setUserInputWordHistory,
+        previousUserInput: state.previousUserInput,
+        increaseRawWordsPerMinuteKeys: state.increaseRawWordsPerMinuteKeys,
+        increaseKPM: state.increaseKPM,
+        updateOverallWPM: state.updateOverallWPM,
+        setInputFocus: state.setInputFocus,
+        setUserStatus: state.setUserStatus,
+        updateCursorPosition: state.updateCursorPosition,
+        increaseExtraChars: state.increaseExtraChars
+    }))
+    const { updatePosition, updateBackSpace } = useCursor() 
     const { wordsIncorrect } = useUpdateHistory()
     const { checkWord } = isCorrect()
     const keyString = currentWordIndex + "." + currentCharIndex
@@ -44,7 +89,7 @@ function useInput() {
     const displayExtraCharacters = (word, index) => {
         let input = userInputWordHistory[index];
         if (!input) {
-            input = currentUserInput.trim()
+            input = currentUserInput?.trim()
         }
         if (index > currentWordIndex) {
             return null;
@@ -55,16 +100,16 @@ function useInput() {
         else {
             // prevent spamming keys by limiting input to be only 10 characters more than the current word
             const extraChars = input.slice(word.length, input.length).split("");
-            history[index] = extraChars.length;
+            history[index] = Number(extraChars.length);
             return extraChars.map((char, index) => (
-                <span key={index} className="incorrect-char">
+                <span key={index} className="incorrect-char char">
                     {char}
                 </span>
             ));
         }
     }
 
-    const handleUserInput = useCallback(({ key, code, keyCode }) => {
+     const handleUserInput = useCallback(({ key, code, keyCode }) => {
         // checks conditons if key pressed is allowed and if the game is ready or not
         /*
         *   If the input is not allowed or if the game is not ongoing,
@@ -99,6 +144,7 @@ function useInput() {
                     setCurrentCharIndex(prevInputWord.length - 1)
                     decreaseWordIndex()
                     setPrevInput(prevInputWord)
+                    updatePosition()
                 }
                 return
             }
@@ -107,6 +153,7 @@ function useInput() {
                 setKeyPressed("")
                 previousUserInput()
                 setUserInputWordHistory("")
+                updateBackSpace()
                 return
             }
         }
@@ -128,6 +175,7 @@ function useInput() {
                 resetKeyPressed()
                 resetUserInput()
                 increaseWordIndex()
+                updatePosition()
                 return
             }
             return
@@ -145,8 +193,9 @@ function useInput() {
                 setKeyPressed(key)
                 increaseCharIndex()
                 setUserInputWordHistory(key)
+                updatePosition()
                 return
-            }
+            }                
         }
     }, [
         history,
@@ -156,6 +205,8 @@ function useInput() {
         gameStatus,
         currentWordIndex,
         currentCharIndex,
+        cursorPositionTop,
+        cursorPositionLeft,
         setGameStatus,
         setCurrentUserInput,
         setKeyPressed,
@@ -167,13 +218,27 @@ function useInput() {
         decreaseWordIndex,
         previousUserInput,
         decreaseCharIndex,
+        updateCursorPosition,
     ])
+    const handleStatusChange = ({code}) => {
+        if (allowedIdleInputs(code)) {
+            setInputFocus(true)
+            setUserStatus('typing')
+        }
+    }
 
     // use effect to listent to user input on window load
     useEffect(() => {
-        window.addEventListener('keydown', handleUserInput)
-        return () => window.removeEventListener('keydown', handleUserInput)
-    }, [currentUserInput])
+        if (userStatus === 'typing') {
+            window.addEventListener('keydown', handleUserInput)
+            return () => window.removeEventListener('keydown', handleUserInput)
+        }
+        if (userStatus === 'idle') {
+            window.addEventListener('keydown', handleStatusChange)
+            return () => window.removeEventListener('keydown', handleStatusChange)
+        }
+        if (userStatus === 'searching') { return }
+    }, [currentUserInput, userStatus])
 
     return { handleUserInput, displayExtraCharacters }
 }

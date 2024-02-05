@@ -1,4 +1,4 @@
-import { useContext, useState, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import {
     Box,
     Button,
@@ -13,6 +13,7 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import FontButton from './FontButton';
 import { useSearch } from "../hooks/useSearch"
+import useStore from '../utils/store';
 
 import chunk from "lodash/chunk"
 import debounce from "lodash/debounce"
@@ -22,7 +23,7 @@ import * as fonts from "../static/fonts/fonts.json"
 export default function FontModal({ open, onClose }) {
     const [searchData, setSearchData] = useState(null)
     const [fontsData, setFontsData] = useState(fonts.default)
-    const [chunkSize, setChunkSize] = useState(100)
+    const [ chunkSize, setChunkSize ] = useState(100)
     const [renderLimit, setRenderLimit] = useState(chunk(fontsData, chunkSize))
     const [currentPage, setCurrentPage] = useState(0)
     const [filters, setFilters] = useState([])
@@ -34,20 +35,11 @@ export default function FontModal({ open, onClose }) {
         if(filters.includes(query)) {
             const arr = filters.filter(font => font !== query)
             setFilters(arr)
-            console.log(filters)
         } else {
             filters.push(query)
-            console.log(filters)
-
         }
-        // filters.includes(query) === true
-        //     ? filters.filter((filter) => filter !== query)
-        //     : filters.push(query)
-        // console.log(filters)
         setSearchData(searchFontsByFilter(filters))
     }
-
-
 
     const handleSearch = (query) => {
         query.trim() !== "" ? setSearchData(searchFonts(query)) : setSearchData(null)
@@ -57,6 +49,7 @@ export default function FontModal({ open, onClose }) {
 
     const handleChunkValueChange = (value) => {
         setChunkSize(value)
+        setRenderLimit(chunk(fontsData, value))
     }
 
     const handlePageChange = (e, value) => {
@@ -110,8 +103,8 @@ export default function FontModal({ open, onClose }) {
                 overflowY: 'scroll',
             }}>
                 {
-                    searchData !== null ?
-                        searchData.map((font, index) =>
+                    searchData !== null
+                        ? searchData.map((font, index) =>
                             <FontButton
                                 key={index}
                                 fontName={font.family}

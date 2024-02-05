@@ -2,6 +2,8 @@ import * as fonts from "../static/fonts/fonts.json";
 
 const useSearch = () => {
   const fontsData = fonts.default;
+
+  // theme search
   const searchByQuery = (query, data) => {
     const keys = Object.keys(data);
     return keys.filter((theme) =>
@@ -11,11 +13,15 @@ const useSearch = () => {
 
   const searchByFilter = (query, data) => {
     const keys = Object.keys(data);
-    keys.map((theme) => {
-      data[theme].themeType.toLowerCase() === query.toLowerCase();
-    });
+
+    const res = keys.filter((theme) => 
+      data[theme].themeType?.toLowerCase() === query?.toLowerCase()
+    );
+
+    return res
   };
 
+  // font search
   const searchFonts = (query) => {
     const res = fontsData.filter((font) => {
       return font.family.toLowerCase().includes(query.toLowerCase());

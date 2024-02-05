@@ -14,7 +14,8 @@ export default function About() {
                 <Box>
                     <Typography variant='h4'>about</Typography>
                     <Typography sx={{mt: 1}}>
-                        type.fast is a minimalistic, highly customizable typing test inspired by monkeytype.
+                        type.fast is a minimalistic, highly customizable typing test experience inspired by monkeytype. 
+                        Currently, you can 
                     </Typography>
                 </Box>
                 <Box sx={{
@@ -31,6 +32,17 @@ export default function About() {
                         the English language to generate its tests. You can change to an 
                         expanded set (1000 most common words) in the options, or change 
                         the language entirely.
+                    </Typography>
+                    <Typography variant='h6' sx={{mt: 1, opacity: ".5"}}>
+                        statistics
+                    </Typography>
+                    <Typography>
+                        Your results are calculated in the following ways for each category:
+                        <br />
+                        <br />
+                        words per minute (wpm) - calculated by taking your raw words per minute and multplying it by your accuracy
+                        <br />
+                        accuracy - calculated by taking how many words you typed correctly divided by the total number of words typed
                     </Typography>
                 </Box>
                 <Box sx={{

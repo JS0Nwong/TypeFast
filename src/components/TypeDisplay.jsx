@@ -1,18 +1,38 @@
 import { useMemo, createRef, useEffect } from 'react'
-import { Box } from "@mui/material"
+import { Box, Typography } from "@mui/material"
 
 import { applyStyles } from '../utils/applyStyles';
 import { useInput } from '../hooks/useInput';
 import useStore from '../utils/store';
+import useStoreActions from '../utils/store';
 import useFocus from '../hooks/useFocus';
+import { LuMousePointer2 } from "react-icons/lu";
+
 import Caret from "../components/Caret"
 
 export default function TypeDisplay() {
   const { applyWordStyles, applyCharStyles } = applyStyles()
-  const { currentWordIndex, text } = useStore()
+  const {
+    userStatus,
+    currentWordIndex,
+    text,
+    focusedTextBox,
+    setUserStatus,
+    setInputFocus,
+  } = useStore((state) => ({
+    userStatus: state.userStatus,
+    currentWordIndex: state.currentWordIndex,
+    text: state.text,
+    currentUserInput: state.currentUserInput,
+    focusedTextBox: state.focusedTextBox,
+    setUserStatus: state.setUserStatus,
+    setInputFocus: state.setInputFocus,
+  }))
+
+  const focus = useFocus()
 
   // needed to initialize user input handler
-  const { handleUserInput, displayExtraCharacters } = useInput()
+  const { displayExtraCharacters } = useInput()
 
   const wordsDict = useMemo(() => {
     return text
@@ -24,13 +44,12 @@ export default function TypeDisplay() {
     }).fill(0).map((i) => createRef())
   }, [text])
 
-  const charRef = useMemo(() => {
-    return wordsDict.map(
-      (str) => str.split('').map((char) => createRef())
-    )
-  }, [])
+  const handleFocus = () => {
+    setUserStatus('typing')
+    setInputFocus(true)
+  }
 
-
+  // useeffect to listen to changes in the text to move it foward properly
   useEffect(() => {
     if (currentWordIndex !== 0 &&
       wordsRef[currentWordIndex].current.offsetLeft <
@@ -40,8 +59,8 @@ export default function TypeDisplay() {
   }, [currentWordIndex, wordsRef])
 
   useEffect(() => {
-    console.log(charRef)
-  }, [])
+
+  }, [currentWordIndex])
 
   return (
     <>
@@ -54,10 +73,31 @@ export default function TypeDisplay() {
           maxHeight: "145px",
           overflow: "hidden",
           position: 'relative',
-          // filter: focusedTextBox ? "none" : "blur(6.5px)",
-          transition: "0.15s ease",
         }}
-      >          
+        id="words"
+        onClick={() => handleFocus()}
+      >
+        
+        {focusedTextBox ? <></> : <Typography sx={{
+          position: 'absolute',
+          top: '50%',
+          left: "50%",
+          maxHeight: "160px",
+          height: '100%',
+          transform: "translate(-50%, -50%)",
+          width: "100%",
+          textAlign: 'center',
+          zIndex: 99,
+          backdropFilter: 'blur(4px)',
+          transition: '0.65s ease-in-out',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+          <LuMousePointer2 style={{ marginRight: '8px' }} />
+          click or start typing to focus
+        </Typography>
+        }
         <Caret />
         {wordsDict.map((word, index) =>
           <div
@@ -75,7 +115,6 @@ export default function TypeDisplay() {
               <span
                 key={char + idx}
                 className={applyCharStyles(index, idx, char, word)}
-                ref={charRef[index][idx]}
               >
                 {char}
               </span>
