@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react"
-import { Box, IconButton } from "@mui/material"
+import { Box, IconButton, Tooltip } from "@mui/material"
 import TypeDisplay from './TypeDisplay'
 import UserInputDisplay from './UserInputDisplay';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
@@ -8,18 +7,19 @@ import Results from "./Results";
 import Menubar from "./Menubar";
 import { motion } from 'framer-motion'
 
-import useStore from '../utils/store';
-import { useUpdateHistory } from "../utils/store"
+import useStore from '../utils/stores/store';
+import { useBoundStore } from "../utils/stores/boundStore";
+import { useUpdateHistory } from "../utils/stores/store"
 
 export default function GameScreenWrapper() {
-    const { 
+    const {
         mode, 
         currentUserInput, 
         hideElements, 
         gameStatus,
         regenerateText, 
         setCurrentUserInput,
-    } = useStore((state) => ({
+    } = useBoundStore((state) => ({
         mode: state.mode,
         currentUserInput: state.currentUserInput,
         gameStatus: state.gameStatus,
@@ -27,6 +27,7 @@ export default function GameScreenWrapper() {
         regenerateText: state.regenerateText,
         setCurrentUserInput: state.setCurrentUserInput,
     }))
+
     const { resetHistory } = useUpdateHistory((state) => ({ resetHistory: state.resetHistory }))
 
     const renderSwitch = (param) => {
@@ -87,13 +88,15 @@ export default function GameScreenWrapper() {
                     <Box sx={{ width: '100%', height: '100%' }}><Results /></Box>
                 }
                 {gameStatus !== 'finished' &&
-                    <IconButton
-                        sx={{ opacity: hideElements ? "0" : "1", mt: -10}}
-                        onClick={handleReset}
-                        tabIndex={9}
-                    >
-                        <RestartAltIcon />
-                    </IconButton>
+                    <Tooltip title={'restart game'}>
+                        <IconButton
+                            sx={{ opacity: hideElements ? "0" : "1", mt: -10 }}
+                            onClick={handleReset}
+                            tabIndex={9}
+                        >
+                            <RestartAltIcon />
+                        </IconButton>
+                    </Tooltip>
                 }
             </Box>
         </>

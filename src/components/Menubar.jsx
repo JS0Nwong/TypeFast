@@ -14,7 +14,7 @@ import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 import SelfImprovementIcon from '@mui/icons-material/SelfImprovement';
 import TuneIcon from '@mui/icons-material/Tune';
 
-import useStore from "../utils/store"
+import { useBoundStore } from '../utils/stores/boundStore';
 
 const MenuBox = styled("div", {
   name: "MuiDiv",
@@ -26,7 +26,7 @@ const MenuBox = styled("div", {
 const timeValues = [15, 30, 60, 120]
 
 export default function Menubar() {
-  const { mode, time, setTime, setMode, hideElements} = useStore()
+  const { mode, time, setTime, setMode, hideElements} = useBoundStore()
 
   return (
     <>

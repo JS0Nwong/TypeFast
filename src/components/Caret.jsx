@@ -1,5 +1,5 @@
 import { styled } from '@mui/material'
-import useStore from '../utils/store';
+import { useBoundStore } from '../utils/stores/boundStore';
 import { motion } from "framer-motion"
 
 export default function Caret() {
@@ -13,15 +13,15 @@ export default function Caret() {
     cursorPositionLeft,
     cursorPositionTop,
     gameStatus,
-  } = useStore((state) => ({
+  } = useBoundStore((state) => ({
+    gameStatus: state.gameStatus,
     cursorPositionLeft: state.cursorPositionLeft,
     cursorPositionTop: state.cursorPositionTop,
-    gameStatus: state.gameStatus,
   }))
 
   return (
     <motion.div
-      animate={{ 
+      animate={{
         x: cursorPositionLeft,
         y: cursorPositionTop + 6,
       }}

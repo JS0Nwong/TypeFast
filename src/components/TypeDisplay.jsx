@@ -3,27 +3,27 @@ import { Box, Typography } from "@mui/material"
 
 import { applyStyles } from '../utils/applyStyles';
 import { useInput } from '../hooks/useInput';
-import useStore from '../utils/store';
-import useStoreActions from '../utils/store';
+import useStore from '../utils/stores/store';
 import useFocus from '../hooks/useFocus';
 import { LuMousePointer2 } from "react-icons/lu";
+
+import { useUserInputStore } from '../utils/stores/userInputStore';
+import { useBoundStore } from '../utils/stores/boundStore'
 
 import Caret from "../components/Caret"
 
 export default function TypeDisplay() {
   const { applyWordStyles, applyCharStyles } = applyStyles()
+
   const {
-    userStatus,
-    currentWordIndex,
     text,
     focusedTextBox,
     setUserStatus,
     setInputFocus,
-  } = useStore((state) => ({
-    userStatus: state.userStatus,
+    currentWordIndex,
+  } = useBoundStore((state) => ({
     currentWordIndex: state.currentWordIndex,
     text: state.text,
-    currentUserInput: state.currentUserInput,
     focusedTextBox: state.focusedTextBox,
     setUserStatus: state.setUserStatus,
     setInputFocus: state.setInputFocus,
@@ -57,10 +57,6 @@ export default function TypeDisplay() {
     )
       wordsRef[currentWordIndex - 1].current.scrollIntoView()
   }, [currentWordIndex, wordsRef])
-
-  useEffect(() => {
-
-  }, [currentWordIndex])
 
   return (
     <>

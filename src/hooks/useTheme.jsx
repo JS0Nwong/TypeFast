@@ -1,9 +1,11 @@
-import { useEffect, useState, createContext, useMemo } from "react";
+import { useState, createContext, useMemo, useCallback, useEffect } from "react";
 import { createTheme, ThemeProvider, CssBaseline } from '@mui/material'
 import { themes } from "../static/themes/themes.json"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { convertHex } from "../utils/convertHexToRGB";
 import { pSBC } from "../utils/adjustColor"
+import useThemeStore from "../utils/stores/themeStore";
+import { shallow } from "zustand/shallow";
 
 const ThemeContext = createContext();
 
@@ -35,6 +37,10 @@ const UserTheme = ({ children }) => {
             let storedTheme = localStorage.getItem('theme')
             currentTheme = storedTheme ? storedTheme : 'default'
         }
+        if(typeof window !== 'undefined' && window.localStorage) {
+            let storedUserTheme = localStorage.getItem('custom-theme')
+            themes.custom = storedUserTheme ? JSON.parse(storedUserTheme) : themes.custom
+        }
         return currentTheme
     }
     const setIntitalView = () => {
@@ -50,6 +56,23 @@ const UserTheme = ({ children }) => {
     const [userCreatedTheme, setUserCreatedTheme] = useState(themes['custom'])
     const [font, setFont] = useState(setInitalFont)
     const [viewValue, setViewValue] = useState(setIntitalView)
+    const {
+        backgroundPrimary,
+        backgroundSecondary,
+        textCaret,
+        textPrimary,
+        textSecondary,
+        errorColor,
+        select,
+    } = useThemeStore((state) => ({
+        backgroundPrimary: state.backgroundPrimary,
+        backgroundSecondary: state.backgroundSecondary,
+        textCaret: state.textCaret,
+        textPrimary: state.textPrimary,
+        textSecondary: state.textSecondary,
+        errorColor: state.errorColor,
+        select: state.select,
+    }))
 
     const theme = useMemo(() => createTheme({
         components: {
@@ -129,7 +152,7 @@ const UserTheme = ({ children }) => {
                     '.incorrect-char': {
                         color: themes[webTheme]?.errorColor,
                         fontFamily: font,
-                    },
+                    }
                 }
             },
             MuiAccordion: {
@@ -204,7 +227,6 @@ const UserTheme = ({ children }) => {
                             background: themes[webTheme]?.backgroundSecondary,
                             boxShadow: "none",
                             borderRadius: "4px",
-                            opacity: 0.55,
                             "&:hover": {
                                 opacity: '1',
                                 backgroundColor: convertHex(themes[webTheme]?.textPrimary, 0.55),
@@ -576,44 +598,72 @@ const UserTheme = ({ children }) => {
         localStorage.setItem('preferred-view', viewValue)
     }
 
-    const setCustomTheme = (
-        backgroundColor,
-        backgroundAltColor,
-        caretColor,
-        textColor,
-        textAltColor,
-        errorColor,
-        selectColor
-    ) => {
+    const setCustomTheme = () => {
         const customTheme = {
-            backgroundColor: backgroundColor.toUpperCase(),
-            backgroundAltColor: backgroundAltColor.toUpperCase(),
-            caretColor: caretColor.toUpperCase(),
-            textColor: textColor.toUpperCase(),
-            textAltColor: textAltColor.toUpperCase(),
-            errorColor: errorColor.toUpperCase(),
-            selectColor: selectColor.toUpperCase(),
+            backgroundPrimary: backgroundPrimary,
+            backgroundSecondary: backgroundSecondary,
+            textCaret: textCaret,
+            textPrimary: textPrimary,
+            textSecondary: textSecondary,
+            errorColor: errorColor,
+            select: select,
             themeType: null
         }
-        
-        // themes['custom'] = customTheme
-        // setUserCreatedTheme(customTheme)
-        themes['custom'].backgroundPrimary = backgroundColor
-        // console.log(userCreatedTheme)
+        themes['custom'] = customTheme
+        setUserCreatedTheme(customTheme)
         localStorage.setItem('custom-theme', JSON.stringify(customTheme))
     }
 
+    // user theme store subscriber
+
+    useEffect(() => {
+        const unsub = useThemeStore.subscribe((state, prevState) => {
+            const storedUserTheme = themes.custom
+            console.log(storedUserTheme, state)
+            if(JSON.stringify(storedUserTheme) !== JSON.stringify(state.customTheme)) {
+
+            }
+            else {
+                console.log('equal')
+            }
+        })
+        return unsub
+        // const unsub = useThemeStore.subscribe(
+        //     (state) => state.customTheme,
+        //     (theme, prevTheme) => {
+        //         console.log(theme, themes.custom)
+        //         if(JSON.stringify(theme) !== JSON.stringify(themes.custom)) {
+        //             theme = themes.custom
+        //         }
+        //         else {
+        //             theme = themes.custom
+        //         }
+        //     },
+        //     {
+        //         equalityFn: shallow,
+        //         fireImmediately: true,
+        //     }
+        // )
+        // return unsub
+    }, [])
+
+    // local storage use effect getters
     useEffect(() => {
         if (window.localStorage.getItem('theme') !== null) {
             setWebTheme(window.localStorage.getItem('theme'))
         }
+        if(window.localStorage.getItem('custom-theme') !== null) {
+            const themeValues = JSON.parse(localStorage.getItem('custom-theme'))
+            themes['custom'] = themeValues
+        }
         if (window.localStorage.getItem('theme') === "custom" &&
             window.localStorage.getItem('custom-theme') !== null) {
-            const themeValues = JSON.parse(localStorage.getItem('custom-theme'))
             setWebTheme('custom')
+            const themeValues = JSON.parse(localStorage.getItem('custom-theme'))
+            themes.custom = themeValues
             setUserCreatedTheme(themeValues)
         }
-    }, [themes.custom])
+    }, [])
 
     return (
         <ThemeContext.Provider

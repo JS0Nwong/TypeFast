@@ -1,86 +1,83 @@
 import { useCallback, useEffect } from 'react'
 
-import useStore from '../utils/store'
+import useStore from '../utils/stores/store'
 import { allowedInputs } from '../utils/allowedInputs'
 import { allowedIdleInputs } from '../utils/allowedIdleInputs'
 import { allowedGameInputs } from '../utils/allowedGameInputs'
 import { isCorrect } from '../utils/isCorrect'
-import { useUpdateHistory } from '../utils/store'
+import { useUpdateHistory } from '../utils/stores/store'
 import { useCursor } from "./useCursor"
-import { useStoreActions } from '../utils/store'
+import { useBoundStore } from '../utils/stores/boundStore'
 
 function useInput() {
     const {
-        userStatus,
+        currentUserInput,
         currentWordIndex,
         currentCharIndex,
-        gameStatus,
-        currentUserInput,
-        userInputWordHistory,
         prevInput,
         history,
+        userInputWordHistory,
         rawWordsPerMinuteKeys,
-        cursorPositionLeft,
-        cursorPositionTop,
-        setKeyPressed,
-        setGameStatus,
-        increaseWordIndex,
-        increaseCharIndex,
-        resetKeyPressed,
-        resetCurrentCharIndex,
-        decreaseCharIndex,
-        decreaseWordIndex,
-        setCurrentUserInput,
-        setCurrentCharIndex,
-        resetUserInput,
-        setPrevInput,
-        startGame,
-        unhideElements,
-        setUserInputWordHistory,
-        previousUserInput,
-        increaseRawWordsPerMinuteKeys,
-        increaseKPM,
-        updateOverallWPM,
-        setInputFocus,
-        setUserStatus,
-        updateCursorPosition,
-        increaseExtraChars,
-    } = useStore((state) => ({
-        userStatus: state.userStatus,
+        userStatus,
+        gameStatus,
+    } = useBoundStore((state) => ({
+        currentUserInput: state.currentUserInput,
         currentWordIndex: state.currentWordIndex,
         currentCharIndex: state.currentCharIndex,
-        gameStatus: state.gameStatus,
-        currentUserInput: state.currentUserInput,
-        userInputWordHistory: state.userInputWordHistory,
         prevInput: state.prevInput,
         history: state.history,
-        rawWordsPerMinuteKeys: state.rawKeysPerMinute,
-        cursorPositionLeft: state.cursorPositionLeft,
-        cursorPositionTop: state.cursorPositionTop,
+        userInputWordHistory: state.userInputWordHistory,
+        rawWordsPerMinuteKeys: state.rawWordsPerMinuteKeys,
+        userStatus: state.userStatus,
+        gameStatus: state.gameStatus,
+    }))
+
+    const {
+        setKeyPressed,
+        setCurrentUserInput,
+        setCurrentCharIndex,
+        setUserInputWordHistory,
+        setPrevInput,
+        increaseCharIndex,
+        increaseWordIndex,
+        resetKeyPressed,
+        resetUserInput,
+        decreaseCharIndex,
+        decreaseWordIndex,
+        previousUserInput,
+        resetCurrentCharIndex,
+        setUserStatus,
+        increaseRawWordsPerMinuteKeys,
+        updateOverallWPM,
+        setGameStatus,
+        startGame,
+        unhideElements,
+        setInputFocus,
+        increaseKPM,
+    } = useBoundStore((state) => ({
         setKeyPressed: state.setKeyPressed,
-        setGameStatus: state.setGameStatus,
-        increaseWordIndex: state.increaseWordIndex,
-        increaseCharIndex: state.increaseCharIndex,
-        resetKeyPressed: state.resetKeyPressed,
-        resetCurrentCharIndex: state.resetCurrentCharIndex,
-        decreaseCharIndex: state.decreaseCharIndex,
-        decreaseWordIndex: state.decreaseWordIndex,
         setCurrentUserInput: state.setCurrentUserInput,
         setCurrentCharIndex: state.setCurrentCharIndex,
-        resetUserInput: state.resetUserInput,
+        setUserInputWordHistory: state.setUserInputWordHistory,
         setPrevInput: state.setPrevInput,
+        increaseCharIndex: state.increaseCharIndex,
+        increaseWordIndex: state.increaseWordIndex,
+        resetKeyPressed: state.resetKeyPressed,
+        resetUserInput: state.resetUserInput,
+        decreaseCharIndex: state.decreaseCharIndex,
+        decreaseWordIndex: state.decreaseWordIndex,
+        previousUserInput: state.previousUserInput,
+        resetCurrentCharIndex: state.resetCurrentCharIndex,
+        setUserStatus: state.setUserStatus,
+        increaseRawWordsPerMinuteKeys: state.increaseRawWordsPerMinuteKeys,
+        updateOverallWPM: state.updateOverallWPM,
+        setGameStatus: state.setGameStatus,
         startGame: state.startGame,
         unhideElements: state.unhideElements,
-        setUserInputWordHistory: state.setUserInputWordHistory,
-        previousUserInput: state.previousUserInput,
-        increaseRawWordsPerMinuteKeys: state.increaseRawWordsPerMinuteKeys,
-        increaseKPM: state.increaseKPM,
-        updateOverallWPM: state.updateOverallWPM,
         setInputFocus: state.setInputFocus,
-        setUserStatus: state.setUserStatus,
-        updateCursorPosition: state.updateCursorPosition,
-        increaseExtraChars: state.increaseExtraChars
+        increaseKPM: state.increaseKPM,
     }))
+
     const { updatePosition, updateBackSpace } = useCursor() 
     const { wordsIncorrect } = useUpdateHistory()
     const { checkWord } = isCorrect()
@@ -94,14 +91,14 @@ function useInput() {
         if (index > currentWordIndex) {
             return null;
         }
-        if (input.length <= word.length) {
+        if (input?.length <= word.length) {
             return null;
         }
         else {
             // prevent spamming keys by limiting input to be only 10 characters more than the current word
-            const extraChars = input.slice(word.length, input.length).split("");
-            history[index] = Number(extraChars.length);
-            return extraChars.map((char, index) => (
+            const extraChars = input?.slice(word.length, input?.length).split("");
+            history[index] = Number(extraChars?.length);
+            return extraChars?.map((char, index) => (
                 <span key={index} className="incorrect-char char">
                     {char}
                 </span>
@@ -205,20 +202,13 @@ function useInput() {
         gameStatus,
         currentWordIndex,
         currentCharIndex,
-        cursorPositionTop,
-        cursorPositionLeft,
-        setGameStatus,
-        setCurrentUserInput,
         setKeyPressed,
         increaseCharIndex,
         increaseWordIndex,
         resetKeyPressed,
-        setPrevInput,
-        setCurrentCharIndex,
         decreaseWordIndex,
         previousUserInput,
         decreaseCharIndex,
-        updateCursorPosition,
     ])
     const handleStatusChange = ({code}) => {
         if (allowedIdleInputs(code)) {

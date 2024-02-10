@@ -4,7 +4,7 @@ import { ThemeContext } from '../hooks/useTheme';
 
 import ThemeModal from './ThemeModal';
 import { themes } from "../static/themes/themes.json"
-import useStore from '../utils/store';
+import useStore from '../utils/stores/store';
 
 export default function ThemeSelect() {
     const { webTheme } = useContext(ThemeContext)

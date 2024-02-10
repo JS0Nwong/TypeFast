@@ -8,8 +8,8 @@ import FeedbackSnackbar from "./FeedbackSnackbar";
 
 import useScreenCapture from '../hooks/useScreenCapture';
 import { ThemeContext } from "../hooks/useTheme"
-import useStore from '../utils/store';
-import { useUpdateHistory } from '../utils/store';
+import { useBoundStore } from "../utils/stores/boundStore";
+import { useUpdateHistory } from '../utils/stores/store';
 
 export default function Results() {
     const {
@@ -23,7 +23,7 @@ export default function Results() {
         repeatTest,
         unhideElements,
         setSnackbar,
-    } = useStore((state) => ({
+    } = useBoundStore((state) => ({
         rawKeysPerMinute: state.rawKeysPerMinute,
         rawWpm: state.rawWpm,
         selectedTime: state.selectedTime,

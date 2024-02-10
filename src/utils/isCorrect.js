@@ -1,29 +1,35 @@
-import { useEffect } from "react";
-import useStore from "./store";
-import { useUpdateHistory } from "./store";
+import useStore from "./stores/store";
+import { useUpdateHistory } from "./stores/store";
+import { useUserInputStore } from "./stores/userInputStore";
 
 const isCorrect = () => {
   const {
     gameStatus,
     text,
+    setUserInputWordHistory,
+  } = useStore((state) => ({
+    gameStatus: state.gameStatus ,
+    text: state.text ,
+    setUserInputWordHistory: state.setUserInputWordHistory,
+  }));
+
+  const {
     currentWordIndex,
     currentUserInput,
     prevInput,
     userInputWordHistory,
-    setUserInputWordHistory,
-    setPrevInput,    
-    increaseRawWordsPerMinuteKeys,
-  } = useStore((state) => ({
-    gameStatus: state.gameStatus ,
-    text: state.text ,
-    currentWordIndex: state.currentWordIndex ,
-    currentUserInput: state.currentUserInput ,
-    prevInput: state.prevInput ,
+  } = useUserInputStore((state) => ({
+    currentWordIndex: state.currentWordIndex,
+    currentUserInput: state.currentUserInput,
+    prevInput: state.prevInput,
     userInputWordHistory: state.userInputWordHistory,
-    setUserInputWordHistory: state. setUserInputWordHistory,
-    setPrevInput: state. setPrevInput,    
-    increaseRawWordsPerMinuteKeys: state.increaseRawWordsPerMinuteKeys ,
   }));
+
+  // const { setPrevInput } = useUserInputStoreActions();
+
+  // const {
+  //   increaseRawWordsPerMinuteKeys,
+  // } = useUserStatsStoreActions()
   
   const {
     updateWordsCorrect,

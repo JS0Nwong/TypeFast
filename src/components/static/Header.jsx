@@ -17,11 +17,11 @@ import ThemeSelect from '../ThemeSelect';
 import FontSelect from '../FontSelect';
 import Logo from  "./Logo"
 
-import useStore from '../../utils/store';
+import { useBoundStore } from "../../utils/stores/boundStore";
 import { useAuth } from '../../hooks/AuthProvider';
 
 export default function Header() {
-  const { regenerateText, hideElements } = useStore()
+  const { regenerateText, hideElements } = useBoundStore()
   const { isLoggedIn } = useAuth()
 
   return (

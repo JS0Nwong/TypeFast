@@ -1,9 +1,9 @@
 import { Box, Typography } from "@mui/material"
-import useStore from '../utils/store';
+import { useBoundStore } from "../utils/stores/boundStore";
 import useCountdown from '../hooks/useCountdown';
 
 export default function TimeDisplay() {
-  const { time, gameStatus, updateTimer, endGame } = useStore((state) => ({
+  const { time, gameStatus, updateTimer, endGame } = useBoundStore((state) => ({
     time: state.time,
     gameStatus: state.gameStatus,
     updateTimer: state.updateTimer,

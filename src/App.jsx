@@ -15,10 +15,8 @@ import Rooms from './views/Rooms';
 import Profile from './views/Profile'
 import UserAuth from './views/UserAuth';
 import PageLayout from './views/PageLayout';
-import useStore from './utils/store';
 
 function App() {
-  const { isAuthenticated } = useStore()
   return (
     <>
       <UserTheme>

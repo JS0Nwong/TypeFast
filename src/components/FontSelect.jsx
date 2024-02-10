@@ -1,10 +1,9 @@
 import { useState, useContext } from 'react'
 import { Box, Button } from "@mui/material"
-import { useModal } from "../hooks/useModal"
 import FontModal from "./FontModal"
 import { ThemeContext } from '../hooks/useTheme'
 
-import useStore from '../utils/store'
+import useStore from '../utils/stores/store'
 
 export default function FontSelect() {
     const { font } = useContext(ThemeContext)

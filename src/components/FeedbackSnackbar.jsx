@@ -1,5 +1,5 @@
 import { Snackbar, Slide } from '@mui/material'
-import useStore from '../utils/store';
+import useStore from '../utils/stores/store';
 // import Fade from '@mui/material/Fade';
 
 export default function FeedbackSnackbar() {

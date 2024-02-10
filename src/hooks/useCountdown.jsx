@@ -1,8 +1,6 @@
 import { useEffect, useRef } from 'react'
-import useStore from '../utils/store'
 
 export default function useCountdown(callback, delay) {
-    const { time } = useStore()
     const intervalRef = useRef(null);
     const savedCallback = useRef(callback)
 

@@ -6,7 +6,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
-import useStore from "../utils/store";
+import useStore from "../utils/stores/store";
 const useAuth = () => {
   const provider = new GoogleAuthProvider()
   const navigate = useNavigate()

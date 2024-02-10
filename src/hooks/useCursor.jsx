@@ -1,14 +1,15 @@
-import useStore from "../utils/store"
+import { useBoundStore } from "../utils/stores/boundStore"
 
 const useCursor = () => {
+
     const { 
-        currentUserInput, 
+        currentUserInput,
         setCursorLeftPosition, 
         setCursorTopPosition 
-    } = useStore((state) => ({
-        currentUserInput: state.currentUserInput,
+    } = useBoundStore((state) => ({
         setCursorLeftPosition: state.setCursorLeftPosition,
         setCursorTopPosition: state.setCursorTopPosition,
+        currentUserInput: state.currentUserInput
     }))
     const updateBackSpace = () => {
         const currentWordsLetterList = document.querySelector('#words .active-word').querySelectorAll('.char')

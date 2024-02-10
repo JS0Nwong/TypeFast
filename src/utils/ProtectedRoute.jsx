@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import useStore from './store'
+import useStore from './stores/store'
 import { useAuth } from "../hooks/AuthProvider";
 
 export default function ProtectedRoute({ Component }) {

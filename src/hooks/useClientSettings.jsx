@@ -7,13 +7,13 @@ const useClientSettings = () => {
     const [closeTheme, setCloseTheme] = useState(true)
     const [closeApperance, setCloseApperance] =  useState(true)
 
-    const handleCloseAccordion = useCallback((fn, value) => {
-        fn(!value)
-    }, [])
+    const handleCloseAccordion = (fn, value) => {
+        fn(false)
+    }
 
-    const handleOpenAccordion = useCallback((fn, value) => {
-        fn(!value)
-    }, [])
+    const handleOpenAccordion = (fn, value) => {
+        fn(true)
+    }
 
     return { 
         closeInput, 

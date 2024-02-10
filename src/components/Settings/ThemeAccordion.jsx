@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useContext } from 'react'
 import {
     Accordion,
     AccordionSummary,
@@ -13,18 +13,24 @@ import { ThemeContext } from '../../hooks/useTheme';
 
 import PresetThemes from './PresetThemes';
 import ThemePicker from './ThemePicker';
+import useThemeStore from '../../utils/stores/themeStore'
+import { useThemeStoreActions } from '../../utils/stores/themeStore';
 
 export default function ThemeAccordion() {
-    const [presetTheme, setPresetTheme] = useState(true)
     const { toggleTheme } = useContext(ThemeContext)
+    const {
+        toggleCustom
+    } = useThemeStore()
+    const { setToggleCustom } = useThemeStoreActions()
     const {
         closeTheme,
         setCloseTheme,
     } = useClientSettings()
     const handleSetCustomTheme = () => {
         toggleTheme('custom')
-        setPresetTheme(false)
+        setToggleCustom(true)
     }
+
     return (
         <Accordion
             expanded={closeTheme}
@@ -46,7 +52,7 @@ export default function ThemeAccordion() {
                     }}>
                         <Button
                             variant='contained'
-                            onClick={() => setPresetTheme(true)}
+                            onClick={() => setToggleCustom(false)}
                             sx={{ mr: 1, pl: 2, pr: 2 }}
                         >preset</Button>
                         <Button
@@ -63,7 +69,7 @@ export default function ThemeAccordion() {
                         mt: 5,
                         width: '100%'
                     }}>
-                    {presetTheme ? <PresetThemes /> : <ThemePicker />}
+                    {toggleCustom ?  <ThemePicker /> :<PresetThemes />}
                 </Stack>
             </AccordionDetails>
         </Accordion>
