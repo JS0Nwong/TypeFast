@@ -1,7 +1,5 @@
+import { generate } from "random-words";
 import generateWords from "../generateWords";
-import { useUserInputStore } from "./userInputStore";
-import { useUserStatsStore } from "./userStatsStore";
-import { useUserStore } from "./userStore";
 
 export const useGameStore = (set) => ({
   // game information
@@ -11,12 +9,24 @@ export const useGameStore = (set) => ({
   hideElements: false,
   cursorPositionLeft: 5,
   cursorPositionTop: 5,
+  blurElements: false,
 
   //game options
-  textOptions: [],
   mode: "time",
+  textOptions: [],
+  customTest: false,
+
   selectedTime: 60,
   time: 60,
+  customTime: 1,
+
+  selectedWordsAmount: 50,
+  wordsAmount: 50,
+  customWordsAmount: 1,
+  wordsTimer: 0,
+
+  // snackbar state
+  snackbarMessage: "",
 
   setGameStatus: (status) =>
     set({
@@ -49,18 +59,55 @@ export const useGameStore = (set) => ({
   setMode: (mode) =>
     set({
       mode: mode,
+      customTest: false,
     }),
 
+  //test mode options
   setTime: (option) =>
     set({
       selectedTime: option,
       time: option,
+      customTest: false,
     }),
   updateTimer: () => {
     set((state) => ({
       time: state.time - 1,
     }));
   },
+  setCustomTime: (time) =>
+    set({
+      selectedTime: time,
+      time: time,
+      customTime: time,
+      customTest: true,
+    }),
+
+  setWordsAmount: (amount) =>
+    set({
+      selectedWordsAmount: amount,
+      wordsAmount: amount,
+      customTest: false,
+    }),
+  setCustomWordsAmount: (amount) =>
+    set({
+      selectedWordsAmount: amount,
+      wordsAmount: amount,
+      customWordsAmout: amount,
+      customTest: true,
+    }),
+  updateWordsTimer: () => set((state) => ({
+    wordsTimer: state.wordsTimer + 1
+  })),
+
+  //snackbar state setter
+  setSnackbar: (text) =>
+    set({
+      snackbarMessage: text,
+    }),
+
+  unhideElements: () => set((state) => ({ hideElements: !state.hideElements })),
+  setBlurElements: () =>
+    set((state) => ({ blurElements: !state.blurElements })),
 
   // game options
   regenerateText: () =>
@@ -77,7 +124,11 @@ export const useGameStore = (set) => ({
       userInputWordHistory: {},
       prevInput: "",
       history: {},
+      mode: state.mode,
+      customTest: state.customTest,
       text: generateWords(),
+      selectedWordsAmount: state.selectedWordsAmount,
+      customWordsAmount: state.customWordsAmount,
       hideElements: false,
       gameStatus: "unready",
       time: state.selectedTime,
@@ -103,10 +154,14 @@ export const useGameStore = (set) => ({
       userInputWordHistory: {},
       prevInput: "",
       history: {},
-      text: generateWords(),
       hideElements: false,
       gameStatus: "unready",
+      mode: state.mode,
+      customTest: state.customTest,
       time: state.selectedTime,
+      text: generateWords(),
+      selectedWordsAmount: state.selectedWordsAmount,
+      customWordsAmount: state.customWordsAmount,
       rawKeysPerMinute: 0,
       wordsPerMinute: 0,
       wordAccuracy: 0,
@@ -119,6 +174,7 @@ export const useGameStore = (set) => ({
     })),
   repeatTest: () =>
     set((state) => ({
+      mode: state.mode,
       text: state.text,
       keyPressed: "",
       currentUserInput: "",
@@ -132,6 +188,10 @@ export const useGameStore = (set) => ({
       history: {},
       hideElements: false,
       gameStatus: "unready",
+      customTest: state.customTest,
+      selectedWordsAmount: state.selectedWordsAmount,
+      customWordsAmount: state.customWordsAmount,
+      mode: state.mode,
       time: state.selectedTime,
       rawKeysPerMinute: 0,
       wordsPerMinute: 0,

@@ -1,5 +1,3 @@
-import useStore from "./store";
-
 export const useCursorStore = (set, get) => ({
   cursorPositionLeft: 5,
   cursorPositionTop: 5,

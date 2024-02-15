@@ -3,7 +3,7 @@ import { motion } from "framer-motion"
 
 import Header from '../components/static/Header'
 import Footer from '../components/static/Footer'
-import Gutter from "../components/Gutter"
+import Gutter from "../components/static/Gutter"
 
 import AboutInformation from "../components/About/About"
 

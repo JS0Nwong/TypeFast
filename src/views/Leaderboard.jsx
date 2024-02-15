@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 import Header from '../components/static/Header'
 import Footer from '../components/static/Footer'
 import Board from "../components/Leaderboard/Board"
-import Gutter from "../components/Gutter"
+import Gutter from "../components/static/Gutter"
 
 export default function Leaderboard() {
   return (

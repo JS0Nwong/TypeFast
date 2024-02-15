@@ -1,4 +1,3 @@
-import useStore from "./stores/store";
 import { useUpdateHistory } from "./stores/store";
 import { useBoundStore } from "./stores/boundStore";
 const applyStyles = () => {

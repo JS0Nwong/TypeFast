@@ -1,6 +1,5 @@
 import { useCallback, useEffect } from 'react'
 
-import useStore from '../utils/stores/store'
 import { allowedInputs } from '../utils/allowedInputs'
 import { allowedIdleInputs } from '../utils/allowedIdleInputs'
 import { allowedGameInputs } from '../utils/allowedGameInputs'

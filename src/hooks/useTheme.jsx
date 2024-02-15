@@ -5,7 +5,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { convertHex } from "../utils/convertHexToRGB";
 import { pSBC } from "../utils/adjustColor"
 import useThemeStore from "../utils/stores/themeStore";
-import { shallow } from "zustand/shallow";
 
 const ThemeContext = createContext();
 
@@ -52,10 +51,30 @@ const UserTheme = ({ children }) => {
         return defaultView
     }
 
+    const setInitialCaret = () => {
+        let defaultCaretSpeed = 0.1
+        if (typeof window !== 'undefined' && window.localStorage) {
+            let storedCaretSpeed = localStorage.getItem('caret-speed')
+            defaultCaretSpeed = storedCaretSpeed ? storedCaretSpeed : 0.1
+        }
+        return Number(defaultCaretSpeed)
+    }
+
+    const setInitialCaretType = () => {
+        let defaultCaret = 'line'
+        if (typeof window !== 'undefined' && window.localStorage) {
+            let storedCaretType= localStorage.getItem('caret-type')
+            defaultCaret = storedCaretType ? storedCaretType : 'line'
+        }
+        return defaultCaret
+    }
+
     const [webTheme, setWebTheme] = useState(setInitialState)
     const [userCreatedTheme, setUserCreatedTheme] = useState(themes['custom'])
     const [font, setFont] = useState(setInitalFont)
     const [viewValue, setViewValue] = useState(setIntitalView)
+    const [caretSpeedValue, setCaretSpeedValue] = useState(setInitialCaret)
+    const [caretType, setCaretType] = useState(setInitialCaretType)
     const {
         backgroundPrimary,
         backgroundSecondary,
@@ -229,7 +248,7 @@ const UserTheme = ({ children }) => {
                             borderRadius: "4px",
                             "&:hover": {
                                 opacity: '1',
-                                backgroundColor: convertHex(themes[webTheme]?.textPrimary, 0.55),
+                                backgroundColor: convertHex(themes[webTheme]?.textPrimary),
                             },
                         }
                     }
@@ -527,12 +546,24 @@ const UserTheme = ({ children }) => {
                     }
                 }
             },
-            MuiCaret: {
+            MuiCaretLine: {
                 styleOverrides: {
                     root: {
                         width: "2px",
                         borderRadius: "99px",
                         height: '24px',
+                        background: themes[webTheme].textSecondary,
+                        position: 'absolute',
+                        transition: "0.15s ease-in-out",
+                    }
+                }
+            },
+            MuiCaretUnderline: {
+                styleOverrides: {
+                    root: {
+                        width: "2px",
+                        borderRadius: "99px",
+                        height: '2px',
                         background: themes[webTheme].textSecondary,
                         position: 'absolute',
                         transition: "0.15s ease-in-out",
@@ -598,6 +629,16 @@ const UserTheme = ({ children }) => {
         localStorage.setItem('preferred-view', viewValue)
     }
 
+    const toggleCaretSpeed = (speed) => {
+        setCaretSpeedValue(speed)
+        localStorage.setItem('caret-speed', speed)
+    }
+
+    const toggleCaretType = (type) => {
+        setCaretType(type)
+        localStorage.setItem('caret-type', type)
+    }
+
     const setCustomTheme = () => {
         const customTheme = {
             backgroundPrimary: backgroundPrimary,
@@ -628,26 +669,9 @@ const UserTheme = ({ children }) => {
             }
         })
         return unsub
-        // const unsub = useThemeStore.subscribe(
-        //     (state) => state.customTheme,
-        //     (theme, prevTheme) => {
-        //         console.log(theme, themes.custom)
-        //         if(JSON.stringify(theme) !== JSON.stringify(themes.custom)) {
-        //             theme = themes.custom
-        //         }
-        //         else {
-        //             theme = themes.custom
-        //         }
-        //     },
-        //     {
-        //         equalityFn: shallow,
-        //         fireImmediately: true,
-        //     }
-        // )
-        // return unsub
     }, [])
 
-    // local storage use effect getters
+    // local storage use effect getter to get theme
     useEffect(() => {
         if (window.localStorage.getItem('theme') !== null) {
             setWebTheme(window.localStorage.getItem('theme'))
@@ -668,16 +692,20 @@ const UserTheme = ({ children }) => {
     return (
         <ThemeContext.Provider
             value={{
+                caretSpeedValue,
+                caretType,
                 viewValue,
                 theme,
                 webTheme,
                 font,
                 userCreatedTheme,
+                toggleCaretSpeed,
                 toggleTheme,
                 toggleFont,
                 setCustomTheme,
                 setUserCreatedTheme,
                 toggleViewSettings,
+                toggleCaretType,
             }}>
             <ThemeProvider theme={theme}>
                 <CssBaseline />

@@ -7,6 +7,7 @@ export const useUserInputStore = (set, get) => ({
   userInputWordHistory: {},
   prevInput: "",
   history: {},
+  
   setKeyPressed: (key) =>
     set({
       keyPressed: key,

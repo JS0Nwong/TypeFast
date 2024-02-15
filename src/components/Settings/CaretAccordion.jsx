@@ -1,3 +1,4 @@
+import { useContext, useEffect } from "react"
 import {
     Accordion,
     AccordionSummary,
@@ -8,8 +9,16 @@ import {
     Button,
 } from "@mui/material"
 import { useClientSettings } from '../../hooks/useClientSettings'
+import { ThemeContext } from "../../hooks/useTheme"
 
 export default function CaretAccordion() {
+    const { 
+        caretType, 
+        caretSpeedValue, 
+        toggleCaretSpeed, 
+        toggleCaretType 
+    } = useContext(ThemeContext)
+
     const {
         closeCaret,
         setCloseCaret,
@@ -17,22 +26,25 @@ export default function CaretAccordion() {
     const caretOptions = [
         {
             type: 'off',
-            value: '0'
+            value: 0
         },
         {
             type: 'slow',
-            value: '50%'
+            value: 0.15
         },
         {
             type: 'medium',
-            value: '15%'
+            value: 0.1
         },
         {
             type: 'fast',
-            value: '15%'
+            value: 0.07
         },
     ]
-    const caretType = [
+    const caretTypes = [
+        {
+            type: 'none',
+        },
         {
             type: 'line',
         },
@@ -43,13 +55,16 @@ export default function CaretAccordion() {
             type: 'box',
         },
         {
-            type: 'none',
-        },
-        {
             type: 'filled',
         },
     ]
 
+    const handleCaretSpeed = (speed) => {
+        toggleCaretSpeed(speed)
+    }
+    const handleCaretTypeChange = (type) => {
+        toggleCaretType(type)
+    }
 
     return (
         <Accordion
@@ -73,7 +88,7 @@ export default function CaretAccordion() {
                         sx={{
                             mt: 5
                         }}>
-                        {caretOptions.map((option) =>
+                        {caretTypes.map((option) =>
                             <Button
                                 key={option.type}
                                 variant='contained'
@@ -81,9 +96,9 @@ export default function CaretAccordion() {
                                     width: "100%",
                                     p: 1,
                                     m: 1,
-                                    // opacity: option.value === viewValue ? 1 : 0.45,
+                                    opacity: option.type === caretType ? 1 : 0.45,
                                 }}
-                            // onClick={() => handleViewSettings(option.value)}
+                            onClick={() => handleCaretTypeChange(option.type)}
                             >
                                 {option.type}
                             </Button>)}
@@ -111,9 +126,9 @@ export default function CaretAccordion() {
                                 width: "100%",
                                 p: 1,
                                 m: 1,
-                                // opacity: option.value === viewValue ? 1 : 0.45,
+                                opacity: option.value === caretSpeedValue ? 1 : 0.45,
                             }}
-                            // onClick={() => handleViewSettings(option.value)}
+                            onClick={() => handleCaretSpeed(option.value)}
                         >
                             {option.type}
                         </Button>)}

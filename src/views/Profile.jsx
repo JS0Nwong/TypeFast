@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material'
 import Header from '../components/static/Header'
 import Footer from '../components/static/Footer'
 import User from '../components/Profile/User'
-import Gutter from '../components/Gutter'
+import Gutter from "../components/static/Gutter"
 import { motion } from "framer-motion"
 
 export default function Profile() {

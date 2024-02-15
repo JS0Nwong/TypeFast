@@ -3,11 +3,11 @@ import TypeDisplay from './TypeDisplay'
 import UserInputDisplay from './UserInputDisplay';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import TimeDisplay from './TimeDisplay';
+import WordsAmountCount from "./WordsAmountCount";
 import Results from "./Results";
-import Menubar from "./Menubar";
+import Menubar from "./Menubar/Menubar";
 import { motion } from 'framer-motion'
 
-import useStore from '../utils/stores/store';
 import { useBoundStore } from "../utils/stores/boundStore";
 import { useUpdateHistory } from "../utils/stores/store"
 
@@ -19,6 +19,8 @@ export default function GameScreenWrapper() {
         gameStatus,
         regenerateText, 
         setCurrentUserInput,
+        setBlurElements,
+        blurElements
     } = useBoundStore((state) => ({
         mode: state.mode,
         currentUserInput: state.currentUserInput,
@@ -26,6 +28,8 @@ export default function GameScreenWrapper() {
         hideElements: state.hideElements,
         regenerateText: state.regenerateText,
         setCurrentUserInput: state.setCurrentUserInput,
+        setBlurElements: state.setBlurElements,
+        blurElements: state.blurElements,
     }))
 
     const { resetHistory } = useUpdateHistory((state) => ({ resetHistory: state.resetHistory }))
@@ -44,7 +48,7 @@ export default function GameScreenWrapper() {
             case 'words':
                 return (
                     <>
-                        <TimeDisplay />
+                        <WordsAmountCount />
                         <TypeDisplay />
                     </>
                 );
@@ -73,12 +77,22 @@ export default function GameScreenWrapper() {
             }}>
                 {gameStatus !== 'finished' &&
                     <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0, ease: 'easeOut' }}
-                        transition={{ delay: 0.4, ease: 'easeInOut' }}
-                        style={{ 
-                            width: '100%',           
+                        initial={{
+                            opacity: 0,
+                        }}
+                        animate={{
+                            opacity: 1,
+                        }}
+                        exit={{
+                            opacity: 0,
+                            ease: 'easeOut',
+                        }}
+                        transition={{
+                            delay: 0.4,
+                            ease: 'easeInOut',
+                        }}
+                        style={{
+                            width: '100%',
                         }}
                     >
                         {renderSwitch(mode)}
