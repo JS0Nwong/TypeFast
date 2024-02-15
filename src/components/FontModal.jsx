@@ -13,7 +13,6 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import FontButton from './FontButton';
 import { useSearch } from "../hooks/useSearch"
-import useStore from '../utils/store';
 
 import chunk from "lodash/chunk"
 import debounce from "lodash/debounce"

@@ -6,11 +6,11 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
-import useStore from "../utils/store";
+import { useBoundStore } from "../utils/stores/boundStore";
 const useAuth = () => {
   const provider = new GoogleAuthProvider()
   const navigate = useNavigate()
-  const { isAuthenticated, setIsAuthenticated } = useStore();
+  const { isAuthenticated, setIsAuthenticated } = useBoundStore();
 
   const emailAndPassAuth = async (isLogin, username, password) => {
     try {

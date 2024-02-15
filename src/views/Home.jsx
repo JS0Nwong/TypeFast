@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 
 import Header from '../components/static/Header'
 import Footer from '../components/static/Footer'
-import Gutter from '../components/Gutter'
+import Gutter from '../components/static/Gutter'
 import GameScreenWrapper from '../components/GameScreenWrapper'
 
 export default function Home() {

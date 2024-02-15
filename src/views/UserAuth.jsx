@@ -4,7 +4,7 @@ import Footer from '../components/static/Footer'
 import Auth from '../components/Auth/Auth'
 import { Box } from '@mui/material'
 import { motion } from 'framer-motion'
-import Gutter from '../components/Gutter'
+import Gutter from "../components/static/Gutter"
 
 export default function UserAuth() {
   return (

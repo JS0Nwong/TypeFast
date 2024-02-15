@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   Box,
   Stack,
@@ -12,9 +11,12 @@ import TimelapseIcon from '@mui/icons-material/Timelapse';
 import TitleIcon from '@mui/icons-material/Title';
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 import SelfImprovementIcon from '@mui/icons-material/SelfImprovement';
-import TuneIcon from '@mui/icons-material/Tune';
+import { motion } from 'framer-motion'
 
-import useStore from "../utils/store"
+import TimeOptions from './TimeOptions';
+import WordOptions from './WordOptions';
+
+import { useBoundStore } from '../../utils/stores/boundStore';
 
 const MenuBox = styled("div", {
   name: "MuiDiv",
@@ -23,10 +25,31 @@ const MenuBox = styled("div", {
   }
 })``;
 
-const timeValues = [15, 30, 60, 120]
+const renderSwitch = (param) => {
+  switch (param) {
+    case 'time':
+      return <TimeOptions />
+    case 'words':
+      return <WordOptions />
+    case 'quote':
+      return <TimeOptions />
+    case 'zen':
+      return <></>
+    default:
+      return <TimeOptions />
+  }
+}
 
 export default function Menubar() {
-  const { mode, time, setTime, setMode, hideElements} = useStore()
+  const {
+    mode,
+    setMode,
+    hideElements,
+  } = useBoundStore((state) => ({
+    mode: state.mode,
+    setMode: state.setMode,
+    hideElements: state.hideElements,
+  }))
 
   return (
     <>
@@ -36,13 +59,13 @@ export default function Menubar() {
         justifyContent: 'center',
         mt: 7,
         width: "100%",
-        opacity: hideElements ? "0" : "1"
+        opacity: hideElements ? 0 : 1,
       }}>
         <MenuBox
           sx={{
             borderRadius: "4px",
             p: 0.5,
-            width: "864px",
+            width: 'auto',
           }}>
           <Stack
             direction='row'
@@ -51,7 +74,7 @@ export default function Menubar() {
           >
             {/* Text Options */}
             <Box sx={{
-              display: 'flex',
+              display: mode === 'zen' ? 'none' : 'flex',
               flexDirection: "row",
               justifyContent: "space-evenly",
             }}>
@@ -91,14 +114,14 @@ export default function Menubar() {
               <Button
                 variant="text"
                 startIcon={<TimelapseIcon />}
-                sx={{ mr: 1, ml: 1, opacity: mode === 'time' ? "1" : "0.55"}}
+                sx={{ mr: 1, ml: 2, opacity: mode === 'time' ? "1" : "0.55" }}
                 onClick={() => setMode('time')}
               >
                 time
               </Button>
               <Button variant="text"
                 startIcon={<TitleIcon />}
-                sx={{ mr: 1, ml: 1, opacity: mode === 'words' ? "1" : "0.55"}}
+                sx={{ mr: 1, ml: 1, opacity: mode === 'words' ? "1" : "0.55" }}
                 onClick={() => setMode('words')}
 
               >
@@ -106,7 +129,7 @@ export default function Menubar() {
               </Button>
               <Button variant="text"
                 startIcon={<FormatQuoteIcon />}
-                sx={{ mr: 1, ml: 1, opacity: mode === 'quote' ? "1" : "0.55"}}
+                sx={{ mr: 1, ml: 1, opacity: mode === 'quote' ? "1" : "0.55" }}
                 onClick={() => setMode('quote')}
 
               >
@@ -114,46 +137,17 @@ export default function Menubar() {
               </Button>
               <Button variant="text"
                 startIcon={<SelfImprovementIcon />}
-                sx={{ mr: 1, ml: 1, opacity: mode === 'zen' ? "1" : "0.55"}}
+                sx={{ mr: 1, ml: 1, opacity: mode === 'zen' ? "1" : "0.55" }}
                 onClick={() => setMode('zen')}
               >
                 zen
               </Button>
             </Box>
-            {/* Test Time Options */}
-            <Box sx={{
-              display: 'flex',
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-            }}>
-              {timeValues.map((value) =>
-                <Button variant="text" key={value} sx={{
-                  padding: 0,
-                  minHeight: 0,
-                  minWidth: 0,
-                  mr: 1,
-                  ml: 2,
-                  opacity: time === value ? '1' : '0.55'
-                }}
-                  onClick={() => setTime(value)}
-                >
-                  {value}s
-                </Button>
-              )}
-              <Button sx={{
-                padding: 0,
-                minHeight: 0,
-                minWidth: 0,
-                mr: 1,
-                ml: 1,
-              }}>
-                <TuneIcon />
-              </Button>
-            </Box>
+            {/* Test Mode Options */}
+            {renderSwitch(mode)}
           </Stack>
         </MenuBox>
       </Box>
-
     </>
   )
 }

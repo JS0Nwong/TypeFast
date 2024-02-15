@@ -10,10 +10,10 @@ import EmailIcon from '@mui/icons-material/Email';
 import CodeIcon from '@mui/icons-material/Code';
 import InfoIcon from '@mui/icons-material/Info';
 import { IoMdGitBranch } from "react-icons/io";
-import useStore from '../../utils/store';
+import { useBoundStore } from '../../utils/stores/boundStore';
 
 export default function Footer() {
-  const {hideElements} = useStore()
+  const { hideElements } = useBoundStore()
   return (
     <Box sx={{
       mt: 10,
@@ -22,7 +22,7 @@ export default function Footer() {
       display: 'flex',
       flexDirection: "row",
       justifyContent: 'space-between',
-      opacity: hideElements ? "0" : "1"
+      opacity: hideElements ? "0" : "1",
     }}>
       <Box sx={{
         display: 'flex',

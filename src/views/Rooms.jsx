@@ -2,7 +2,7 @@ import { Box } from "@mui/material"
 import Header from '../components/static/Header'
 import Footer from '../components/static/Footer'
 import { motion } from "framer-motion"
-import Gutter from "../components/Gutter"
+import Gutter from "../components/static/Gutter"
 
 import RoomsDisplay from "../components/Multiplayer/RoomsDisplay"
 

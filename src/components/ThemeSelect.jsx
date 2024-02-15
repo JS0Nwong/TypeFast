@@ -4,11 +4,12 @@ import { ThemeContext } from '../hooks/useTheme';
 
 import ThemeModal from './ThemeModal';
 import { themes } from "../static/themes/themes.json"
-import useStore from '../utils/store';
+import { useBoundStore } from '../utils/stores/boundStore'
+
 
 export default function ThemeSelect() {
     const { webTheme } = useContext(ThemeContext)
-    const { openThemeModal, setThemeModal } = useStore()
+    const { openThemeModal, setThemeModal } = useBoundStore()
 
     return (
         <Box sx={{

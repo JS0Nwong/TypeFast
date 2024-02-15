@@ -1,29 +1,15 @@
-import { useContext } from 'react'
 import {
-    Accordion,
-    AccordionSummary,
-    Typography,
-    AccordionDetails,
     styled,
     Stack,
     Button
 } from "@mui/material"
-import { useClientSettings } from '../../hooks/useClientSettings'
-import { ThemeContext } from '../../hooks/useTheme';
 import AppearanceAccordion from './AppearanceAccordion';
 import ThemeAccordion from './ThemeAccordion';
+import CaretAccordion from "./CaretAccordion"
+import InputAccordion from './InputAccordion';
+import BehaviorAccordion from "./BehaviorAccordion";
 
 export default function Settings() {
-    const { toggleTheme } = useContext(ThemeContext)
-    const {
-        closeInput,
-        closeBehavior,
-        closeCaret,
-        setCloseInput,
-        setCloseBehavior,
-        setCloseCaret,
-    } = useClientSettings()
-
     const options = ['behavior', 'input', 'caret', 'theme', 'apperance']
     const Box = styled("div", {
         name: "MuiPanel",
@@ -31,11 +17,6 @@ export default function Settings() {
             return [styles.root]
         }
     })``;
-
-    const handleSetCustomTheme = () => {
-        toggleTheme('custom')
-        setPresetTheme(false)
-    }
 
     return (
         <>
@@ -73,42 +54,9 @@ export default function Settings() {
                     overflowY: 'auto',
                     maxHeight: '100%',
                 }}>
-                    <Accordion
-                        expanded={closeBehavior}
-                        onChange={() => setCloseBehavior(!closeBehavior)}
-                    >
-                        <AccordionSummary id={"behavior"}>
-                            <Typography variant='h3'>behavior</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            
-                        </AccordionDetails>
-                    </Accordion>
-
-                    <Accordion
-                        expanded={closeInput}
-                        onChange={() => setCloseInput(!closeInput)}
-                    >
-                        <AccordionSummary id={"input"}>
-                            <Typography variant='h3'>input</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-
-                        </AccordionDetails>
-                    </Accordion>
-
-                    <Accordion
-                        expanded={closeCaret}
-                        onChange={() => setCloseCaret(!closeCaret)}
-                    >
-                        <AccordionSummary id={"caret"}>
-                            <Typography variant='h3'>caret</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-
-                        </AccordionDetails>
-                    </Accordion>
-
+                    <BehaviorAccordion />
+                    <InputAccordion />
+                    <CaretAccordion />
                     <ThemeAccordion />
                     <AppearanceAccordion />
                 </Box>

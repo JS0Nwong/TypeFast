@@ -1,6 +1,7 @@
-import { generate, count } from "random-words";
+import { generate } from "random-words";
 
-export default function generateWords() {
-  const words = generate({exactly: 250})
+export default function generateWords(amount) {
+  amount = amount || 250;
+  const words = generate({ exactly: amount });
   return words;
 }

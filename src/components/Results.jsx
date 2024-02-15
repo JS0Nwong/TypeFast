@@ -8,11 +8,14 @@ import FeedbackSnackbar from "./FeedbackSnackbar";
 
 import useScreenCapture from '../hooks/useScreenCapture';
 import { ThemeContext } from "../hooks/useTheme"
-import useStore from '../utils/store';
-import { useUpdateHistory } from '../utils/store';
+import { useBoundStore } from "../utils/stores/boundStore";
+import { useUpdateHistory } from '../utils/stores/store';
 
 export default function Results() {
     const {
+        mode,
+        customTest,
+        wordsAmount,
         rawKeysPerMinute,
         selectedTime,
         rawWpm,
@@ -23,7 +26,11 @@ export default function Results() {
         repeatTest,
         unhideElements,
         setSnackbar,
-    } = useStore((state) => ({
+        wordsTimer,
+    } = useBoundStore((state) => ({
+        mode: state.mode,
+        customTest: state.customTest,
+        wordsAmount: state.wordsAmount,
         rawKeysPerMinute: state.rawKeysPerMinute,
         rawWpm: state.rawWpm,
         selectedTime: state.selectedTime,
@@ -34,12 +41,14 @@ export default function Results() {
         repeatTest: state.repeatTest,
         unhideElements: state.unhideElements,
         setSnackbar: state.setSnackbar,
+        wordsTimer: state.wordsTimer,
     }))
 
     const totalChars = Object.values(history).length
     const charsCorrect = Object.values(history).reduce((v, item) => v + (item === true ? 1 : 0), 0)
     const charsIncorrect = totalChars - charsCorrect
-    const extraChars = Object.values(history).reduce((count, item) => count + (typeof item === 'number' ? item : 0), 0)
+    const extraChars = Object.values(history).reduce(
+        (count, item) => count + (typeof item === 'number' ? item : 0), 0)
 
     const { wordsCorrect, wordsIncorrect, resetHistory } = useUpdateHistory()
     const { capture } = useScreenCapture()
@@ -105,7 +114,9 @@ export default function Results() {
                             </Typography>
                         </Tooltip>
                         <Typography variant='h4' sx={{ opacity: ".65", fontSize: '1.2rem' }}>test type</Typography>
-                        <Typography variant='body2'>time {selectedTime}s</Typography>
+                        <Typography variant='body2'>
+                            {customTest ? `custom ${mode}` : mode} {mode === 'time' ? selectedTime : wordsAmount}
+                        </Typography>
                     </Box>
                     <Box sx={{
                         display: 'flex',
@@ -137,7 +148,13 @@ export default function Results() {
                                 </Box>
                                 <Box> 
                                     <Typography variant='subtitle1' sx={{ opacity: ".65" }}>time</Typography>
-                                    <Typography sx={{mt: 0.5, fontSize: '2rem'}}>{selectedTime}s</Typography>
+                                    <Typography 
+                                        sx={{ 
+                                            mt: 0.5, 
+                                            fontSize: '2rem' 
+                                        }}>
+                                            {mode === 'time' ? selectedTime : wordsTimer}s
+                                    </Typography>
                                 </Box>
                             </Stack>
                         </Box>

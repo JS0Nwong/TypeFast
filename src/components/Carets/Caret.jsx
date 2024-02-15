@@ -1,33 +1,38 @@
 import { styled } from '@mui/material'
-import useStore from '../utils/store';
+import { useContext } from 'react';
+import { useBoundStore } from '../../utils/stores/boundStore';
 import { motion } from "framer-motion"
+import { ThemeContext } from '../../hooks/useTheme';
 
 export default function Caret() {
   const Caret = styled("div", {
-    name: "MuiCaret",
+    name: "MuiCaretLine",
     overridesResolver: (props, styles) => {
       return [styles.root]
     }
   })``;
+
+  const { caretSpeedValue } = useContext(ThemeContext)
+
   const {
     cursorPositionLeft,
     cursorPositionTop,
     gameStatus,
-  } = useStore((state) => ({
+  } = useBoundStore((state) => ({
+    gameStatus: state.gameStatus,
     cursorPositionLeft: state.cursorPositionLeft,
     cursorPositionTop: state.cursorPositionTop,
-    gameStatus: state.gameStatus,
   }))
 
   return (
     <motion.div
-      animate={{ 
+      animate={{
         x: cursorPositionLeft,
         y: cursorPositionTop + 6,
       }}
       transition={{
         type: 'keyframes',
-        duration: 0.1
+        duration: caretSpeedValue
       }}
     >
       <Caret

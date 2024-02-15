@@ -1,16 +1,13 @@
-import { useCallback } from "react";
-import useStore from "../utils/store";
-import { useUpdateHistory } from "./store";
-
+import { useUpdateHistory } from "./stores/store";
+import { useBoundStore } from "./stores/boundStore";
 const applyStyles = () => {
-  const { keyPressed, currentWordIndex, currentCharIndex, history } = useStore(
-    (state) => ({
+  const { keyPressed, currentWordIndex, currentCharIndex, history } =
+    useBoundStore((state) => ({
       keyPressed: state.keyPressed,
       currentWordIndex: state.currentWordIndex,
       currentCharIndex: state.currentCharIndex,
       history: state.history,
-    })
-  );
+    }));
   const { wordsIncorrect } = useUpdateHistory();
 
   //Apply char style based on if the inputted char is correct or not

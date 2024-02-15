@@ -1,9 +1,9 @@
 import { Snackbar, Slide } from '@mui/material'
-import useStore from '../utils/store';
+import { useBoundStore } from '../utils/stores/boundStore';
 // import Fade from '@mui/material/Fade';
 
 export default function FeedbackSnackbar() {
-    const { snackbarMessage, setSnackbar } = useStore();
+    const { snackbarMessage, setSnackbar } = useBoundStore();
     return (
         <Snackbar
             anchorOrigin={{

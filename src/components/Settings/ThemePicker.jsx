@@ -1,62 +1,81 @@
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import { Box, TextField, Typography, Button, Divider } from '@mui/material'
-import { themes } from "../../static/themes/themes.json"
 import { ThemeContext } from '../../hooks/useTheme'
+import useThemeStore from '../../utils/stores/themeStore'
+import { useThemeStoreActions } from '../../utils/stores/themeStore'
 import PaletteIcon from '@mui/icons-material/Palette';
 
 export default function ThemePicker() {
-    const { setCustomTheme, setUserCreatedTheme, viewValue } = useContext(ThemeContext)
-    const [backgroundColor, setBackgroundColor] = useState(themes['custom']?.backgroundPrimary)
-    const [backgroundAltColor, setBackgroundAltColor] = useState(themes['custom']?.backgroundSecondary)
-    const [caretColor, setCaretColor] = useState(themes['custom']?.textCaret)
-    const [textColor, setTextColor] = useState(themes['custom']?.textPrimary)
-    const [textAltColor, setTextAltColor] = useState(themes['custom']?.textSecondary)
-    const [errorColor, setErrorColor] = useState(themes['custom']?.errorColor)
-    const [selectColor, setSelectColor] = useState(themes['custom']?.select)
+    const { viewValue, setCustomTheme, userCreatedTheme } = useContext(ThemeContext)
     const [errorAltColor, setErrorAltColor] = useState()
+
+    const {
+        customTheme,
+        backgroundPrimary,
+        backgroundSecondary,
+        textCaret,
+        textPrimary,
+        textSecondary,
+        errorColor,
+        select,
+    } = useThemeStore((state) => ({
+        customTheme: state.customTheme,
+        backgroundPrimary: state.backgroundPrimary,
+        backgroundSecondary: state.backgroundSecondary,
+        textCaret: state.textCaret,
+        textPrimary: state.textPrimary,
+        textSecondary: state.textSecondary,
+        errorColor: state.errorColor,
+        select: state.select,
+    }))
+
+    const {
+        setBackgroundColor,
+        setBackgroundAltColor,
+        setCaretColor,
+        setTextColor,
+        setTextAltColor,
+        setErrorColor,
+        setSelectColor,
+        getColors,
+    } = useThemeStoreActions()
 
     const handleBackgroundChange = (color) => {
         setBackgroundColor(color)
-        setCustomTheme(
-            color,
-            backgroundAltColor,
-            caretColor,
-            textColor,
-            textAltColor,
-            errorColor,
-            selectColor
-        )
+        setCustomTheme()
     }
     const handleBackgroundAltChange = (color) => {
-        console.log(color.toUpperCase())
-        themes.custom.backgroundSecondary = color.toUpperCase()
-        // setBackgroundAltColor(color)
-        // setCustomTheme(
-        //     backgroundColor,
-        //     color,
-        //     caretColor,
-        //     textColor,
-        //     textAltColor,
-        //     errorColor,
-        //     selectColor
-        // )
+        setBackgroundAltColor(color)
+        setCustomTheme()
     }
-    const handleCaretChange = (color) => {
-
+    const handleCaretColorChange = (color) => {
+        setCaretColor(color)
+        setCustomTheme()
     }
-    const handleTextChange = (color) => {
-
+    const handleTextColorChange = (color) => {
+        setTextColor(color)
+        setCustomTheme()
     }
-    const handleTextAltChange = (color) => {
-
+    const handleTextAltColorChange = (color) => {
+        setTextAltColor(color)
+        setCustomTheme()
     }
-    const handleErrorChange = (color) => {
-
+    const handleErrorColorChange = (color) => {
+        setErrorColor(color)
+        setCustomTheme()
     }
     const handleSelectColorChange = (color) => {
-
+        setSelectColor(color)
+        setCustomTheme()
     }
 
+    useEffect(() => {
+        getColors()
+        // console.log(customTheme)
+        // console.log(getColors())
+        console.log(userCreatedTheme)
+        // useThemeStore.subscribe((state, prevState) => )
+    }, [])
 
     return (
         <>
@@ -87,7 +106,7 @@ export default function ThemePicker() {
                             <Typography variant='h5'>background</Typography>
                             <Box>
                                 <TextField
-                                    value={backgroundColor}
+                                    value={backgroundPrimary}
                                     inputProps={{ style: { height: "16px" } }}
                                     sx={{
                                         mr: 1,
@@ -99,7 +118,7 @@ export default function ThemePicker() {
                                     onChange={(e) => handleBackgroundChange(e.target.value)}
                                     />
                                 <input 
-                                    value={backgroundColor}
+                                    value={backgroundPrimary}
                                     type="color" 
                                     name="" 
                                     id=""
@@ -126,7 +145,7 @@ export default function ThemePicker() {
                             <Typography variant='h5'>background alt</Typography>
                             <Box>
                                 <TextField
-                                    value={backgroundAltColor}
+                                    value={backgroundSecondary}
                                     inputProps={{ style: { height: "16px" } }}
                                     sx={{
                                         mr: 1,
@@ -134,9 +153,11 @@ export default function ThemePicker() {
                                         "&.MuiInputBase": {
                                             height: '10px',
                                         },
-                                    }} />
+                                    }} 
+                                    onChange={(e) => handleBackgroundAltChange(e.target.value)}
+                                    />
                                 <input 
-                                    value={backgroundAltColor}
+                                    value={backgroundSecondary}
                                     type="color" 
                                     name="" 
                                     id=""
@@ -163,7 +184,7 @@ export default function ThemePicker() {
                             <Typography variant='h5'>caret</Typography>
                             <Box>
                                 <TextField
-                                    value={caretColor}
+                                    value={textCaret}
                                     inputProps={{ style: { height: "16px" } }}
                                     sx={{
                                         mr: 1,
@@ -172,10 +193,10 @@ export default function ThemePicker() {
                                             height: '10px',
                                         },
                                     }} 
-                                    onChange={(e) => setCaretColor(e.target.value)}
+                                    onChange={(e) => handleCaretColorChange(e.target.value)}
                                     />
                                 <input 
-                                    value={caretColor}
+                                    value={textCaret}
                                     type="color" 
                                     name="" 
                                     id=""
@@ -186,7 +207,7 @@ export default function ThemePicker() {
                                         width: '32px',
                                         height: '32px',
                                     }} 
-                                    onChange={(e) => setCaretColor(e.target.value)}
+                                    onChange={(e) => handleCaretColorChange(e.target.value)}
                                 />
                             </Box>
                         </Box>
@@ -211,7 +232,7 @@ export default function ThemePicker() {
                             <Typography variant='h5' sx={{ml: viewValue === "50%" ? 0 : 4}}>text</Typography>
                             <Box>
                                 <TextField
-                                    value={textColor}
+                                    value={textPrimary}
                                     inputProps={{ style: { height: "16px" } }}
                                     sx={{
                                         mr: 1,
@@ -219,9 +240,11 @@ export default function ThemePicker() {
                                         "&.MuiInputBase": {
                                             height: '10px',
                                         },
-                                    }} />
+                                    }}
+                                    onChange={(e) => handleTextColorChange(e.target.value)}
+                                />
                                 <input 
-                                    value={textColor}
+                                    value={textPrimary}
                                     type="color" 
                                     name="" 
                                     id=""
@@ -232,7 +255,7 @@ export default function ThemePicker() {
                                         width: '32px',
                                         height: '32px',
                                     }} 
-                                    onChange={(e) => setTextColor(e.target.value)}
+                                    onChange={(e) => handleTextColorChange(e.target.value)}
                                 />
                             </Box>
                         </Box>
@@ -249,7 +272,7 @@ export default function ThemePicker() {
                             <Typography variant='h5' sx={{ml: viewValue === "50%" ? 0 : 4}}>text alt</Typography>
                             <Box>
                                 <TextField
-                                    value={textAltColor}
+                                    value={textSecondary}
                                     inputProps={{ style: { height: "16px" } }}
                                     sx={{
                                         mr: 1,
@@ -257,9 +280,11 @@ export default function ThemePicker() {
                                         "&.MuiInputBase": {
                                             height: '10px',
                                         },
-                                    }} />
+                                    }}
+                                    onChange={(e) => handleTextAltColorChange(e.target.value)}
+                                />
                                 <input 
-                                    value={textAltColor}
+                                    value={textSecondary}
                                     type="color" 
                                     name="" 
                                     id=""
@@ -270,7 +295,7 @@ export default function ThemePicker() {
                                         width: '32px',
                                         height: '32px',
                                     }} 
-                                    onChange={(e) => setTextAltColor(e.target.value)}
+                                    onChange={(e) => handleTextAltColorChange(e.target.value)}
                                 />
                             </Box>
                         </Box>
@@ -285,7 +310,7 @@ export default function ThemePicker() {
                             <Typography variant='h5' sx={{ml: viewValue === "50%" ? 0 : 4}}>select</Typography>
                             <Box>
                                 <TextField
-                                    value={selectColor}
+                                    value={select}
                                     inputProps={{ style: { height: "16px" } }}
                                     sx={{
                                         mr: 1,
@@ -293,9 +318,11 @@ export default function ThemePicker() {
                                         "&.MuiInputBase": {
                                             height: '10px',
                                         },
-                                    }} />
+                                    }}
+                                    onChange={(e) => handleSelectColorChange(e.target.value)}
+                                />
                                 <input 
-                                    value={selectColor}
+                                    value={select}
                                     type="color" 
                                     name="" 
                                     id=""
@@ -306,7 +333,7 @@ export default function ThemePicker() {
                                         width: '32px',
                                         height: '32px',
                                     }} 
-                                    onChange={(e) => setSelectColor(e.target.value)}
+                                    onChange={(e) => handleSelectColorChange(e.target.value)}
                                 />
                             </Box>
                         </Box>
@@ -336,7 +363,9 @@ export default function ThemePicker() {
                                         "&.MuiInputBase": {
                                             height: '10px',
                                         },
-                                    }} />
+                                    }}
+                                    onChange={(e) => handleErrorColorChange(e.target.value)}
+                                />
                                 <input
                                     value={errorColor}
                                     type="color"
@@ -349,7 +378,7 @@ export default function ThemePicker() {
                                         width: '32px',
                                         height: '32px',
                                     }}
-                                    onChange={(e) => setErrorColor(e.target.value)}
+                                    onChange={(e) => handleErrorColorChange(e.target.value)}
                                 />
                             </Box>
                         </Box>
@@ -362,7 +391,13 @@ export default function ThemePicker() {
                             alignItems: "center",
                             mt: viewValue === "50%" ? 2 : 0
                         }}>
-                            <Typography variant='h5' sx={{ml: viewValue === "50%" ? 0 : 4}}>error alt</Typography>
+                            <Typography
+                                variant='h5'
+                                sx={{
+                                    ml: viewValue === "50%" ? 0 : 4
+                                }}>
+                                error alt
+                            </Typography>
                             <Box>
                                 <TextField
                                     value={errorColor}
@@ -373,7 +408,9 @@ export default function ThemePicker() {
                                         "&.MuiInputBase": {
                                             height: '10px',
                                         },
-                                    }} />
+                                    }}
+                                    onChange={(e) => setErrorAltColor(e.target.value)}
+                                />
                                 <input
                                     value={errorColor}
                                     type="color"
@@ -400,9 +437,12 @@ export default function ThemePicker() {
                     justifyContent: 'flex-end',
                 }}>
                     <Button>
-                        load
+                        export
                     </Button>
-                    <Button sx={{mr: 4}}>
+                    <Button>
+                        import
+                    </Button>
+                    <Button sx={{mr: 4}} onClick={() => setCustomTheme()}>
                         save
                     </Button>
                 </Box>

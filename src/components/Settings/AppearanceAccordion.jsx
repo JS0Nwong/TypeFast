@@ -17,17 +17,22 @@ export default function AppearanceAccordion() {
         closeApperance,
         setCloseApperance,
     } = useClientSettings()
-    const viewOptions = ['normal', 'compact', 'exploded']
+    const viewOptions = [
+        {
+            type: 'normal',
+            value: '30%'
+        },
+        {
+            type: 'compact',
+            value: '50%'
+        },
+        {
+            type: 'exploded',
+            value: '15%'
+        },
+    ]
     const handleViewSettings = (option) => {
-        if (option === 'compact') {
-            toggleViewSettings('50%')
-        }
-        if (option === 'exploded') {
-            toggleViewSettings('15%')
-        }
-        if (option === 'normal') {
-            toggleViewSettings('30%')
-        }
+        toggleViewSettings(option)
     }
 
 
@@ -55,16 +60,17 @@ export default function AppearanceAccordion() {
                     }}>
                     {viewOptions.map((option) =>
                         <Button
-                            key={option}
+                            key={option.type}
                             variant='contained'
                             sx={{
                                 width: "100%",
                                 p: 1,
                                 m: 1,
+                                opacity: option.value === viewValue ? 1 : 0.45,
                             }}
-                            onClick={() => handleViewSettings(option)}
+                            onClick={() => handleViewSettings(option.value)}
                         >
-                            {option}
+                            {option.type}
                         </Button>)}
                 </Stack>
             </AccordionDetails>

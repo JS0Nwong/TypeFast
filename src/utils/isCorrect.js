@@ -1,34 +1,41 @@
-import { useEffect } from "react";
-import useStore from "./store";
-import { useUpdateHistory } from "./store";
+import { useUpdateHistory } from "./stores/store";
+import { useUserInputStore } from "./stores/userInputStore";
+
+import { useBoundStore } from "./stores/boundStore";
 
 const isCorrect = () => {
   const {
     gameStatus,
     text,
+    setPrevInput,
+    setUserInputWordHistory,
     currentWordIndex,
     currentUserInput,
     prevInput,
     userInputWordHistory,
-    setUserInputWordHistory,
-    setPrevInput,    
     increaseRawWordsPerMinuteKeys,
-  } = useStore((state) => ({
-    gameStatus: state.gameStatus ,
-    text: state.text ,
-    currentWordIndex: state.currentWordIndex ,
-    currentUserInput: state.currentUserInput ,
-    prevInput: state.prevInput ,
+    // updateWordsCorrect,
+    // updateWordsIncorrect,
+  } = useBoundStore((state) => ({
+    gameStatus: state.gameStatus,
+    text: state.text,
+    updateWordsCorrect: state.updateWordsCorrect,
+    updateWordsIncorrect: state.updateWordsIncorrect,
+    setPrevInput: state.setPrevInput,
+    setUserInputWordHistory: state.setUserInputWordHistory,
+    currentWordIndex: state.currentWordIndex,
+    currentUserInput: state.currentUserInput,
+    prevInput: state.prevInput,
     userInputWordHistory: state.userInputWordHistory,
-    setUserInputWordHistory: state. setUserInputWordHistory,
-    setPrevInput: state. setPrevInput,    
-    increaseRawWordsPerMinuteKeys: state.increaseRawWordsPerMinuteKeys ,
+    increaseRawWordsPerMinuteKeys: state.increaseRawWordsPerMinuteKeys,
+    // updateWordsCorrect: state.updateWordsCorrect,
+    // updateWordsIncorrect: state.updateWordsIncorrect,
   }));
   
   const {
     updateWordsCorrect,
     updateWordsIncorrect,
-  } = useUpdateHistory();
+  } = useUpdateHistory()
 
   const checkWord = () => {
     // checks if user is active, return early if not

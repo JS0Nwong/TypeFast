@@ -3,27 +3,26 @@ import { Box, Typography } from "@mui/material"
 
 import { applyStyles } from '../utils/applyStyles';
 import { useInput } from '../hooks/useInput';
-import useStore from '../utils/store';
-import useStoreActions from '../utils/store';
 import useFocus from '../hooks/useFocus';
 import { LuMousePointer2 } from "react-icons/lu";
 
-import Caret from "../components/Caret"
+import { useUserInputStore } from '../utils/stores/userInputStore';
+import { useBoundStore } from '../utils/stores/boundStore'
+
+import Caret from "./Carets/Caret"
 
 export default function TypeDisplay() {
   const { applyWordStyles, applyCharStyles } = applyStyles()
+
   const {
-    userStatus,
-    currentWordIndex,
     text,
     focusedTextBox,
     setUserStatus,
     setInputFocus,
-  } = useStore((state) => ({
-    userStatus: state.userStatus,
+    currentWordIndex,
+  } = useBoundStore((state) => ({
     currentWordIndex: state.currentWordIndex,
     text: state.text,
-    currentUserInput: state.currentUserInput,
     focusedTextBox: state.focusedTextBox,
     setUserStatus: state.setUserStatus,
     setInputFocus: state.setInputFocus,
@@ -52,15 +51,11 @@ export default function TypeDisplay() {
   // useeffect to listen to changes in the text to move it foward properly
   useEffect(() => {
     if (currentWordIndex !== 0 &&
-      wordsRef[currentWordIndex].current.offsetLeft <
-      wordsRef[currentWordIndex - 1].current.offsetLeft
+      wordsRef[currentWordIndex]?.current.offsetLeft <
+      wordsRef[currentWordIndex - 1]?.current.offsetLeft
     )
-      wordsRef[currentWordIndex - 1].current.scrollIntoView()
+      wordsRef[currentWordIndex - 1]?.current.scrollIntoView()
   }, [currentWordIndex, wordsRef])
-
-  useEffect(() => {
-
-  }, [currentWordIndex])
 
   return (
     <>
@@ -105,7 +100,6 @@ export default function TypeDisplay() {
             id={index}
             style={{
               margin: '5px 5px',
-              display: 'flex',
               scrollMargin: '4px'
             }}
             className={applyWordStyles(index)}

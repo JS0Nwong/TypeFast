@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
-import useStore from '../utils/store'
-import useStoreActions from "../utils/store"
+import { useBoundStore } from '../utils/stores/boundStore'
 
 const useFocus = () => {
     const { 
@@ -9,7 +8,7 @@ const useFocus = () => {
         gameStatus, 
         userStatus, 
         setUserStatus 
-    } = useStore((state) => ({
+    } = useBoundStore((state) => ({
         focusedTextBox: state.focusedTextBox,
         setInputFocus: state.setInputFocus,
         gameStatus: state.gameStatus,
