@@ -250,6 +250,13 @@ const UserTheme = ({ children }) => {
                                 opacity: '1',
                                 backgroundColor: convertHex(themes[webTheme]?.textPrimary),
                             },
+                        },
+                        '&.MuiButton-outlined': {
+                            border: `2px solid ${themes[webTheme]?.backgroundSecondary}`,
+                            padding: '8px',
+                            "&:hover": {
+                                backgroundColor: themes[webTheme]?.backgroundSecondary,
+                            },
                         }
                     }
                 }
@@ -582,6 +589,26 @@ const UserTheme = ({ children }) => {
                     arrow: {
                         color: '#0a0908',
                     },
+                }
+            },
+            MuiRadio: {
+                styleOverrides: {
+                    root: {
+                        '&.Mui-checked': {
+                            color: themes[webTheme]?.textPrimary,                        
+                        }
+                    }
+                }
+            },
+            MuiChip: {
+                styleOverrides: {
+                    root: {
+                        '&.MuiChip-sizeSmall': {
+                            paddingLeft: '.5rem',
+                            paddingRight: ".5rem",
+
+                        }
+                    }
                 }
             }
         },

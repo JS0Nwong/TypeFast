@@ -45,6 +45,13 @@ export default function GameScreenWrapper() {
                         <TypeDisplay />
                     </>
                 );
+            case 'quote':
+                return (
+                    <>
+                        <TimeDisplay />
+                        <TypeDisplay />
+                    </>
+                );
             case 'words':
                 return (
                     <>
@@ -104,7 +111,10 @@ export default function GameScreenWrapper() {
                 {gameStatus !== 'finished' &&
                     <Tooltip title={'restart game'}>
                         <IconButton
-                            sx={{ opacity: hideElements ? "0" : "1", mt: -10 }}
+                            sx={{ 
+                                opacity: hideElements ? "0" : "1", 
+                                mt: -10 ,
+                            }}
                             onClick={handleReset}
                             tabIndex={9}
                         >

@@ -27,7 +27,6 @@ export default function Leaderboard() {
           }}>
             <Header />
             <Board />
-
             <Footer />
           </Box>
           <Gutter />

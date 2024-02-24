@@ -1,15 +1,20 @@
-import { Box, Typography, Stack, styled, IconButton, Divider } from '@mui/material'
+import { Box, Typography, Stack, styled, IconButton, Avatar } from '@mui/material'
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import XIcon from '@mui/icons-material/X';
 import InstagramIcon from '@mui/icons-material/Instagram';
+import { useContext } from 'react';
+import AuthContext from '../../hooks/AuthProvider';
 
 export default function User() {
+  const { auth } = useContext(AuthContext)
+
   const ProfileBox = styled("div", {
     name: "MuiDiv",
     overridesResolver: (props, styles) => {
       return [styles.root]
     }
   })``;
+
   return (
     <>
       <Box sx={{
@@ -33,36 +38,43 @@ export default function User() {
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-              <Box
-                component="img"
+              <Avatar
                 sx={{
                   height: 300,
                   width: 300,
 
                   borderRadius: "999px"
                 }}
-                alt="The house from the offer."
-                src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2"
+                alt="User profile avatar"
+                src={auth.currentUser.photoURL}
               />
             </Box>
             <Stack
               direction="column"
               sx={{ height: '100%', width: '100%', }}
             >
-              <Typography variant='h4'>@username</Typography>
+              <Typography variant='h4'>
+                {auth.currentUser.displayName
+                  ? auth.currentUser.displayName
+                  : auth.currentUser.uid}
+              </Typography>
               <Box sx={{ mt: 2 }}>
                 <Typography
                   variant='h6'
                   sx={{ opacity: 0.45 }}
                 >bio</Typography>
-                <Typography variant='body2'>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</Typography>
+                <Typography variant='body2'>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                </Typography>
               </Box>
               <Box sx={{ mt: 2 }}>
                 <Typography variant='h6'
                   sx={{ opacity: 0.45 }}>
                   keyboard
                 </Typography>
-                <Typography variant='body2'>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</Typography>
+                <Typography variant='body2'>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                </Typography>
               </Box>
 
               <Stack
@@ -159,8 +171,8 @@ export default function User() {
                 <Typography variant='h4'>0</Typography>
                 <Typography variant='h4' sx={{ opacity: 0.85 }}>100%</Typography>
               </Stack>
-            </Stack>          
-            </ProfileBox>
+            </Stack>
+          </ProfileBox>
         </Stack>
       </Box>
     </>

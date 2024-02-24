@@ -1,7 +1,9 @@
 import { useMemo, useContext } from 'react'
 import { Box } from "@mui/material"
-import Character from './Character';
+
 import { ThemeContext } from "../hooks/useTheme"
+import Caret from "./Carets/Caret"
+import { useBoundStore } from '../utils/stores/boundStore';
 
 export default function UserInputDisplay({ charsTyped }) {
     const char = useMemo(() => {
@@ -12,16 +14,7 @@ export default function UserInputDisplay({ charsTyped }) {
 
     return (
         <Box>
-            {char.map((_, index) => {
-                return (<Character
-                    key={index}
-                    char={charsTyped.charAt(index)}
-                    correctColor={theme.theme.palette.text.primary}
-                    incorrectColor={theme.theme.palette.text.error}
-                />
-                )
-            })
-            }
+            
         </Box>
     )
 }
