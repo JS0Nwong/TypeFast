@@ -9,6 +9,7 @@ import { useUserStore } from "./userStore";
 import { useCursorStore } from "./cursorStore";
 import { useWordHistoryStore } from "./wordHistoryStore";
 import { useModalStore } from "./modalStore";
+import { useMultiplayerStore } from "./multiplayerStore";
 
 export const useBoundStore = create(
   persist(
@@ -20,6 +21,7 @@ export const useBoundStore = create(
       ...useCursorStore(...args),
       ...useWordHistoryStore(...args),
       ...useModalStore(...args),
+      ...useMultiplayerStore(...args),
     }),
     {
       name: "bound-store",

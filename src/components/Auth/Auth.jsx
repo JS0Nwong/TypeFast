@@ -12,6 +12,7 @@ import {
 import { useAuth } from '../../hooks/useAuth'
 
 export default function Auth() {
+    const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [pass, setPass] = useState('')
     const [confirmEmail, setConfirmEmail] = useState('')
@@ -28,11 +29,13 @@ export default function Auth() {
     const handleAuthSubmit = () => {
         email.trim() !== "" && pass.trim() !== ""
         if (isLogin) {
-            emailAndPassAuth(isLogin, email, pass)
+            emailAndPassAuth(isLogin, email.trim(), pass.trim(), username.trim())
         }
         else {
-            email === confirmEmail && pass === confirmPass ?
-                emailAndPassAuth(isLogin, email, pass) :
+            email.trim() === confirmEmail.trim() 
+            && pass.trim() === confirmPass.trim()
+            && username.trim() !== "" ?
+                emailAndPassAuth(isLogin, email.trim(), pass.trim(), username.trim()) :
                 handleError()
         }
     }
@@ -72,30 +75,36 @@ export default function Auth() {
                                 <TextField
                                     autoComplete='off'
                                     placeholder='username'
+                                    onChange={(e) => setUsername(e.target.value)}
                                 />
                                 : <></>}
                             <TextField
                                 autoComplete='off'
                                 placeholder='email'
                                 type='email'
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                             {!isLogin ?
                                 <TextField
                                     autoComplete='off'
                                     placeholder='confirm email'
                                     type='email'
+                                    onChange={(e) => setConfirmEmail(e.target.value)}
                                 />
                                 : <></>}
                             <TextField
                                 autoComplete='off'
                                 placeholder='password'
                                 type='password'
+                                onChange={(e) => setPass(e.target.value)}
                             />
                             {!isLogin ?
                                 <TextField
                                     autoComplete='off'
                                     placeholder='confirm password'
                                     type='password'
+                                    onChange={(e) => setConfirmPass(e.target.value)}
+
                                 />
                                 : <></>}
                         </Stack>

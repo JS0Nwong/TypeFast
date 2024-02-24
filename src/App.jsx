@@ -14,6 +14,7 @@ import Error from './views/404'
 import Rooms from './views/Rooms';
 import Profile from './views/Profile'
 import UserAuth from './views/UserAuth';
+import Lobby from './views/Lobby';
 import PageLayout from './views/PageLayout';
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
                       Component={Profile}
                     />}
                 />
+                <Route path="/:lobby" element={<Lobby />} />
                 <Route path="/u/:username" element={<Profile />} />
                 <Route path="/*" element={<Error />} />
               </Routes>

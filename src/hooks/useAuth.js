@@ -5,20 +5,27 @@ import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
+  updateProfile,
 } from "firebase/auth";
 import { useBoundStore } from "../utils/stores/boundStore";
 const useAuth = () => {
-  const provider = new GoogleAuthProvider()
-  const navigate = useNavigate()
+  const provider = new GoogleAuthProvider();
+  const navigate = useNavigate();
   const { isAuthenticated, setIsAuthenticated } = useBoundStore();
 
-  const emailAndPassAuth = async (isLogin, username, password) => {
+  const emailAndPassAuth = async (isLogin, email, password, username) => {
     try {
       isLogin
         ? await signInWithEmailAndPassword(auth, username, password)
-        : await createUserWithEmailAndPassword(auth, email, password);
-      navigate("/account");
+        : await createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+              return updateProfile(userCredential.user, {
+                displayName: username,
+              });
+            })
+            .catch((error) => console.log(error));
       setIsAuthenticated(true);
+      navigate("/account");
     } catch (error) {
       console.log(error);
     }
@@ -26,8 +33,8 @@ const useAuth = () => {
   const popUpAuth = async () => {
     try {
       await signInWithPopup(auth, provider);
-      navigate("/account");
       setIsAuthenticated(true);
+      navigate("/account");
     } catch (error) {
       console.log(error);
     }

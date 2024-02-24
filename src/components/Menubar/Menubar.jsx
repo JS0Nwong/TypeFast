@@ -60,6 +60,7 @@ export default function Menubar() {
         mt: 7,
         width: "100%",
         opacity: hideElements ? 0 : 1,
+        transition: '0.25s',
       }}>
         <MenuBox
           sx={{
@@ -70,81 +71,139 @@ export default function Menubar() {
           <Stack
             direction='row'
             spacing='auto'
-            divider={<Divider orientation="vertical" flexItem />}
+            divider={
+              mode === 'zen' 
+              ? false 
+              : <Divider orientation="vertical" flexItem />
+            }
+            sx={{
+              transition: '0.25s',
+            }}
           >
-            {/* Text Options */}
-            <Box sx={{
-              display: mode === 'zen' ? 'none' : 'flex',
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-            }}>
-              <Button
-                variant="text"
-                startIcon={<AlternateEmailIcon />}
-                sx={{
-                  padding: 0,
-                  minHeight: 0,
-                  minWidth: 0,
-                  mr: 2,
-                  ml: 2,
-                }}
-              >
-                Puncuations
-              </Button>
-              <Button variant="text"
-                startIcon={<NumbersIcon />}
-                sx={{
-                  padding: 0,
-                  minHeight: 0,
-                  minWidth: 0,
-                  mr: 2,
-                  ml: 2,
-                }}
-              >
-                Numbers
-              </Button>
-            </Box>
-            {/* Test Modes */}
-            <Box sx={{
-              display: 'flex',
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-              width: '100%',
-            }}>
-              <Button
-                variant="text"
-                startIcon={<TimelapseIcon />}
-                sx={{ mr: 1, ml: 2, opacity: mode === 'time' ? "1" : "0.55" }}
-                onClick={() => setMode('time')}
-              >
-                time
-              </Button>
-              <Button variant="text"
-                startIcon={<TitleIcon />}
-                sx={{ mr: 1, ml: 1, opacity: mode === 'words' ? "1" : "0.55" }}
-                onClick={() => setMode('words')}
+            {/* <motion.div
+              initial={{
+                width: mode === 'zen' ? "auto" : '0',
+              }}
+              animate={{
+                width: mode === 'zen' ? "0" : 'auto',
+              }}
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-evenly',
+                width: '100%',
+              }}
+            > */}
+              {/* Text Options */}
+              <Box sx={{
+                display: mode === 'zen' ? 'none' : 'flex',
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+              }}>
+                <Button
+                  variant="text"
+                  startIcon={<AlternateEmailIcon />}
+                  sx={{
+                    padding: 0,
+                    minHeight: 0,
+                    minWidth: 0,
+                    mr: 2,
+                    ml: 2,
+                  }}
+                >
+                  Puncuations
+                </Button>
+                <Button variant="text"
+                  startIcon={<NumbersIcon />}
+                  sx={{
+                    padding: 0,
+                    minHeight: 0,
+                    minWidth: 0,
+                    mr: 2,
+                    ml: 2,
+                  }}
+                >
+                  Numbers
+                </Button>
+              </Box>
+            {/* </motion.div> */}
 
-              >
-                words
-              </Button>
-              <Button variant="text"
-                startIcon={<FormatQuoteIcon />}
-                sx={{ mr: 1, ml: 1, opacity: mode === 'quote' ? "1" : "0.55" }}
-                onClick={() => setMode('quote')}
+            {/* <motion.div
+              initial={{
+                width: mode === 'zen' ? "auto" : '0',
+              }}
+              animate={{
+                width: 'auto',
+              }}
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-evenly',
+                width: '100%',
+              }}
+            > */}
 
-              >
-                quote
-              </Button>
-              <Button variant="text"
-                startIcon={<SelfImprovementIcon />}
-                sx={{ mr: 1, ml: 1, opacity: mode === 'zen' ? "1" : "0.55" }}
-                onClick={() => setMode('zen')}
-              >
-                zen
-              </Button>
-            </Box>
-            {/* Test Mode Options */}
-            {renderSwitch(mode)}
+              {/* Test Modes */}
+              <Box sx={{
+                display: 'flex',
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                width: '100%',
+              }}>
+                <Button
+                  variant="text"
+                  startIcon={<TimelapseIcon />}
+                  sx={{ mr: 1, ml: 2, opacity: mode === 'time' ? "1" : "0.55" }}
+                  onClick={() => setMode('time')}
+                >
+                  time
+                </Button>
+                <Button variant="text"
+                  startIcon={<TitleIcon />}
+                  sx={{ mr: 1, ml: 1, opacity: mode === 'words' ? "1" : "0.55" }}
+                  onClick={() => setMode('words')}
+
+                >
+                  words
+                </Button>
+                <Button variant="text"
+                  startIcon={<FormatQuoteIcon />}
+                  sx={{ mr: 1, ml: 1, opacity: mode === 'quote' ? "1" : "0.55" }}
+                  onClick={() => setMode('quote')}
+
+                >
+                  quote
+                </Button>
+                <Button variant="text"
+                  startIcon={<SelfImprovementIcon />}
+                  sx={{ mr: 1, ml: 1, opacity: mode === 'zen' ? "1" : "0.55" }}
+                  onClick={() => setMode('zen')}
+                >
+                  zen
+                </Button>
+              </Box>
+            {/* </motion.div> */}
+
+
+            {/* <motion.div
+              initial={{
+                width: mode === 'zen' ? "auto" : '0',
+              }}
+              animate={{
+                width: mode === 'zen' ? "0" : 'auto',
+              }}
+              transition={{
+                type: 'keyframes'
+              }}
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-evenly',
+                width: '100%',
+              }}> */}
+              {/* Test Mode Options */}
+              {renderSwitch(mode)}
+            {/* </motion.div> */}
           </Stack>
         </MenuBox>
       </Box>

@@ -72,7 +72,6 @@ export default function TypeDisplay() {
         id="words"
         onClick={() => handleFocus()}
       >
-        
         {focusedTextBox ? <></> : <Typography sx={{
           position: 'absolute',
           top: '50%',
