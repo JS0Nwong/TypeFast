@@ -1,12 +1,10 @@
 import { useMemo, createRef, useEffect } from 'react'
 import { Box, Typography } from "@mui/material"
+import { LuMousePointer2 } from "react-icons/lu";
 
 import { applyStyles } from '../utils/applyStyles';
 import { useInput } from '../hooks/useInput';
 import useFocus from '../hooks/useFocus';
-import { LuMousePointer2 } from "react-icons/lu";
-
-import { useUserInputStore } from '../utils/stores/userInputStore';
 import { useBoundStore } from '../utils/stores/boundStore'
 
 import Caret from "./Carets/Caret"

@@ -2,7 +2,6 @@ import { Box, Typography } from "@mui/material"
 import { useEffect } from "react"
 import MPGameInfo from "./MPGameInfo"
 import { useBoundStore } from "../../utils/stores/boundStore"
-import useFirebase from "../../hooks/useFirebase"
 
 export default function RoomList() {
   const {
@@ -14,6 +13,7 @@ export default function RoomList() {
     // Fetch the current lobbies
     fetchCurrentLobbies()
   }, [])
+
   return (
     <Box sx={{
       height: "550px",

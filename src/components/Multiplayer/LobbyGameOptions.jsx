@@ -8,31 +8,57 @@ import {
     Radio,
     FormLabel,
 } from '@mui/material'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useFirebase from '../../hooks/useFirebase';
 import { useSearchParams } from 'react-router-dom';
 import { useBoundStore } from '../../utils/stores/boundStore'
 
-
 export default function LobbyGameOptions() {
-    const { currentLobbyInfo } = useBoundStore()
+    const { currentLobbyInfo, editRoomSettings } = useBoundStore()
 
-    const [gameMode, setGameMode] = useState(currentLobbyInfo.gameMode);
-    const [time, setTime] = useState(60);
-    const [words, setWords] = useState(25);
-    const [quoteLength, setQuoteLength] = useState('short')
-    const [includePunctuation, setIncludePunctuation] = useState(currentLobbyInfo.includePunctuation);
-    const [includeNumbers, setIncludeNumbers] = useState(currentLobbyInfo.includeNumbers);
-    const [maxPlayers, setMaxPlayers] = useState(currentLobbyInfo.maxPlayers)
-    const [roomPrivacy, setRoomPrivacy] = useState(true)
+    const {
+        mode,
+        setMode,
+        includeNumbers,
+        includePunctuation,
+        customTest,
+        quoteLength,
+        time,
+        setTime,
+        wordsAmount,
+        isLobbyPublic,
+        maxPlayers,
+        setWordsAmount,
+        setIncludePunctuation,
+        setIncludeNumbers,
+        setLobbyMaxPlayers,
+        setLobbyPublic,
+    } = useBoundStore((state) => ({
+        mode: state.mode,
+        includeNumbers: state.includeNumbers,
+        includePunctuation: state.includePunctuation,
+        customTest: state.customTest,
+        quoteLength: state.quoteLength,
+        time: state.time,
+        wordsAmount: state.wordsAmount,
+        isLobbyPublic: state.isLobbyPublic,
+        maxPlayers: state.maxPlayers,
+        setTime: state.setTime,
+        setMode: state.setMode,
+        setWordsAmount: state.setWordsAmount,
+        setIncludePunctuation: state.setIncludePunctuation,
+        setIncludeNumbers: state.setIncludeNumbers,
+        setLobbyMaxPlayers: state.setLobbyMaxPlayers,
+        setLobbyPublic: state.setLobbyPublic,
+    }))
 
-    const { editGameSettings } = useFirebase()
+    const { startGame } = useFirebase()
 
     const [searchParams] = useSearchParams()
     const roomID = searchParams.get('room')
 
     const handleGameModeChange = (e) => {
-        setGameMode(e.target.value);
+        setMode(e.target.value);
         handleEditGameSettings()
     };
     const handleTimeSettingsChange = (e) => {
@@ -41,7 +67,12 @@ export default function LobbyGameOptions() {
 
     };
     const handleWordSettingsChange = (e) => {
-        setWords(e.target.value)
+        setWordsAmount(e.target.value)
+        handleEditGameSettings()
+    }
+
+    const handleQuoteLengthChange = (e) => {
+        setQuoteLength(e.target.value)
         handleEditGameSettings()
     }
 
@@ -56,18 +87,16 @@ export default function LobbyGameOptions() {
     };
 
     const handleRoomPrivacyChange = (e) => {
-        setRoomPrivacy(e.target.value)
+        setLobbyPublic(e.target.value)
         handleEditGameSettings()
     }
 
+    const handleSetMaxPlayers = (e) => {
+        setLobbyMaxPlayers(e.target.value)
+        handleEditGameSettings()
+    }
     const handleEditGameSettings = () => {
-        editGameSettings({
-            roomID,
-            gameMode,
-            includePunctuation,
-            includeNumbers,
-            roomPrivacy,
-        })
+        editRoomSettings(roomID)
     }
 
     const renderSwitch = (param) => {
@@ -93,7 +122,7 @@ export default function LobbyGameOptions() {
                     <RadioGroup
                         row
                         aria-labelledby="game-mode-buttons-group-label"
-                        value={words}
+                        value={wordsAmount}
                         name="game-mode-buttons-group"
                         onChange={handleWordSettingsChange}
                     >
@@ -111,7 +140,7 @@ export default function LobbyGameOptions() {
                         aria-labelledby="game-mode-buttons-group-label"
                         value={quoteLength}
                         name="game-mode-buttons-group"
-                        onChange={handleWordSettingsChange}
+                        onChange={handleQuoteLengthChange}
                     >
                         <FormControlLabel value="short" control={<Radio />} label="short" />
                         <FormControlLabel value="medium" control={<Radio />} label="medium" />
@@ -125,9 +154,9 @@ export default function LobbyGameOptions() {
                     <RadioGroup
                         row
                         aria-labelledby="game-mode-buttons-group-label"
-                        value={gameMode}
+                        value={time}
                         name="game-mode-buttons-group"
-                        onChange={handleChangeGameSettings}
+                        onChange={handleTimeSettingsChange}
                     >
                         <FormControlLabel value="15" control={<Radio />} label="15" />
                         <FormControlLabel value="30" control={<Radio />} label="30" />
@@ -161,7 +190,7 @@ export default function LobbyGameOptions() {
                         <RadioGroup
                             row
                             aria-labelledby="game-mode-buttons-group-label"
-                            value={gameMode}
+                            value={mode}
                             name="game-mode-buttons-group"
                             onChange={handleGameModeChange}
                         >
@@ -172,7 +201,7 @@ export default function LobbyGameOptions() {
                     </Box>
                     <Box sx={{ mt: 2 }}>
                         <FormLabel id="game-settings-buttons-group-label-group">game settings</FormLabel>
-                        {renderSwitch(gameMode)}
+                        {renderSwitch(mode)}
                     </Box>
                     <Box sx={{ mt: 2 }}>
                         <FormLabel id="game-text-options-buttons-group-label-group">text options</FormLabel>
@@ -213,9 +242,9 @@ export default function LobbyGameOptions() {
                         <RadioGroup
                             row
                             aria-labelledby="game-mode-buttons-group-label"
-                            value={roomPrivacy}
+                            value={isLobbyPublic}
                             name="game-mode-buttons-group"
-                            onChange={handleRoomPrivacyChange}
+                            onChange={(e) => handleRoomPrivacyChange(e)}
                         >
                             <FormControlLabel value={true} control={<Radio />} label="public" />
                             <FormControlLabel value={false} control={<Radio />} label="private" />
@@ -227,7 +256,7 @@ export default function LobbyGameOptions() {
                             InputProps={{
                                 inputProps: {
                                     min: 2,
-                                    max: 50,
+                                    max: 25,
                                 },
                                 disableUnderline: true,
                             }}
@@ -235,27 +264,17 @@ export default function LobbyGameOptions() {
                                 ml: 1,
                                 p: 0,
                                 "& fieldset": { border: 'none' },
+                                '& input[type=number]::-webkit-inner-spin-button': {
+                                    opacity: 1,
+                                }
                             }}
                             size='small'
                             variant='standard'
                             type='number'
                             value={maxPlayers}
-                            max='50'
-                            onChange={(e) => setMaxPlayers(e.target.value)}
+                            max='25'
+                            onChange={(e) => handleSetMaxPlayers(e)}
                         />
-                    </Box>
-                    <Box>
-                        <FormLabel id="game-mode-buttons-group-label-group">room privacy</FormLabel>
-                        <RadioGroup
-                            row
-                            aria-labelledby="game-mode-buttons-group-label"
-                            value={roomPrivacy}
-                            name="game-mode-buttons-group"
-                            onChange={handleRoomPrivacyChange}
-                        >
-                            <FormControlLabel value={true} control={<Radio />} label="public" />
-                            <FormControlLabel value={false} control={<Radio />} label="private" />
-                        </RadioGroup>
                     </Box>
                 </Box>
             </Box>
@@ -265,9 +284,14 @@ export default function LobbyGameOptions() {
                 justifyContent: 'flex-end'
             }}>
                 <Button sx={{ mr: 2 }}>end game</Button>
-                <Button variant={'contained'} sx={{
-                    p: 1
-                }}>start game</Button>
+                <Button
+                    variant={'contained'}
+                    sx={{
+                        p: 1
+                    }}
+                    onClick={() => startGame(roomID)}
+                >
+                    start game</Button>
             </Box>
         </>
     )

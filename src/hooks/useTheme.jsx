@@ -442,7 +442,7 @@ const UserTheme = ({ children }) => {
                     inputProps: {
                         sx: {
                             color: themes[webTheme]?.textPrimary,
-                            fontFamily: font
+                            fontFamily: font,
                         },
                     }
                 },

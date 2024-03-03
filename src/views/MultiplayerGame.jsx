@@ -1,22 +1,21 @@
 import { Box } from "@mui/material"
 import { motion } from "framer-motion"
 import { useEffect } from "react"
-import { useSearchParams } from "react-router-dom";
-
-import { useBoundStore } from "../utils/stores/boundStore";
+import { useSearchParams } from "react-router-dom"
 
 import Header from '../components/static/Header'
 import Footer from '../components/static/Footer'
 import Gutter from "../components/static/Gutter"
-import GameLobby from "../components/Multiplayer/GameLobby"
+import MPGameWrapper from "../components/Multiplayer/MPGameWrapper"
 
-export default function Lobby() {
-    const { setLobbyInfo, subscribeToCurrentRoom } = useBoundStore()
+import { useBoundStore } from "../utils/stores/boundStore"
+
+export default function MultiplayerGame() {
+    const { fetchGame } = useBoundStore()
     const [searchParams] = useSearchParams()
 
-    //use effect to get current lobby data
     useEffect(() => {
-        subscribeToCurrentRoom(searchParams.get('room'))
+        fetchGame(searchParams.get('room'))
     }, [])
 
     return (
@@ -29,7 +28,6 @@ export default function Lobby() {
             >
                 <Box sx={{ display: "flex", flexDirection: "row" }}>
                     <Gutter />
-
                     <Box sx={{
                         maxWidth: { sm: "100%", md: "1440px" },
                         width: "100%",
@@ -39,11 +37,10 @@ export default function Lobby() {
                         alignItems: "center"
                     }}>
                         <Header />
-                        <GameLobby />
+                        <MPGameWrapper />
                         <Footer />
                     </Box>
                     <Gutter />
-
                 </Box>
             </motion.div>
         </>

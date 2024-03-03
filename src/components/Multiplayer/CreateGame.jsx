@@ -16,19 +16,27 @@ import {
     FormLabel,
 } from '@mui/material';
 import { useNavigate, createSearchParams } from 'react-router-dom';
-
 import useFirebase from '../../hooks/useFirebase';
+import { useBoundStore } from '../../utils/stores/boundStore';
 
 const CreateGameDialog = ({ open, onClose }) => {
     const [gameMode, setGameMode] = useState('time');
     const [time, setTime] = useState(60);
     const [words, setWords] = useState(25);
     const [quoteLength, setQuoteLength] = useState('short')
-    const [includePunctuation, setIncludePunctuation] = useState(false);
-    const [includeNumbers, setIncludeNumbers] = useState(false);
+    const [includePunctuation, setIncludeTextPunctuation] = useState(false);
+    const [includeNumbers, setIncludeTextNumbers] = useState(false);
     const [maxPlayers, setMaxPlayers] = useState(2)
     const [roomPrivacy, setRoomPrivacy] = useState(true)
     const [roomCode, setRoomCode] = useState('')
+
+    const {
+        setMode,
+        setIncludePunctuation,
+        setIncludeNumbers,
+        setLobbyMaxPLayers,
+        setLobbyPublic,
+     } = useBoundStore()
 
     const navigate = useNavigate()
 
@@ -36,6 +44,7 @@ const CreateGameDialog = ({ open, onClose }) => {
 
     const handleGameModeChange = (e) => {
         setGameMode(e.target.value);
+        setMode(e.target.value)
     };
 
     const handleTimeSettingsChange = (e) => {
@@ -45,27 +54,40 @@ const CreateGameDialog = ({ open, onClose }) => {
         setWords(e.target.value)
     }
 
+    const handleQuoteLengthChange = (e) => {
+        setQuoteLength(e.target.value)
+    }
+
     const handleIncludePunctuationChange = (e) => {
-        setIncludePunctuation(e.target.checked);
+        setIncludeTextPunctuation(e.target.checked);
+        setIncludePunctuation(e.target.checked)
     };
 
     const handleIncludeNumbersChange = (e) => {
         setIncludeNumbers(e.target.checked);
+        setIncludeNumbers(e.target.checked)
     };
 
     const handleRoomPrivacyChange = (e) => {
         setRoomPrivacy(e.target.value)
+        setLobbyPublic(e.target.value)
+    }
+
+    const handleSetMaxPlayers = (e) => {
+        setMaxPlayers(e.target.value)
+        setLobbyMaxPLayers(e.target.value)
     }
 
     const handleCreateGame = async () => {
         // Logic to create the game with the selected settings
         await createGameLobby({
             mode: gameMode,
-            includePuncuation: includePunctuation,
+            includePunctuation: includePunctuation,
             includeNumbers: includeNumbers,
             maxPlayers: maxPlayers,
             roomPrivacy: roomPrivacy
         }).then((res) => {
+
             navigate({
                 pathname: '/lobby',
                 search: createSearchParams({
@@ -117,7 +139,7 @@ const CreateGameDialog = ({ open, onClose }) => {
                         aria-labelledby="game-mode-buttons-group-label"
                         value={quoteLength}
                         name="game-mode-buttons-group"
-                        onChange={handleWordSettingsChange}
+                        onChange={handleQuoteLengthChange}
                     >
                         <FormControlLabel value="short" control={<Radio />} label="short" />
                         <FormControlLabel value="medium" control={<Radio />} label="medium" />
@@ -131,9 +153,9 @@ const CreateGameDialog = ({ open, onClose }) => {
                     <RadioGroup
                         row
                         aria-labelledby="game-mode-buttons-group-label"
-                        value={gameMode}
+                        value={time}
                         name="game-mode-buttons-group"
-                        onChange={handleChangeGameSettings}
+                        onChange={handleTimeSettingsChange}
                     >
                         <FormControlLabel value="15" control={<Radio />} label="15" />
                         <FormControlLabel value="30" control={<Radio />} label="30" />
@@ -218,7 +240,7 @@ const CreateGameDialog = ({ open, onClose }) => {
                                     InputProps={{
                                         inputProps: {
                                             min: 2,
-                                            max: 50,
+                                            max: 25,
                                         },
                                         disableUnderline: true,
                                     }}
@@ -232,8 +254,8 @@ const CreateGameDialog = ({ open, onClose }) => {
                                     variant='standard'
                                     type='number'
                                     value={maxPlayers}
-                                    max='50'
-                                    onChange={(e) => setMaxPlayers(e.target.value)}
+                                    max='25'
+                                    onChange={(e) => handleSetMaxPlayers(e.target.value)}
                                 />}
                                 sx={{
                                     m: 0,

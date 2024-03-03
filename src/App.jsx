@@ -16,6 +16,7 @@ import Profile from './views/Profile'
 import UserAuth from './views/UserAuth';
 import Lobby from './views/Lobby';
 import PageLayout from './views/PageLayout';
+import MultiplayerGame from './views/MultiplayerGame';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
                     />}
                 />
                 <Route path="/:lobby" element={<Lobby />} />
+                <Route path="/mpgame" element={<MultiplayerGame />} />
                 <Route path="/u/:username" element={<Profile />} />
                 <Route path="/*" element={<Error />} />
               </Routes>

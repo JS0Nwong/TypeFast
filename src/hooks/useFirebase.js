@@ -15,15 +15,37 @@ import { auth, db } from "../configs/firebase";
 import { useBoundStore } from "../utils/stores/boundStore";
 import { useNavigate } from "react-router-dom";
 
+import { httpsCallable } from "firebase/functions";
+
+import generateWords from "../utils/generateWords";
+
 const useFirebase = () => {
-  const { createGame, setLobbyInfo } = useBoundStore();
+  const {
+    createGame,
+    setLobbyInfo,
+    setSnackbar,
+    mode,
+    includePunctuation,
+    includeNumbers,
+    time,
+    wordsAmount,
+  } = useBoundStore((state) => ({
+    createGame: state.createGame,
+    setLobbyInfo: state.setLobbyInfo,
+    setSnackbar: state.setSnackbar,
+    mode: state.mode,
+    includePunctuation: state.includePunctuation,
+    includeNumbers: state.includeNumber,
+    time: state.time,
+    wordsAmount: state.wordsAmount,
+  }));
 
   const gamesCollection = collection(db, "games");
   const navigate = useNavigate();
 
   const createGameLobby = async ({
     mode,
-    includePuncuation,
+    includePunctuation,
     includeNumbers,
     maxPlayers,
     roomPrivacy,
@@ -39,10 +61,12 @@ const useFirebase = () => {
         maxPlayers: maxPlayers,
         createdAt: serverTimestamp(),
         gameMode: mode,
-        includePuncuation,
+        includePunctuation,
         includeNumbers,
         roomPrivacy,
         roomOwner: auth.currentUser?.uid ? auth.currentUser.uid : null,
+        gameStatus: "waiting-for-players",
+
       });
       createGame({
         players: [
@@ -54,9 +78,12 @@ const useFirebase = () => {
         maxPlayers: maxPlayers,
         createdAt: serverTimestamp(),
         gameMode: mode,
-        includePuncuation,
+        includePunctuation,
         includeNumbers,
-        roomOwner: auth.currentUser?.uid ? auth.currentUser.uid : null,
+        roomOwner: {
+          id: auth.currentUser?.uid ? auth.currentUser.uid : null,
+          displayName: auth.currentUser.displayName ? auth.currentUser.displayName : null
+        },
         roomID: lobbyDoc.id,
       });
       return lobbyDoc.id;
@@ -77,10 +104,11 @@ const useFirebase = () => {
               id: auth.currentUser.uid,
             }),
           });
+          navigate("/lobby?room=" + id);
         }
         // if game is full
         else {
-          console.error("Game room is full");
+          setSnackbar('Error joining game: Room is full')
         }
       } else {
         console.error("Game room does not exist");
@@ -107,39 +135,54 @@ const useFirebase = () => {
     }
   };
 
-  
-  const editRoomSettings = async (
-    id,
-    gameMode,
-    includeNumbers,
-    includePuncuation,
-    maxPlayers,
-    roomPrivacy,
-  ) => {
+  const editRoomSettings = async (id) => {
+    const privateRoom = roomPrivacy === 'true'
     try {
       const gameDoc = await getDoc(doc(db, "games", id));
       if (gameDoc.exists()) {
         await updateDoc(doc(db, "games", id), {
-          gameMode: gameMode,
-          includePuncuation: includePuncuation,
+          gameMode: mode,
+          includePunctuation: includePunctuation,
           includeNumbers: includeNumbers,
-          maxPlayers: maxPlayers,
-          roomPrivacy: roomPrivacy,
+          maxPlayers: Number(maxPlayers),
+          roomPrivacy: privateRoom,       
+          
+          wordsAmount: wordsAmount,
+          time: time,
         });
       } else {
-        console.error("Game room does not exist");
+        console.error("Game room does not exist, cannot edit settings");
       }
     } catch (error) {
       console.error("Error editing game room settings:", error);
     }
   };
-  
 
-  const getLobbyInfo = async (lobbyId) => {
+  const getLobbyInfo = (lobbyId) => {
     const unsub = onSnapshot(doc(db, "games", lobbyId), (doc) => {
       setLobbyInfo(doc.data());
     });
+
+    return () => unsub();
   };
+
+  const startGame = async (id) => {
+    try {
+      const gameDoc = await getDoc(doc(db, "games", id));
+      if (gameDoc.exists()) {
+        await updateDoc(doc(db, "games", id), {
+          gameStatus: "starting",
+          results: [],
+          text: mode === "words" ? generateWords(wordsAmount) : generateWords(),
+        })
+        httpsCallable('startGame')({id})
+        navigate("/mpgame?room=" + id);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const endGame = async () => {};
 
   return {
     createGameLobby,
@@ -147,6 +190,8 @@ const useFirebase = () => {
     joinGameRoom,
     leaveGameRoom,
     editRoomSettings,
+    startGame,
+    endGame,
   };
 };
 
