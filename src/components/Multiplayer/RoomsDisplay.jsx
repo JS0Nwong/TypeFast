@@ -2,6 +2,7 @@ import { Box } from "@mui/material"
 
 import RoomList from './RoomList'
 import MultiplayerMenuBar from './MultiplayerMenuBar'
+import FeedbackSnackbar from '../FeedbackSnackbar'
 
 export default function RoomsDisplay() {
     return (
@@ -14,6 +15,7 @@ export default function RoomsDisplay() {
         }}>
             <MultiplayerMenuBar />
             <RoomList />
+            <FeedbackSnackbar />
         </Box>
     )
 }

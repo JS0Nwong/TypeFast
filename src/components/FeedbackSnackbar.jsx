@@ -13,7 +13,6 @@ export default function FeedbackSnackbar() {
             message={snackbarMessage}
             open={!!snackbarMessage}
             autoHideDuration={3000}
-            TransitionComponent={Slide}
             onClose={() => setSnackbar("")}
         />
     )

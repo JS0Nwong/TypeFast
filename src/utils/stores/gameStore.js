@@ -25,6 +25,14 @@ export const useGameStore = (set) => ({
   customWordsAmount: 1,
   wordsTimer: 0,
 
+  selectedQuoteLength: "medium",
+  quoteLength: 'medium',
+  customQuoteLength: 1,
+
+  // game text options
+  includePunctuation: false,
+  includeNumbers: false,
+
   // snackbar state
   snackbarMessage: "",
 
@@ -95,9 +103,14 @@ export const useGameStore = (set) => ({
       customWordsAmout: amount,
       customTest: true,
     }),
-  updateWordsTimer: () => set((state) => ({
-    wordsTimer: state.wordsTimer + 1
-  })),
+  updateWordsTimer: () =>
+    set((state) => ({
+      wordsTimer: state.wordsTimer + 1,
+    })),
+
+  // game text options
+  setIncludePunctuation: (boolean) => set({ includePunctuation: boolean }),
+  setIncludeNumbers: (boolean) => set({ includeNumbers: boolean }),
 
   //snackbar state setter
   setSnackbar: (text) =>

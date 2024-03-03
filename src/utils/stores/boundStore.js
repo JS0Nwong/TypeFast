@@ -35,7 +35,7 @@ export const useBoundStore = create(
         selectedTime: state.selectedTime,
         textOptions: state.textOptions,
       }),
-    }
+    },
   ),
   shallow
 );
