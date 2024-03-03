@@ -1,9 +1,11 @@
 # TypeFast
-![React](https://img.shields.io/badge/React-18.2.0-61dafb)
-![Cloud Functions](https://img.shields.io/badge/react_beautiful_dnd-13.0.0-0baf7c)
-![Firebase](https://img.shields.io/badge/Firebase-10.5.2-ffa611)
-![Material UI](https://img.shields.io/badge/Material_UI-11.11.1-06b6d4)
-![Zustand](https://img.shields.io/badge/Zustand-^4.4.6-333383)
+![React](https://img.shields.io/badge/React.js-^18.2.0-blue.svg?logo=React)
+![Cloud Functions](https://img.shields.io/badge/Google_Cloud_Functions-2nd_gen-blue.svg?logo=GoogleCloud)
+![Firebase](https://img.shields.io/badge/Firebase-^10.7.1-yellow.svg?logo=Firebase)
+![Material UI](https://img.shields.io/badge/MUI-^5.15.3-blue.svg?logo=MUI)
+![Framer Motion](https://img.shields.io/badge/Framer_Motion-^10.17.4-blue.svg?logo=framer)
+![Zustand](https://img.shields.io/badge/Zustand-^4.4.7-333383)
+
 
 ## About
 TypeFast is a open-source minimalistic typing test inspired by [@monkeytypegame](https://github.com/monkeytypegame/monkeytype). It features several test types, an account system to save your typing history and user-customizable options such as fonts, color themes and carets. TypeFast aims to be an unobtrusive and simple typing experience while providing real-time feedback about your typing.
