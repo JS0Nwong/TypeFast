@@ -42,7 +42,7 @@ npm install
 npm start
 ```
 
-Visit `http://localhost:3000` in your browser to see the Kanban board app in action.
+Visit `http://localhost:3000` in your browser.
 
 ## Deployment
 
