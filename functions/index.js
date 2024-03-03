@@ -24,7 +24,6 @@ const { ServerValue } = require("firebase-admin/database");
 
 initializeApp()
 
-
 // exports.createGameLobby = onDocumentCreate(
 //   "games/{lobbyId}",
 //   async (snapshot, context) => {
@@ -60,8 +59,8 @@ initializeApp()
 //   }
 // );
 
-exports.startGame = onCall(async (data, context) => {
-  log(data, context)
+exports.startGame = onCall(async (request) => {
+  log(request.data)
 
   const db = getFirestore();
   // const { gameId } = res.data.data();
