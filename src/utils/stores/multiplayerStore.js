@@ -1,17 +1,14 @@
 import {
-  addDoc,
   collection,
   getDoc,
   updateDoc,
-  serverTimestamp,
-  setDoc,
   onSnapshot,
-  arrayUnion,
   getDocs,
   query,
   doc,
+  arrayUnion,
 } from "firebase/firestore";
-import { db } from "../../configs/firebase";
+import { auth, db } from "../../configs/firebase";
 import { useBoundStore } from "../stores/boundStore";
 
 const params = new URL(document.location).searchParams;
@@ -20,20 +17,27 @@ const id = params.get("room")?.toString();
 export const useMultiplayerStore = (set) => ({
   currentLobbies: [],
   currentLobbyInfo: null,
+  lobbyId: "EZt6IkyTqZm7aNuvUkR5",
 
   // game state
   gameText: [],
+  startGameCountdown: 0,
+  allowUserInput: false,
 
   // game options information
   mode: "time",
   includePunctuation: false,
   includeNumbers: false,
   maxPlayers: 2,
-  isLobbyPublic: true,  
+  isLobbyPublic: true,
+  isGameEnded: false,
 
   // lobby state
   maxPlayers: 2,
   isLobbyPublic: true,
+
+  // results data
+  gameResults: [],
 
   setLobbies: (lobbies) =>
     set({
@@ -46,6 +50,18 @@ export const useMultiplayerStore = (set) => ({
   setLobbyInfo: (info) =>
     set({
       currentLobbyInfo: info,
+    }),
+  setIsGameEnded: (boolean) =>
+    set({
+      isGameEnded: boolean,
+    }),
+  setStartGameCountdown: (seconds) =>
+    set({
+      startGameCountdown: seconds,
+    }),
+  setAllowUserInput: (bool) =>
+    set({
+      allowUserInput: bool,
     }),
 
   // lobby state setters
@@ -60,7 +76,8 @@ export const useMultiplayerStore = (set) => ({
         includePunctuation: doc.data().includePunctuation,
         includeNumbers: doc.data().includeNumbers,
         maxPlayers: doc.data().maxPlayers,
-        isLobbyPublic: doc.data().roomPrivacy,  
+        isLobbyPublic: doc.data().roomPrivacy,
+        lobbyId: id,
       });
     });
     return () => unsub();
@@ -84,10 +101,10 @@ export const useMultiplayerStore = (set) => ({
       currentLobbies: lobbies,
     });
   },
-  editRoomSettings: async (roomID) => {
+  editRoomSettings: async (id) => {
     const privateRoom = useBoundStore.getState().isLobbyPublic === "true";
     try {
-      const gameDoc = await getDoc(doc(db, "games", roomID));
+      const gameDoc = await getDoc(doc(db, "games", id));
       if (gameDoc.exists()) {
         await updateDoc(doc(db, "games", id), {
           gameMode: useBoundStore.getState().mode,
@@ -103,4 +120,27 @@ export const useMultiplayerStore = (set) => ({
       console.error("Error editing game room settings:", error);
     }
   },
+  addUserToResult: async (id) => {
+    try {
+      const docRef = doc(db, "games", id);
+      const gameDoc = await getDoc(docRef);
+      if (gameDoc.exists()) {
+        const results = gameDoc.data().results;
+        await updateDoc(docRef, {
+          results: arrayUnion({
+            id: auth.currentUser.uid,
+            name: auth.currentUser.displayName,
+            wpm: 0,
+            accuracy: 0,
+          }),
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  setGameResults: async (data) =>
+    set({
+      gameResults: data,
+    }),
 });

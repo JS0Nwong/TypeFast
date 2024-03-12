@@ -7,10 +7,7 @@
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
 
-const {
-  log
-} = require('firebase-functions/logger')
-
+const { log } = require('firebase-functions/logger')
 const {
     onDocumentCreate,
     onDocumentDelete,
@@ -21,55 +18,28 @@ const { onRequest, onCall } = require("firebase-functions/v2/https");
 const { initializeApp } = require("firebase-admin/app");
 const { getFirestore, FieldValue } = require("firebase-admin/firestore");
 const { ServerValue } = require("firebase-admin/database");
+const { onValueCreated } = require('firebase-functions/v2/database');
 
 initializeApp()
 
-// exports.createGameLobby = onDocumentCreate(
-//   "games/{lobbyId}",
-//   async (snapshot, context) => {
-//     const db = getFirestore();
-//     const lobbyId = context.params.lobbyId;
-//     const lobbyData = snapshot.data();
-
-//     if (lobbyData) {
-//       const { players, maxPlayers } = lobbyData;
-//       if (players.length === maxPlayers) {
-//         const gameData = {
-//           players,
-//           words: [],
-//           currentWord: "",
-//           currentRound: 0,
-//           started: false,
-//           createdAt: FieldValue.serverTimestamp(),
-//         };
-//         const gameRef = db.collection("games").doc(lobbyId);
-//         await gameRef.set(gameData);
-//       }
-//     }
-//   }
-// );
-
-// exports.deleteGameLobby = onDocumentDelete(
-//   "games/{lobbyId}",
-//   async (snapshot, context) => {
-//     const db = getFirestore();
-//     const lobbyId = context.params.lobbyId;
-//     const gameRef = db.collection("games").doc(lobbyId);
-//     await gameRef.delete();
-//   }
-// );
-
 exports.startGame = onCall(async (request) => {
-  log(request.data)
+  try {
+    log(request.data.id);
 
-  const db = getFirestore();
-  // const { gameId } = res.data.data();
-  // const { gameData } = res.data();
-  // if (gameData) {
-  //   const gameRef = db.collection("games").doc(gameId);
-  //   await gameRef.update({
-  //     countdown: ServerValue.TIMESTAMP,
-  //     seconds: 5,
-  //   });
-  // }
+    const db = getFirestore();
+    const gameId = request.data.id;
+    if (gameId) {
+      const gameRef = db.collection("games").doc(gameId);
+      await gameRef.update({
+        countdown: {
+          startTime: FieldValue.serverTimestamp(),
+          seconds: 5,
+        },
+        gameStatus: "starting",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    log(error);
+  }
 });

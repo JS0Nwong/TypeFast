@@ -87,7 +87,6 @@ const CreateGameDialog = ({ open, onClose }) => {
             maxPlayers: maxPlayers,
             roomPrivacy: roomPrivacy
         }).then((res) => {
-
             navigate({
                 pathname: '/lobby',
                 search: createSearchParams({

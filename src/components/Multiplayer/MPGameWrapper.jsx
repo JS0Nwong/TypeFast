@@ -1,5 +1,7 @@
 import { Box } from "@mui/material"
+import { useEffect } from "react";
 import { motion } from 'framer-motion'
+import { useSearchParams } from 'react-router-dom';
 
 import TimeDisplay from '../TimeDisplay';
 import WordsAmountCount from "../WordsAmountCount";
@@ -8,15 +10,22 @@ import MPResultsScreen from "./MPResultsScreen";
 import GameCountdown from "./GameCountdown";
 
 import { useBoundStore } from "../../utils/stores/boundStore";
+import useFirebase from "../../hooks/useFirebase";
 
 export default function MPGameWrapper() {
+    const { startCountdown, setPlayerStatus } = useFirebase()
+    const [searchParams] = useSearchParams()
+    const id = searchParams.get('room')
+
     const {
         mode, 
         gameStatus,
+        allowUserInput,
     } = useBoundStore((state) => ({
         mode: state.mode,
         currentUserInput: state.currentUserInput,
         gameStatus: state.gameStatus,
+        allowUserInput: state.allowUserInput,
         hideElements: state.hideElements,
         setCurrentUserInput: state.setCurrentUserInput,
         setBlurElements: state.setBlurElements,
@@ -56,6 +65,11 @@ export default function MPGameWrapper() {
         }
     }
 
+    useEffect(() => {
+        setPlayerStatus(id)
+        startCountdown(id)
+    }, [])
+
     return (
         <>
             <Box sx={{
@@ -68,7 +82,7 @@ export default function MPGameWrapper() {
                 height: "100%",
                 position: 'relative',
             }}>
-                <GameCountdown />
+                {allowUserInput ? <></> : <GameCountdown />}
                 {gameStatus !== 'finished' &&
                     <motion.div
                         initial={{
@@ -93,7 +107,9 @@ export default function MPGameWrapper() {
                     </motion.div>
                 }
                 {gameStatus === 'finished' &&
-                    <Box sx={{ width: '100%', height: '100%' }}><MPResultsScreen /></Box>
+                    <Box sx={{ width: '100%', height: '100%' }}>
+                        <MPResultsScreen id={id}/>
+                    </Box>
                 }
             </Box>
         </>

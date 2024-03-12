@@ -11,13 +11,13 @@ import Gutter from "../components/static/Gutter"
 import GameLobby from "../components/Multiplayer/GameLobby"
 
 export default function Lobby() {
-    const { setLobbyInfo, subscribeToCurrentRoom } = useBoundStore()
+    const { subscribeToCurrentRoom } = useBoundStore()
     const [searchParams] = useSearchParams()
 
     //use effect to get current lobby data
     useEffect(() => {
         subscribeToCurrentRoom(searchParams.get('room'))
-    }, [])
+    }, [searchParams])
 
     return (
         <>

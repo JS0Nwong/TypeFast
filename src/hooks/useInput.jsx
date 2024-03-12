@@ -19,6 +19,7 @@ function useInput() {
         rawWordsPerMinuteKeys,
         userStatus,
         gameStatus,
+        allowUserInput,
     } = useBoundStore((state) => ({
         currentUserInput: state.currentUserInput,
         currentWordIndex: state.currentWordIndex,
@@ -29,6 +30,7 @@ function useInput() {
         rawWordsPerMinuteKeys: state.rawWordsPerMinuteKeys,
         userStatus: state.userStatus,
         gameStatus: state.gameStatus,
+        allowUserInput: state.allowUserInput
     }))
 
     const {
@@ -218,6 +220,7 @@ function useInput() {
 
     // use effect to listent to user input on window load
     useEffect(() => {
+        if (!allowUserInput) { return }
         if (userStatus === 'typing') {
             window.addEventListener('keydown', handleUserInput)
             return () => window.removeEventListener('keydown', handleUserInput)
@@ -227,7 +230,7 @@ function useInput() {
             return () => window.removeEventListener('keydown', handleStatusChange)
         }
         if (userStatus === 'searching') { return }
-    }, [currentUserInput, userStatus])
+    }, [currentUserInput, userStatus, allowUserInput])
 
     return { handleUserInput, displayExtraCharacters }
 }

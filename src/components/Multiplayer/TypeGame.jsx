@@ -1,4 +1,4 @@
-import { useMemo, createRef } from 'react'
+import { useMemo, createRef, useEffect } from 'react'
 import { Box } from "@mui/material"
 
 import { applyStyles } from '../../utils/applyStyles';
@@ -34,6 +34,15 @@ export default function TypeGame() {
             length: gameText.length
         }).fill(0).map((i) => createRef())
     }, [gameText])
+
+    // useeffect to listen to changes in the text to move it foward properly
+    useEffect(() => {
+        if (currentWordIndex !== 0 &&
+            wordsRef[currentWordIndex]?.current.offsetLeft <
+            wordsRef[currentWordIndex - 1]?.current.offsetLeft
+        )
+            wordsRef[currentWordIndex - 1]?.current.scrollIntoView()
+    }, [currentWordIndex, wordsRef])
 
     return (
         <>
