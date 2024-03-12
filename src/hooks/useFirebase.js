@@ -10,34 +10,51 @@ import {
   getDocs,
   query,
   doc,
+  Timestamp,
 } from "firebase/firestore";
 import { auth, db } from "../configs/firebase";
+import { getFunctions, httpsCallable } from "firebase/functions";
+
 import { useBoundStore } from "../utils/stores/boundStore";
 import { useNavigate } from "react-router-dom";
-
-import { httpsCallable } from "firebase/functions";
-
 import generateWords from "../utils/generateWords";
 
 const useFirebase = () => {
+  const functions = getFunctions();
+  const startGameFunction = httpsCallable(functions, "startGame");
+
   const {
     createGame,
-    setLobbyInfo,
-    setSnackbar,
     mode,
     includePunctuation,
     includeNumbers,
     time,
     wordsAmount,
+    setLobbyInfo,
+    setSnackbar,
+    setStartGameCountdown,
+    setAllowUserInput,
+    unhideElements,
+    setGameStatus,
+    setIsGameEnded,
+    setGameResults,
+    lobbyId,
   } = useBoundStore((state) => ({
     createGame: state.createGame,
-    setLobbyInfo: state.setLobbyInfo,
-    setSnackbar: state.setSnackbar,
     mode: state.mode,
     includePunctuation: state.includePunctuation,
     includeNumbers: state.includeNumber,
     time: state.time,
     wordsAmount: state.wordsAmount,
+    setLobbyInfo: state.setLobbyInfo,
+    setSnackbar: state.setSnackbar,
+    setStartGameCountdown: state.setStartGameCountdown,
+    setAllowUserInput: state.setAllowUserInput,
+    unhideElements: state.unhideElements,
+    setGameStatus: state.setGameStatus,
+    setIsGameEnded: state.setIsGameEnded,
+    setGameResults: state.setGameResults,
+    lobbyId: state.lobbyId
   }));
 
   const gamesCollection = collection(db, "games");
@@ -66,7 +83,6 @@ const useFirebase = () => {
         roomPrivacy,
         roomOwner: auth.currentUser?.uid ? auth.currentUser.uid : null,
         gameStatus: "waiting-for-players",
-
       });
       createGame({
         players: [
@@ -82,7 +98,9 @@ const useFirebase = () => {
         includeNumbers,
         roomOwner: {
           id: auth.currentUser?.uid ? auth.currentUser.uid : null,
-          displayName: auth.currentUser.displayName ? auth.currentUser.displayName : null
+          displayName: auth.currentUser.displayName
+            ? auth.currentUser.displayName
+            : null,
         },
         roomID: lobbyDoc.id,
       });
@@ -96,19 +114,22 @@ const useFirebase = () => {
     try {
       const gameDoc = await getDoc(doc(db, "games", id));
       if (gameDoc.exists()) {
+        // check if game has already started
+        if(gameDoc.data().gameStatus !== 'waiting') return setSnackbar("Error joining game: Game has already started")
         // check if game is full
         if (gameDoc.data().maxPlayers > gameDoc.data().players.length) {
           await updateDoc(doc(db, "games", id), {
             players: arrayUnion({
               name: auth.currentUser.displayName,
               id: auth.currentUser.uid,
+              playerStatus: 'loading',
             }),
           });
           navigate("/lobby?room=" + id);
         }
         // if game is full
         else {
-          setSnackbar('Error joining game: Room is full')
+          setSnackbar("Error joining game: Room is full");
         }
       } else {
         console.error("Game room does not exist");
@@ -136,7 +157,7 @@ const useFirebase = () => {
   };
 
   const editRoomSettings = async (id) => {
-    const privateRoom = roomPrivacy === 'true'
+    const privateRoom = roomPrivacy === "true";
     try {
       const gameDoc = await getDoc(doc(db, "games", id));
       if (gameDoc.exists()) {
@@ -145,8 +166,8 @@ const useFirebase = () => {
           includePunctuation: includePunctuation,
           includeNumbers: includeNumbers,
           maxPlayers: Number(maxPlayers),
-          roomPrivacy: privateRoom,       
-          
+          roomPrivacy: privateRoom,
+
           wordsAmount: wordsAmount,
           time: time,
         });
@@ -171,18 +192,101 @@ const useFirebase = () => {
       const gameDoc = await getDoc(doc(db, "games", id));
       if (gameDoc.exists()) {
         await updateDoc(doc(db, "games", id), {
-          gameStatus: "starting",
           results: [],
           text: mode === "words" ? generateWords(wordsAmount) : generateWords(),
-        })
-        httpsCallable('startGame')({id})
+          countdown: {
+            startTime: serverTimestamp(),
+            seconds: 5,
+          },
+        });
+        startGameFunction({ id: id })
         navigate("/mpgame?room=" + id);
       }
     } catch (error) {
       console.log(error);
     }
   };
-  const endGame = async () => {};
+
+  const startCountdown = async (id) => {
+    try {
+      const gameDoc = onSnapshot(doc(db, "games", id), (doc) => {
+        if (doc.exists()) {
+          if(Object.values(doc.data().players).every(player => player.playerStatus === 'ready')) {
+            const startAt = doc.data().countdown.startTime || {seconds: 0, nanoseconds: 0};
+            const seconds = doc.data().countdown.seconds;
+    
+            const timeStamp = new Timestamp(startAt.seconds, startAt.nanoseconds);
+            const date = timeStamp.toDate();
+  
+            const startTime = new Date(new Date(date).setSeconds(date.getSeconds()));
+  
+            const interval = setInterval(() => {
+              const timeLeft = seconds * 1000 - (Date.now() - startTime);
+              if (timeLeft < 0) {
+                clearInterval(interval);
+                setAllowUserInput(true);
+                setGameStatus('ready')
+                unhideElements()
+              } else {
+                const secondsRemaining = Math.floor(
+                  (timeLeft % (1000 * 60)) / 1000
+                );
+                setStartGameCountdown(secondsRemaining);
+              }
+            }, 500);
+          }
+          else {
+            setStartGameCountdown('waiting for players...')
+          }
+        }
+      });
+      return () => gameDoc();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const setPlayerStatus = async(id) => {
+    try {
+      const docRef = doc(db, "games", id)
+      const gameDoc = await getDoc(docRef);
+      if (gameDoc.exists()) {
+        await updateDoc(docRef, {
+          players: gameDoc.data().players.map(player => {
+            if(player.id === auth.currentUser.uid) {
+              return {
+                ...player,
+                playerStatus: 'ready'
+              }
+            } else {
+              return player
+            }
+          })
+        })
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+ 
+  const endMultiplayerGame = async () => {
+    try {
+      const docRef = doc(db, "games", lobbyId);
+      const gameDoc = onSnapshot(docRef, (doc) => {
+        if(doc.exists()) {
+          if(doc.data().players.length === doc.data().results.length 
+          || doc.data().players.length <= doc.data().results.length) {   
+            const results = doc.data().results;
+            setGameResults(results)
+            setIsGameEnded(true)
+          }
+        }
+      })
+      return () => gameDoc()
+    } catch (error) {
+      console.log(error)
+    }
+  };
 
   return {
     createGameLobby,
@@ -191,7 +295,9 @@ const useFirebase = () => {
     leaveGameRoom,
     editRoomSettings,
     startGame,
-    endGame,
+    startCountdown,
+    endMultiplayerGame,
+    setPlayerStatus
   };
 };
 

@@ -1,12 +1,13 @@
 import { Box, IconButton, Tooltip } from "@mui/material"
+import { motion } from 'framer-motion'
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
+
 import TypeDisplay from './TypeDisplay'
 import UserInputDisplay from './UserInputDisplay';
-import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import TimeDisplay from './TimeDisplay';
 import WordsAmountCount from "./WordsAmountCount";
 import Results from "./Results";
 import Menubar from "./Menubar/Menubar";
-import { motion } from 'framer-motion'
 
 import { useBoundStore } from "../utils/stores/boundStore";
 import { useUpdateHistory } from "../utils/stores/store"

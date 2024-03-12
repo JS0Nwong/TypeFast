@@ -9,15 +9,19 @@ export default function WordsAmountCount() {
         gameStatus,
         currentWordIndex,
         endGame,
-        updateWordsTimer
+        updateWordsTimer,
+        lobbyId,
+        addUserToResult,
     } = useBoundStore((state) => ({
         wordsAmount: state.wordsAmount,
         gameStatus: state.gameStatus,
         currentWordIndex: state.currentWordIndex,
         endGame: state.endGame,
         updateWordsTimer: state.updateWordsTimer,
+        lobbyId: state.lobbyId,
+        addUserToResult: state.addUserToResult
     }))
-
+    
     useCountdown(() => {
         updateWordsTimer()
     }, gameStatus === 'ready' ? 1000 : null)
@@ -25,6 +29,7 @@ export default function WordsAmountCount() {
     useEffect(() => {
         if (currentWordIndex === wordsAmount || currentWordIndex > wordsAmount) {
             endGame()
+            addUserToResult(lobbyId)
         }
     }, [currentWordIndex])
 
