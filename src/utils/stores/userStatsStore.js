@@ -6,6 +6,7 @@ export const useUserStatsStore = (set, get) => ({
   rawWordsPerMinuteKeys: 0,
   rawWpm: 0,
   extraCharsCount: 0,
+  pointInTimeStats: [],
   increaseWPM: () =>
     set((state) => ({
       wordsPerMinute: state.wordsPerMinute + 1,
@@ -22,4 +23,14 @@ export const useUserStatsStore = (set, get) => ({
     set((state) => ({
       rawWpm: (state.rawWordsPerMinuteKeys / 5 / state.selectedTime) * 60,
     })),
+  updatePointInTimeStats: (time) => {
+    const stat = {
+      time: time, 
+      wpm: (get().rawWpm),
+    }
+    set((state) => ({
+      pointInTimeStats: [ ...state.pointInTimeStats, stat ],
+    }))
+  },
+  resetPointInTimeStats: () => set({ pointInTimeStats: {} }),
 });

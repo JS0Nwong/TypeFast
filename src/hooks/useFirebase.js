@@ -233,7 +233,7 @@ const useFirebase = () => {
                 );
                 setStartGameCountdown(secondsRemaining);
               }
-            }, 500);
+            }, 100);
           }
           else {
             setStartGameCountdown('waiting for players...')
@@ -281,6 +281,9 @@ const useFirebase = () => {
             setIsGameEnded(true)
           }
         }
+      })
+      await updateDoc(docRef, {
+        gameStatus: "ended",
       })
       return () => gameDoc()
     } catch (error) {

@@ -68,8 +68,9 @@ export default function Header() {
             </IconButton>
           </Link>
 
-          <Link href='/games'  tabIndex={-1}>
-            <IconButton
+          <Link href='/games' 
+            tabIndex={-1} 
+>            <IconButton
               aria-label="multiplayer"
               tabIndex={-1}
             >

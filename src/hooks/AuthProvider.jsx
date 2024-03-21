@@ -1,18 +1,33 @@
 import { useContext, createContext, useState, useEffect } from 'react'
 import { onAuthStateChanged } from 'firebase/auth'
-import { auth } from "../configs/firebase";
+import { doc, getDoc, } from "firebase/firestore";
+import { auth, db } from "../configs/firebase";
 
 const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(true)
     const [isLoggedIn, setIsLoggedIn] = useState(null)
+    const [userData, setUserData] = useState(null)
 
     useEffect(() => {
         const unsub = onAuthStateChanged(auth, (user) => {
             setIsLoading(false)
             if(user) {
-                setIsLoggedIn(user)
+                try {
+                    const userDocRef = doc(db, "users", auth.currentUser.uid);
+                    const userDoc = getDoc(userDocRef).then((doc) => {
+                        if (doc.exists()) {
+                            setUserData(doc.data())
+                        } else {
+                            console.log("User does not exist!");
+                        }
+                    });
+                    setIsLoggedIn(user)
+                } catch (error) {
+                    console.log(error)
+                    setIsLoggedIn(user)
+                }
             } else {
                 setIsLoggedIn(false)
             }
@@ -26,6 +41,7 @@ export const AuthProvider = ({ children }) => {
                 isLoggedIn,
                 isLoading,
                 auth,
+                userData,
             }}>
             {!isLoading && children}
         </AuthContext.Provider>

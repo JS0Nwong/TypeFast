@@ -55,6 +55,7 @@ function useInput() {
         unhideElements,
         setInputFocus,
         increaseKPM,
+        setAllowUserInput,
     } = useBoundStore((state) => ({
         setKeyPressed: state.setKeyPressed,
         setCurrentUserInput: state.setCurrentUserInput,
@@ -77,6 +78,7 @@ function useInput() {
         unhideElements: state.unhideElements,
         setInputFocus: state.setInputFocus,
         increaseKPM: state.increaseKPM,
+        setAllowUserInput: state.setAllowUserInput,
     }))
 
     const { updatePosition, updateBackSpace } = useCursor() 
@@ -220,7 +222,8 @@ function useInput() {
 
     // use effect to listent to user input on window load
     useEffect(() => {
-        if (!allowUserInput) { return }
+        // if (!allowUserInput) { return }
+        if (userStatus === 'searching') { return }
         if (userStatus === 'typing') {
             window.addEventListener('keydown', handleUserInput)
             return () => window.removeEventListener('keydown', handleUserInput)
@@ -229,7 +232,6 @@ function useInput() {
             window.addEventListener('keydown', handleStatusChange)
             return () => window.removeEventListener('keydown', handleStatusChange)
         }
-        if (userStatus === 'searching') { return }
     }, [currentUserInput, userStatus, allowUserInput])
 
     return { handleUserInput, displayExtraCharacters }

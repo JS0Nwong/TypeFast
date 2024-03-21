@@ -1,15 +1,17 @@
 import { useContext } from "react"
+import { motion } from "framer-motion"
 import { Box, Stack, Typography, IconButton, Tooltip } from '@mui/material'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import PanoramaIcon from '@mui/icons-material/Panorama';
-import { motion } from "framer-motion"
 import FeedbackSnackbar from "./FeedbackSnackbar";
 
 import useScreenCapture from '../hooks/useScreenCapture';
 import { ThemeContext } from "../hooks/useTheme"
 import { useBoundStore } from "../utils/stores/boundStore";
 import { useUpdateHistory } from '../utils/stores/store';
+
+import ResultsChart from "./ResultsChart";
 
 export default function Results() {
     const {
@@ -90,19 +92,19 @@ export default function Results() {
                             flexDirection: "column",
                         }}>
                         <Typography variant='h4' sx={{ opacity: ".65" }}>wpm</Typography>
-                        <Tooltip 
+                        <Tooltip
                             title={
-                                (rawWpm * 
-                                    (wordsCorrect.size / 
-                                    (wordsCorrect.size + wordsIncorrect.size)
+                                (rawWpm *
+                                    (wordsCorrect.size /
+                                        (wordsCorrect.size + wordsIncorrect.size)
                                     )
                                 ).toPrecision(4) ?? 0 + ' wpm'
-                        }>
-                        <Typography variant='h2'>
-                            {Math.floor(
-                                rawWpm * (wordsCorrect.size / (wordsCorrect.size + wordsIncorrect.size)))
-                            ?? 0}
-                        </Typography>
+                            }>
+                            <Typography variant='h2'>
+                                {Math.floor(
+                                    rawWpm * (wordsCorrect.size / (wordsCorrect.size + wordsIncorrect.size)))
+                                    ?? 0}
+                            </Typography>
                         </Tooltip>
                         <Typography variant='h4' sx={{ opacity: ".65" }}>acc</Typography>
                         <Tooltip 
@@ -125,7 +127,7 @@ export default function Results() {
                         width: '100%',
                     }}>
                         <Box sx={{width: "100%", height: "100%", mb: 1}}>
-                            
+                            <ResultsChart />
                         </Box>
                         <Box>
                             <Stack direction='row' spacing={5}>
@@ -185,6 +187,7 @@ export default function Results() {
                         </IconButton>
                     </Tooltip>
                 </Stack>
+                
             </Box>
         </motion.div>
     )

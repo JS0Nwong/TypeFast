@@ -8,18 +8,21 @@ export default function TimeDisplay() {
     time,
     gameStatus,
     updateTimer,
-    endGame
+    endGame,
+    updatePointInTimeStats
   } = useBoundStore((state) => ({
     customTime: state.customTime,
     time: state.time,
     gameStatus: state.gameStatus,
     updateTimer: state.updateTimer,
     endGame: state.endGame,
+    updatePointInTimeStats: state.updatePointInTimeStats,
   }))
 
   useCountdown(() => {
     if (time > 0) {
       updateTimer()
+      updatePointInTimeStats(time)
     }
     else {
       endGame()

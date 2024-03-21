@@ -1,7 +1,6 @@
 import { useBoundStore } from "../utils/stores/boundStore"
 
 const useCursor = () => {
-
     const { 
         currentUserInput,
         setCursorLeftPosition, 

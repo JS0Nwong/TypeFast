@@ -253,7 +253,6 @@ const UserTheme = ({ children }) => {
                         },
                         '&.MuiButton-outlined': {
                             border: `2px solid ${themes[webTheme]?.backgroundSecondary}`,
-                            padding: '8px',
                             "&:hover": {
                                 backgroundColor: themes[webTheme]?.backgroundSecondary,
                             },
@@ -683,7 +682,6 @@ const UserTheme = ({ children }) => {
     }
 
     // user theme store subscriber
-
     useEffect(() => {
         const unsub = useThemeStore.subscribe((state, prevState) => {
             const storedUserTheme = themes.custom

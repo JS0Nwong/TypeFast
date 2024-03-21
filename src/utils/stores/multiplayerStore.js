@@ -17,7 +17,7 @@ const id = params.get("room")?.toString();
 export const useMultiplayerStore = (set) => ({
   currentLobbies: [],
   currentLobbyInfo: null,
-  lobbyId: "EZt6IkyTqZm7aNuvUkR5",
+  lobbyId: id,
 
   // game state
   gameText: [],
@@ -125,13 +125,12 @@ export const useMultiplayerStore = (set) => ({
       const docRef = doc(db, "games", id);
       const gameDoc = await getDoc(docRef);
       if (gameDoc.exists()) {
-        const results = gameDoc.data().results;
         await updateDoc(docRef, {
           results: arrayUnion({
             id: auth.currentUser.uid,
             name: auth.currentUser.displayName,
-            wpm: 0,
-            accuracy: 0,
+            wpm: useBoundStore.getState().wordsPerMinute,
+            accuracy: useBoundStore.getState().wordAccuracy,
           }),
         });
       }

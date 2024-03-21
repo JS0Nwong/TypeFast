@@ -37,7 +37,7 @@ export default function Footer() {
             Github
           </Button>
         </Link>
-        <Link href="mailto:Jason.Wong47@myhunter.cuny.edu" tabIndex={-1}> 
+        <Link href="mailto:Jason.Wong47@myhunter.cuny.edu" tabIndex={-1}>
           <Button
             variant="text"
             startIcon={<EmailIcon />}
@@ -54,25 +54,30 @@ export default function Footer() {
         flexDirection: "row",
         justifyContent: 'space-between'
       }}>
-        <Button
-          variant="text"
-          startIcon={<CodeIcon />}
-          sx={{
-            ml: 2
-          }}
-        >
-          source
-        </Button>
-        <Button
-          variant="text"
-          startIcon={<IoMdGitBranch />}
-          sx={{
-            ml: 2
-          }}
-        >
-          v0.7.50
-        </Button>
-        <Link href="https://monkeytype.com/"  tabIndex={-1}>
+        <Link href="https://github.com/JS0Nwong/TypeFast" tabIndex={-1}>
+          <Button
+            variant="text"
+            startIcon={<CodeIcon />}
+            sx={{
+              ml: 2
+            }}
+          >
+            source
+          </Button>
+        </Link>
+        <Link href="https://github.com/JS0Nwong/TypeFast" tabIndex={-1}>
+          <Button
+            variant="text"
+            startIcon={<IoMdGitBranch />}
+            sx={{
+              ml: 2
+            }}
+          >
+            v0.7.50
+          </Button>
+        </Link>
+
+        <Link href="https://monkeytype.com/" tabIndex={-1}>
           <Button
             variant="text"
             startIcon={<InfoIcon />}
