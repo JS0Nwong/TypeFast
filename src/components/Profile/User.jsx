@@ -36,7 +36,7 @@ export default function User() {
           flexDirection: 'row',
         }}>
           <ProfileBox sx={{
-            width: '100%',
+            width: '550px',
             borderRadius: "4px",
             p: 3,
             mr: 1,
@@ -143,28 +143,44 @@ export default function User() {
               width: '100%',
               p: 3,
               borderRadius: "4px",
-              mt: 2
+              mt: 2,
             }}>
               <Stack direction='row' spacing={2} justifyContent='space-around'>
                 <Stack direction='column' spacing={1} alignItems="center">
                   <Typography variant='subtitle2'>15 sec</Typography>
-                  <Typography variant='h4'>0</Typography>
-                  <Typography variant='h4' sx={{ opacity: 0.85 }}>100%</Typography>
+                  <Typography variant='h4'>
+                    {Math.floor(userData.userStats.time[15]?.wpm.toPrecision(2) ?? 0) }
+                  </Typography>
+                  <Typography variant='h4' sx={{ opacity: 0.85 }}>
+                    {Math.floor(userData.userStats.time[15]?.acc.toPrecision(2) ?? 0) }%
+                  </Typography>
                 </Stack>
                 <Stack direction='column' spacing={1} alignItems="center">
                   <Typography variant='subtitle2'>30 sec</Typography>
-                  <Typography variant='h4'>0</Typography>
-                  <Typography variant='h4' sx={{ opacity: 0.85 }}>100%</Typography>
+                  <Typography variant='h4'>
+                    {userData.userStats.time[30]?.wpm.toPrecision(2) ?? 0}
+                  </Typography>
+                  <Typography variant='h4' sx={{ opacity: 0.85 }}>
+                    {Math.floor(userData.userStats.time[30]?.acc.toPrecision(2) ?? 0)}%
+                  </Typography>
                 </Stack>
                 <Stack direction='column' spacing={1} alignItems="center">
                   <Typography variant='subtitle2'>60 sec</Typography>
-                  <Typography variant='h4'>0</Typography>
-                  <Typography variant='h4' sx={{ opacity: 0.85 }}>100%</Typography>
+                  <Typography variant='h4'>
+                    {userData.userStats.time[60]?.wpm.toPrecision(2) ?? 0}
+                  </Typography>
+                  <Typography variant='h4' sx={{ opacity: 0.85 }}>
+                    {Math.floor(userData.userStats.time[60]?.acc.toPrecision(2)?? 0) }%
+                  </Typography>
                 </Stack>
                 <Stack direction='column' spacing={1} alignItems="center">
                   <Typography variant='subtitle2'>120 sec</Typography>
-                  <Typography variant='h4'>0</Typography>
-                  <Typography variant='h4' sx={{ opacity: 0.85 }}>100%</Typography>
+                  <Typography variant='h4'>
+                    {userData.userStats.time[120]?.wpm.toPrecision(2) ?? 0}
+                  </Typography>
+                  <Typography variant='h4' sx={{ opacity: 0.85 }}>
+                    {Math.floor(userData.userStats.time[120]?.acc.toPrecision(2) ?? 0)}%
+                  </Typography>
                 </Stack>
               </Stack>
             </ProfileBox>
@@ -178,23 +194,39 @@ export default function User() {
               <Stack direction='row' spacing={2} justifyContent='space-around'>
                 <Stack direction='column' spacing={1} alignItems="center">
                   <Typography variant='subtitle2'>10 words</Typography>
-                  <Typography variant='h4'>0</Typography>
-                  <Typography variant='h4' sx={{ opacity: 0.85 }}>100%</Typography>
+                  <Typography variant='h4'>
+                    {userData.userStats?.words[10].wpm.toPrecision(2) ?? 0}
+                  </Typography>
+                  <Typography variant='h4' sx={{ opacity: 0.85 }}>
+                    {Math.floor(userData.userStats?.words[10].acc.toPrecision(2)?? 0) }%
+                  </Typography>
                 </Stack>
                 <Stack direction='column' spacing={1} alignItems="center">
                   <Typography variant='subtitle2'>20 words</Typography>
-                  <Typography variant='h4'>0</Typography>
-                  <Typography variant='h4' sx={{ opacity: 0.85 }}>100%</Typography>
+                  <Typography variant='h4'>
+                    {userData.userStats.words[20]?.wpm.toPrecision(2) ?? 0}
+                  </Typography>
+                  <Typography variant='h4' sx={{ opacity: 0.85 }}>
+                    {Math.floor(userData.userStats?.words[20]?.acc.toPrecision(2)?? 0) }%
+                  </Typography>
                 </Stack>
                 <Stack direction='column' spacing={1} alignItems="center">
                   <Typography variant='subtitle2'>50 words</Typography>
-                  <Typography variant='h4'>0</Typography>
-                  <Typography variant='h4' sx={{ opacity: 0.85 }}>100%</Typography>
+                  <Typography variant='h4'>
+                    {userData.userStats?.words[50]?.wpm.toPrecision(2) ?? 0}
+                  </Typography>
+                  <Typography variant='h4' sx={{ opacity: 0.85 }}>
+                    {Math.floor(userData.userStats?.words[50]?.acc.toPrecision(2)?? 0) }%
+                  </Typography>
                 </Stack>
                 <Stack direction='column' spacing={1} alignItems="center">
                   <Typography variant='subtitle2'>100 words</Typography>
-                  <Typography variant='h4'>0</Typography>
-                  <Typography variant='h4' sx={{ opacity: 0.85 }}>100%</Typography>
+                  <Typography variant='h4'>
+                    {userData.userStats?.words[100]?.wpm.toPrecision(2) ?? 0}
+                  </Typography>
+                  <Typography variant='h4' sx={{ opacity: 0.85 }}>
+                    {Math.floor(userData.userStats?.words[100]?.acc.toPrecision(2)?? 0) }%
+                  </Typography>
                 </Stack>
               </Stack>
             </ProfileBox>

@@ -1,6 +1,7 @@
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Box, Stack, Typography, IconButton, Tooltip } from '@mui/material'
+import { useAuth } from "../hooks/useAuth"
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import PanoramaIcon from '@mui/icons-material/Panorama';
@@ -56,15 +57,28 @@ export default function Results() {
     const { capture } = useScreenCapture()
     const { theme } = useContext(ThemeContext)
 
+    const { updateUserStats } = useAuth()
+
     const handleScreenshot = async () => {
         unhideElements()
         setTimeout(async () => {
             await capture().then((res) => (
                 res ? unhideElements() : unhideElements()
             ))
-            setSnackbar('Sucessfully copied screenshot to clipboard!')
+        setSnackbar('Sucessfully copied screenshot to clipboard!')
         }, 350)
     }
+
+    const wpm = (rawWpm *
+        (wordsCorrect.size /
+            (wordsCorrect.size + wordsIncorrect.size)
+        )
+    )
+    const accuracy =  (wordsCorrect.size / (wordsCorrect.size + wordsIncorrect.size) * 100)
+
+    useEffect(() => {
+        updateUserStats(wpm, accuracy, rawWpm, mode, selectedTime, wordsAmount)
+    }, [])
 
     return (
         <motion.div
@@ -92,27 +106,15 @@ export default function Results() {
                             flexDirection: "column",
                         }}>
                         <Typography variant='h4' sx={{ opacity: ".65" }}>wpm</Typography>
-                        <Tooltip
-                            title={
-                                (rawWpm *
-                                    (wordsCorrect.size /
-                                        (wordsCorrect.size + wordsIncorrect.size)
-                                    )
-                                ).toPrecision(4) ?? 0 + ' wpm'
-                            }>
+                        <Tooltip title={wpm.toPrecision(4) + ' wpm'}>
                             <Typography variant='h2'>
-                                {Math.floor(
-                                    rawWpm * (wordsCorrect.size / (wordsCorrect.size + wordsIncorrect.size)))
-                                    ?? 0}
+                                {Math.floor(wpm) ?? 0}
                             </Typography>
                         </Tooltip>
                         <Typography variant='h4' sx={{ opacity: ".65" }}>acc</Typography>
-                        <Tooltip 
-                            title={
-                                (wordsCorrect.size / (wordsCorrect.size + wordsIncorrect.size) * 100).toPrecision(4) + '%'
-                        }>
+                        <Tooltip title={accuracy.toPrecision(4) + '%'}>
                             <Typography variant='h2'>
-                                {Math.ceil(wordsCorrect.size / (wordsCorrect.size + wordsIncorrect.size) * 100)}%
+                                {Math.ceil(accuracy)}%
                             </Typography>
                         </Tooltip>
                         <Typography variant='h4' sx={{ opacity: ".65", fontSize: '1.2rem' }}>test type</Typography>
@@ -126,6 +128,7 @@ export default function Results() {
                         justifyContent: 'space-between',
                         width: '100%',
                     }}>
+                        {/* Results Chart */}
                         <Box sx={{width: "100%", height: "100%", mb: 1}}>
                             <ResultsChart />
                         </Box>
@@ -164,7 +167,13 @@ export default function Results() {
                     </Box>
                 </Stack>
 
-                <Stack direction='row' sx={{ mt: 5, justifyContent: 'center', opacity: hideElements ? 0 : 1 }}>
+                <Stack 
+                    direction='row' 
+                    sx={{ 
+                        mt: 5, 
+                        justifyContent: 'center', 
+                        opacity: hideElements ? 0 : 1 
+                    }}>
                     <Tooltip title="next test">
                         <IconButton sx={{ mr: 10, ml: 10 }} tabIndex={0} onClick={() => {
                             nextTest()

@@ -1,13 +1,21 @@
 import { useState, useContext, useEffect } from 'react'
 import { Box, TextField, Typography, Button, Divider } from '@mui/material'
-import { ThemeContext } from '../../hooks/useTheme'
-import useThemeStore from '../../utils/stores/themeStore'
-import { useThemeStoreActions } from '../../utils/stores/themeStore'
 import PaletteIcon from '@mui/icons-material/Palette';
 
+import { ThemeContext } from '../../hooks/useTheme'
+
+import useThemeStore from '../../utils/stores/themeStore'
+import { useBoundStore } from '../../utils/stores/boundStore';
+import { useThemeStoreActions } from '../../utils/stores/themeStore'
+import FeedbackSnackbar from '../FeedbackSnackbar';
+import ExportOptions from './ExportOptions';
+import useImportTheme from '../../hooks/useImportTheme';
+
+
 export default function ThemePicker() {
-    const { viewValue, setCustomTheme, userCreatedTheme } = useContext(ThemeContext)
+    const { viewValue, handleSetCustomTheme, handleResetTheme } = useContext(ThemeContext)
     const [errorAltColor, setErrorAltColor] = useState()
+    const [open, setOpen] = useState(false)
 
     const {
         customTheme,
@@ -27,6 +35,7 @@ export default function ThemePicker() {
         textSecondary: state.textSecondary,
         errorColor: state.errorColor,
         select: state.select,
+        
     }))
 
     const {
@@ -38,43 +47,74 @@ export default function ThemePicker() {
         setErrorColor,
         setSelectColor,
         getColors,
-    } = useThemeStoreActions()
+        setTheme,
+        resetTheme
 
+    } = useThemeStoreActions((state) => ({
+        setBackgroundColor: state.setBackgroundColor,
+        setBackgroundAltColor: state.setBackgroundAltColor,
+        setCaretColor: state.setCaretColor,
+        setTextColor: state.setTextColor,
+        setTextAltColor: state.setTextAltColor,
+        setErrorColor: state.setErrorColor,
+        setSelectColor: state.setSelectColor,
+        getColors: state.getColors,
+        setTheme: state.setTheme,
+        resetTheme: state.resetTheme,
+    }))
+
+    const { setSnackbar } = useBoundStore((state) => ({setSnackbar: state.setSnackbar}))
+    
     const handleBackgroundChange = (color) => {
         setBackgroundColor(color)
-        setCustomTheme()
+        setTheme()
     }
     const handleBackgroundAltChange = (color) => {
         setBackgroundAltColor(color)
-        setCustomTheme()
+        setTheme()
     }
     const handleCaretColorChange = (color) => {
         setCaretColor(color)
-        setCustomTheme()
+        setTheme()
     }
     const handleTextColorChange = (color) => {
         setTextColor(color)
-        setCustomTheme()
+        setTheme()
     }
     const handleTextAltColorChange = (color) => {
         setTextAltColor(color)
-        setCustomTheme()
+        setTheme()
     }
     const handleErrorColorChange = (color) => {
         setErrorColor(color)
-        setCustomTheme()
+        setTheme()
     }
     const handleSelectColorChange = (color) => {
         setSelectColor(color)
-        setCustomTheme()
+        setTheme()
+    }
+
+    const setCustom = () => {
+        setTheme()
+        handleSetCustomTheme()
+        setSnackbar('Saved custom theme!')
+    }
+
+    const reset =() => {
+        resetTheme()
+        handleResetTheme()
+    }
+
+    const openExport = (bool) => {
+        setOpen(bool)
+    }
+
+    const handleImport = (e) => {
+        useImportTheme(e)
     }
 
     useEffect(() => {
         getColors()
-        // console.log(customTheme)
-        // console.log(getColors())
-        console.log(userCreatedTheme)
-        // useThemeStore.subscribe((state, prevState) => )
     }, [])
 
     return (
@@ -84,6 +124,7 @@ export default function ThemePicker() {
                 flexDirection: "column",
                 width: '100%',
             }}>
+                <FeedbackSnackbar />
                 <Box sx={{
                     display: 'flex',
                     flexDirection: viewValue === "50%" ? 'column' : "row",
@@ -114,28 +155,36 @@ export default function ThemePicker() {
                                         "&.MuiInputBase": {
                                             height: '10px',
                                         },
-                                    }} 
+                                    }}
                                     onChange={(e) => handleBackgroundChange(e.target.value)}
-                                    />
-                                <input 
-                                    value={backgroundPrimary}
-                                    type="color" 
-                                    name="" 
-                                    id=""
+                                />
+                                <label htmlFor='bg-primary'>
+                                    <PaletteIcon sx={{ 
+                                        position: 'absolute', 
+                                        color: textPrimary,
+                                        m: '4px',
+                                        cursor: "pointer" 
+                                    }} />
+                                </label>
+                                <input
+                                    value={backgroundSecondary}
+                                    type="color"
+                                    id="bg-primary"
                                     style={{
-                                        marginRight: '48px', 
-                                        border: 'none', 
+                                        marginRight: '8px',
+                                        border: 'none',
                                         outline: 'none',
                                         width: '32px',
                                         height: '32px',
-                                    }} 
+                                    }}
                                     onChange={(e) => handleBackgroundChange(e.target.value)}
                                 />
                             </Box>
                         </Box>
 
                         {/* Background Alt Color Picker */}
-                        <Box sx={{  display: 'flex',
+                        <Box sx={{
+                            display: 'flex',
                             flexDirection: "row",
                             width: "100%",
                             justifyContent: "space-between",
@@ -153,28 +202,37 @@ export default function ThemePicker() {
                                         "&.MuiInputBase": {
                                             height: '10px',
                                         },
-                                    }} 
+                                    }}
                                     onChange={(e) => handleBackgroundAltChange(e.target.value)}
-                                    />
-                                <input 
+                                />
+                                <label htmlFor='bg-secondary'>
+                                    <PaletteIcon sx={{
+                                        position: 'absolute',
+                                        color: textPrimary,
+                                        m: '4px',
+                                        cursor: "pointer"
+                                    }} />
+                                </label>                                
+                                <input
                                     value={backgroundSecondary}
-                                    type="color" 
-                                    name="" 
-                                    id=""
+                                    type="color"
+                                    name=""
+                                    id="bg-secondary"
                                     style={{
-                                        marginRight: '48px', 
-                                        border: 'none', 
+                                        marginRight: '8px',
+                                        border: 'none',
                                         outline: 'none',
                                         width: '32px',
                                         height: '32px',
-                                    }} 
+                                    }}
                                     onChange={(e) => handleBackgroundAltChange(e.target.value)}
                                 />
                             </Box>
                         </Box>
 
                         {/* Caret Color Picker */}
-                        <Box sx={{  display: 'flex',
+                        <Box sx={{
+                            display: 'flex',
                             flexDirection: "row",
                             width: "100%",
                             justifyContent: "space-between",
@@ -192,21 +250,29 @@ export default function ThemePicker() {
                                         "&.MuiInputBase": {
                                             height: '10px',
                                         },
-                                    }} 
+                                    }}
                                     onChange={(e) => handleCaretColorChange(e.target.value)}
-                                    />
-                                <input 
+                                />
+                                <label htmlFor='text-caret'>
+                                    <PaletteIcon sx={{
+                                        position: 'absolute',
+                                        color: backgroundPrimary,
+                                        m: '4px',
+                                        cursor: "pointer"
+                                    }} />
+                                </label>                                        
+                                <input
                                     value={textCaret}
-                                    type="color" 
-                                    name="" 
-                                    id=""
+                                    type="color"
+                                    name=""
+                                    id="text-caret"
                                     style={{
-                                        marginRight: '48px',
+                                        marginRight: '8px',
                                         border: 'none',
                                         outline: 'none',
                                         width: '32px',
                                         height: '32px',
-                                    }} 
+                                    }}
                                     onChange={(e) => handleCaretColorChange(e.target.value)}
                                 />
                             </Box>
@@ -217,8 +283,8 @@ export default function ThemePicker() {
                     {/* Text, text alt and select color picker */}
 
                     <Box sx={{
-                        display: "flex", 
-                        flexDirection: "column", 
+                        display: "flex",
+                        flexDirection: "column",
                         width: "100%",
                         mt: viewValue === "50%" ? 2 : 0,
                     }}>
@@ -229,7 +295,7 @@ export default function ThemePicker() {
                             justifyContent: "space-between",
                             alignItems: "center",
                         }}>
-                            <Typography variant='h5' sx={{ml: viewValue === "50%" ? 0 : 4}}>text</Typography>
+                            <Typography variant='h5' sx={{ ml: viewValue === "50%" ? 0 : 4 }}>text</Typography>
                             <Box>
                                 <TextField
                                     value={textPrimary}
@@ -243,18 +309,26 @@ export default function ThemePicker() {
                                     }}
                                     onChange={(e) => handleTextColorChange(e.target.value)}
                                 />
-                                <input 
+                                <label htmlFor='text-primary'>
+                                    <PaletteIcon sx={{
+                                        position: 'absolute',
+                                        color: backgroundPrimary,
+                                        m: '4px',
+                                        cursor: "pointer"
+                                    }} />
+                                </label>                                     
+                                <input
                                     value={textPrimary}
-                                    type="color" 
-                                    name="" 
-                                    id=""
+                                    type="color"
+                                    name=""
+                                    id="text-primary"
                                     style={{
-                                        marginRight: '48px', 
-                                        border: 'none', 
+                                        marginRight: '8px',
+                                        border: 'none',
                                         outline: 'none',
                                         width: '32px',
                                         height: '32px',
-                                    }} 
+                                    }}
                                     onChange={(e) => handleTextColorChange(e.target.value)}
                                 />
                             </Box>
@@ -269,7 +343,7 @@ export default function ThemePicker() {
                             mt: 2
 
                         }}>
-                            <Typography variant='h5' sx={{ml: viewValue === "50%" ? 0 : 4}}>text alt</Typography>
+                            <Typography variant='h5' sx={{ ml: viewValue === "50%" ? 0 : 4 }}>text alt</Typography>
                             <Box>
                                 <TextField
                                     value={textSecondary}
@@ -283,18 +357,26 @@ export default function ThemePicker() {
                                     }}
                                     onChange={(e) => handleTextAltColorChange(e.target.value)}
                                 />
-                                <input 
+                                <label htmlFor='text-alt'>
+                                    <PaletteIcon sx={{
+                                        position: 'absolute',
+                                        color: backgroundPrimary,
+                                        m: '4px',
+                                        cursor: "pointer"
+                                    }} />
+                                </label>
+                                <input
                                     value={textSecondary}
-                                    type="color" 
-                                    name="" 
-                                    id=""
+                                    type="color"
+                                    name=""
+                                    id="text-alt"
                                     style={{
-                                        marginRight: '48px', 
-                                        border: 'none', 
+                                        marginRight: '8px',
+                                        border: 'none',
                                         outline: 'none',
                                         width: '32px',
                                         height: '32px',
-                                    }} 
+                                    }}
                                     onChange={(e) => handleTextAltColorChange(e.target.value)}
                                 />
                             </Box>
@@ -307,7 +389,7 @@ export default function ThemePicker() {
                             alignItems: "center",
                             mt: 2
                         }}>
-                            <Typography variant='h5' sx={{ml: viewValue === "50%" ? 0 : 4}}>select</Typography>
+                            <Typography variant='h5' sx={{ ml: viewValue === "50%" ? 0 : 4 }}>select</Typography>
                             <Box>
                                 <TextField
                                     value={select}
@@ -321,18 +403,26 @@ export default function ThemePicker() {
                                     }}
                                     onChange={(e) => handleSelectColorChange(e.target.value)}
                                 />
-                                <input 
+                                <label htmlFor='select'>
+                                    <PaletteIcon sx={{
+                                        position: 'absolute',
+                                        color: backgroundPrimary,
+                                        m: '4px',
+                                        cursor: "pointer"
+                                    }} />
+                                </label>                               
+                                 <input
                                     value={select}
-                                    type="color" 
-                                    name="" 
-                                    id=""
+                                    type="color"
+                                    name=""
+                                    id="select"
                                     style={{
-                                        marginRight: '48px', 
-                                        border: 'none', 
+                                        marginRight: '8px',
+                                        border: 'none',
                                         outline: 'none',
                                         width: '32px',
                                         height: '32px',
-                                    }} 
+                                    }}
                                     onChange={(e) => handleSelectColorChange(e.target.value)}
                                 />
                             </Box>
@@ -366,13 +456,21 @@ export default function ThemePicker() {
                                     }}
                                     onChange={(e) => handleErrorColorChange(e.target.value)}
                                 />
+                                 <label htmlFor='error'>
+                                    <PaletteIcon sx={{
+                                        position: 'absolute',
+                                        color: backgroundPrimary,
+                                        m: '4px',
+                                        cursor: "pointer"
+                                    }} />
+                                </label>       
                                 <input
                                     value={errorColor}
                                     type="color"
                                     name=""
-                                    id=""
+                                    id="error"
                                     style={{
-                                        marginRight: '48px',
+                                        marginRight: '8px',
                                         border: 'none',
                                         outline: 'none',
                                         width: '32px',
@@ -411,13 +509,21 @@ export default function ThemePicker() {
                                     }}
                                     onChange={(e) => setErrorAltColor(e.target.value)}
                                 />
+                                <label htmlFor='error-alt'>
+                                    <PaletteIcon sx={{
+                                        position: 'absolute',
+                                        color: backgroundPrimary,
+                                        m: '4px',
+                                        cursor: "pointer"
+                                    }} />
+                                </label>                                       
                                 <input
                                     value={errorColor}
                                     type="color"
                                     name=""
-                                    id=""
+                                    id="error-alt"
                                     style={{
-                                        marginRight: '48px',
+                                        marginRight: '8px',
                                         border: 'none',
                                         outline: 'none',
                                         width: '32px',
@@ -426,27 +532,45 @@ export default function ThemePicker() {
                                     onChange={(e) => setErrorAltColor(e.target.value)}
                                 />
                             </Box>
-                        </Box>  
+                        </Box>
                     </Box>
                 </Box>
 
                 <Box sx={{
-                    mt: 3, 
-                    width: "100%", 
-                    display: "flex", 
+                    mt: 3,
+                    width: "100%",
+                    display: "flex",
                     justifyContent: 'flex-end',
                 }}>
-                    <Button>
+                    <Button onClick={() => openExport(true)}>
                         export
                     </Button>
                     <Button>
-                        import
+                        <label
+                            htmlFor='theme_file'
+                            style={{
+                                cursor: 'pointer',
+                            }}>
+                            import
+                        </label>
+                        <input
+                            type="file"
+                            id="theme_file"
+                            name="theme_file"
+                            accept=".css, .json"
+                            style={{ display: 'none' }}
+                            onChange={(e) => handleImport(e)}
+                        />
                     </Button>
-                    <Button sx={{mr: 4}} onClick={() => setCustomTheme()}>
+                   
+                    <Button onClick={() => reset()}>
+                        reset
+                    </Button>
+                    <Button sx={{ mr: -0.5, ml: 4 }} onClick={() => setCustom()}>
                         save
                     </Button>
                 </Box>
-                
+                <ExportOptions onClose={() => openExport(false)} open={open}/>
             </Box>
         </>
     )

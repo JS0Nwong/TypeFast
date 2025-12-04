@@ -7,7 +7,7 @@ import {
   signInWithPopup,
   updateProfile,
 } from "firebase/auth";
-import { doc, getDoc, updateDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, setDoc, increment } from "firebase/firestore";
 import { useBoundStore } from "../utils/stores/boundStore";
 const useAuth = () => {
   const provider = new GoogleAuthProvider();
@@ -31,6 +31,7 @@ const useAuth = () => {
       console.log(error);
     }
   };
+
   const popUpAuth = async () => {
     try {
       await signInWithPopup(auth, provider);
@@ -40,6 +41,7 @@ const useAuth = () => {
       console.log(error);
     }
   };
+
   const editUserProfile = async (
     bioInfo,
     keyboardInfo,
@@ -58,8 +60,7 @@ const useAuth = () => {
           youtube: youtubeLink,
           twitter: xLink,
         });
-      }
-      else {
+      } else {
         await setDoc(userDocRef, {
           bio: bioInfo,
           keyboard: keyboardInfo,
@@ -73,10 +74,97 @@ const useAuth = () => {
     }
   };
 
+  const updateUserStats = async (wpm, accuracy, rawWpm, mode, selectedTime, wordsAmount) => {
+
+    const validWordsAmount = [
+      {10: 'ten'},
+      {20: 'twenty'},
+      {50: 'fifty'},
+      {100: 'hundred'},
+    ];
+    const validTimeAmount = [
+      {15: 'fifteen'},
+      {30: 'thirty'},
+      {60: 'sixty'},
+      {120: 'two_minutes'},
+    ]
+    try {
+      const userDocRef = doc(db, "users", auth.currentUser.uid);
+      const userDoc = await getDoc(userDocRef);
+      if (userDoc.exists()) {
+        const userDocData = userDoc.data();
+        const time = validTimeAmount[selectedTime];
+        const words = validWordsAmount[wordsAmount];
+
+        await updateDoc(userDocRef, {
+          userStats: {
+            ...userDocData.userStats,
+            [mode]: {
+              ...userDocData.userStats[mode],
+              [mode === "time" ? selectedTime : wordsAmount]: {
+                wpm: wpm,
+                acc: accuracy,
+              },
+            },
+            testTaken: increment(1),
+          },
+        });
+      } else {
+        await setDoc(userDocRef, {
+          userStats: {
+            time: {
+              fifteen: {
+                wpm: 0,
+                acc: 0,
+              },
+              thirty: {
+                wpm: 0,
+                acc: 0,
+              },
+              sixty: {
+                wpm: 0,
+                acc: 0,
+              },
+              two_minutes: {
+                wpm: 0,
+                acc: 0,
+              },
+            },
+            words: {
+              ten: {
+                wpm: 0,
+                acc: 0,
+              },
+              twenty: {
+                wpm: 0,
+                acc: 0,
+              },
+              fifty: {
+                wpm: 0,
+                acc: 0,
+              },
+              hundred: {
+                wpm: 0,
+                acc: 0,
+              },
+            },
+            wpm: wpm,
+            rawWpm: rawWpm,
+            accuracy: accuracy,
+            testTaken: 1,
+          },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return {
     emailAndPassAuth,
     popUpAuth,
     editUserProfile,
+    updateUserStats,
   };
 };
 

@@ -12,11 +12,12 @@ import InfoIcon from '@mui/icons-material/Info';
 import { IoMdGitBranch } from "react-icons/io";
 import { useBoundStore } from '../../utils/stores/boundStore';
 
+
 export default function Footer() {
   const { hideElements } = useBoundStore()
   return (
     <Box sx={{
-      mt: 10,
+      mt: 5,
       mb: 4,
       width: "100%",
       display: 'flex',

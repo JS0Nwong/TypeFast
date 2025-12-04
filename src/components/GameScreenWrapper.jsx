@@ -79,7 +79,6 @@ export default function GameScreenWrapper() {
                 width: '100%',
                 justifyContent: 'space-evenly',
                 alignItems: 'center',
-                mt: 5,
                 height: "100%",
                 position: 'relative',
             }}>

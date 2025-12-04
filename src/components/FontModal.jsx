@@ -22,7 +22,7 @@ import * as fonts from "../static/fonts/fonts.json"
 export default function FontModal({ open, onClose }) {
     const [searchData, setSearchData] = useState(null)
     const [fontsData, setFontsData] = useState(fonts.default)
-    const [ chunkSize, setChunkSize ] = useState(100)
+    const [chunkSize, setChunkSize] = useState(100)
     const [renderLimit, setRenderLimit] = useState(chunk(fontsData, chunkSize))
     const [currentPage, setCurrentPage] = useState(0)
     const [filters, setFilters] = useState([])

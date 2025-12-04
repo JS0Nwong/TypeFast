@@ -11,14 +11,21 @@ export default function useScreenCapture() {
             const ctx = canvas.getContext('2d')
             const results = document.getElementById('results')
             const screenshot = await html2canvas(results)
+            const currentDate = new Date(
+                new Date().getTime() - new Date().getTimezoneOffset() * 60000   
+            ).toISOString().slice(0, 19).replace('T', ' ')
             canvas.width = screenshot.width
             canvas.height = screenshot.height
-            canvas.font = "30px serif"
-            canvas.textAlign = 'end'
-            canvas.textBaseline = 'middle'
 
             ctx.drawImage(screenshot, 0, 0)
-            ctx.fillText('test', canvas.width / 2, canvas.height / 2)
+            ctx.font = `20px ${font}`
+            ctx.fillStyle = theme.palette.text.primary
+
+            ctx.fillText(
+                currentDate + ' | ' + 'fasttype-e735d.web.app', 
+                canvas.width / 2, 
+                canvas.height - 20
+            )
             
             const screenshotBlob = canvas.toBlob((blob) => {
                 navigator.clipboard.write([

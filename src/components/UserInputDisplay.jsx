@@ -1,22 +1,35 @@
-import { useMemo, useContext } from 'react'
+import { useMemo, useContext, createRef } from 'react'
 import { Box } from "@mui/material"
 
-import { ThemeContext } from "../hooks/useTheme"
 import Caret from "./Carets/Caret"
+import { ThemeContext } from "../hooks/useTheme"
 import { useBoundStore } from '../utils/stores/boundStore';
+import { useFreeInput } from '../hooks/useFreeInput';
 
 export default function UserInputDisplay() {
     const {
-        currentUserInput
+        freeInput,
+        setFreeInput
     } = useBoundStore((state) => ({
-        currentUserInput: state.currentUserInput
+        freeInput: state.freeInput,
+        setFreeInput: state.setFreeInput
     }))
 
     const char = useMemo(() => {
-        return currentUserInput?.split('');
-    }, [currentUserInput]);
+        return freeInput?.split('');
+    }, [freeInput]);
 
-    const theme = useContext(ThemeContext)
+    const wordsRef = useMemo(() => {
+        return Array.from({
+          length: freeInput.length
+        }).fill(0).map((i) => createRef())
+      }, [freeInput])
+    
+
+    const handleUserInput = (value) => {
+        setFreeInput(value)
+    }
+
 
     return (
         <>
@@ -28,10 +41,8 @@ export default function UserInputDisplay() {
                     width: '100%',
                     maxHeight: "145px",
                     overflow: "hidden",
-                    position: 'relative',
                 }}
                 id="words"
-                onClick={() => handleFocus()}
             >
                 <Caret />
                 {char.map((word, index) =>
@@ -42,20 +53,35 @@ export default function UserInputDisplay() {
                             margin: '5px 5px',
                             scrollMargin: '4px'
                         }}
-                        className={applyWordStyles(index)}
+                        className='word'
                         ref={wordsRef[index]}
                     >
                         {word.split('').map((char, idx) =>
                             <span
                                 key={char + idx}
-                                className={applyCharStyles(index, idx, char, word)}
+                                className='char'
                             >
                                 {char}
                             </span>
                         )}
-                        {displayExtraCharacters(word, index)}
                     </div>
                 )}
+                <input
+                    autoComplete='false'
+                    autoFocus
+                    type="text"
+                    value={freeInput}
+                    onChange={(e) => handleUserInput(e.target.value)}
+                    className="input"
+                    style={{
+                        width: '100px',
+                        position: 'absolute',
+                        zIndex: 99,
+                        top: 0,
+                        
+                    }}
+                
+                />
             </Box>
         </>
     )

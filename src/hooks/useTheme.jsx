@@ -70,7 +70,6 @@ const UserTheme = ({ children }) => {
     }
 
     const [webTheme, setWebTheme] = useState(setInitialState)
-    const [userCreatedTheme, setUserCreatedTheme] = useState(themes['custom'])
     const [font, setFont] = useState(setInitalFont)
     const [viewValue, setViewValue] = useState(setIntitalView)
     const [caretSpeedValue, setCaretSpeedValue] = useState(setInitialCaret)
@@ -99,7 +98,7 @@ const UserTheme = ({ children }) => {
                 styleOverrides: {
                     body: {
                         background: themes[webTheme]?.backgroundPrimary,
-                        transition: "0.35s ease",
+                        transition: "0.45s ease",
                     },
                     "::-webkit-scrollbar": {
                         background: 'transparent',
@@ -110,10 +109,10 @@ const UserTheme = ({ children }) => {
                         borderRadius: "99px",
                     },
                     "::selection": {
-                        background: "#ffb7b7", /* WebKit/Blink Browsers */
+                        background: themes[webTheme]?.select, /* WebKit/Blink Browsers */
                     },
                     "::-moz-selection": {
-                        background: "#ffb7b7", /* Gecko Browsers */
+                        background:  themes[webTheme]?.select, /* Gecko Browsers */
                     },
                     "input[type='color']": {
                         border: "none",
@@ -414,6 +413,18 @@ const UserTheme = ({ children }) => {
                     }
                 }
             },
+            MuiPodium: {
+                styleOverrides: {
+                    root: {
+                        background: themes[webTheme]?.backgroundSecondary,
+                        width: '100%',
+                        padding: '2rem',
+                        borderRadius: '6px',
+                        textAlign: 'center',
+                        borderTop: `4px solid ${themes[webTheme]?.textSecondary}`,
+                    }
+                }
+            },
             MuiDialog: {
                 styleOverrides: {
                     root: {
@@ -511,7 +522,7 @@ const UserTheme = ({ children }) => {
                             color: themes[webTheme]?.textSecondary,
                             opacity: 1,
                         },
-                        ".MuiTabs-indicator": {
+                        "& .MuiTabs-indicator": {
                             backgroundColor: themes[webTheme]?.textSecondary,
                         }
                     }
@@ -640,62 +651,46 @@ const UserTheme = ({ children }) => {
         }
     }))
 
+    // Functions for theming
+    const storeInLocalStorage = (key, value) => {
+        localStorage.setItem(key, value)
+    }
+
     const toggleTheme = (themeValue) => {
+        document.body.setAttribute('data-theme', themeValue)
         setWebTheme(themeValue)
-        localStorage.setItem('theme', themeValue)
+        storeInLocalStorage('theme', themeValue)
     }
 
     const toggleFont = (fontValue) => {
         setFont(fontValue)
-        localStorage.setItem('preferred-font', fontValue)
+        storeInLocalStorage('preferred-font', fontValue)
     }
 
     const toggleViewSettings = (viewValue) => {
         setViewValue(viewValue)
-        localStorage.setItem('preferred-view', viewValue)
+        storeInLocalStorage('preferred-view', viewValue)
     }
 
     const toggleCaretSpeed = (speed) => {
         setCaretSpeedValue(speed)
-        localStorage.setItem('caret-speed', speed)
+        storeInLocalStorage('caret-speed', speed)
     }
 
     const toggleCaretType = (type) => {
         setCaretType(type)
-        localStorage.setItem('caret-type', type)
+        storeInLocalStorage('caret-type', type)
     }
 
-    const setCustomTheme = () => {
-        const customTheme = {
-            backgroundPrimary: backgroundPrimary,
-            backgroundSecondary: backgroundSecondary,
-            textCaret: textCaret,
-            textPrimary: textPrimary,
-            textSecondary: textSecondary,
-            errorColor: errorColor,
-            select: select,
-            themeType: null
-        }
-        themes['custom'] = customTheme
-        setUserCreatedTheme(customTheme)
-        localStorage.setItem('custom-theme', JSON.stringify(customTheme))
+    const handleResetTheme = () => {
+        const theme = themes.custom
+        storeInLocalStorage('custom-theme', JSON.stringify(theme))
     }
 
-    // user theme store subscriber
-    useEffect(() => {
-        const unsub = useThemeStore.subscribe((state, prevState) => {
-            const storedUserTheme = themes.custom
-            console.log(storedUserTheme, state)
-            if(JSON.stringify(storedUserTheme) !== JSON.stringify(state.customTheme)) {
-
-            }
-            else {
-                console.log('equal')
-            }
-        })
-        return unsub
-    }, [])
-
+    const handleSetCustomTheme = () => {
+        const theme = themes.custom
+        storeInLocalStorage('custom-theme', JSON.stringify(theme))
+    }
     // local storage use effect getter to get theme
     useEffect(() => {
         if (window.localStorage.getItem('theme') !== null) {
@@ -710,7 +705,6 @@ const UserTheme = ({ children }) => {
             setWebTheme('custom')
             const themeValues = JSON.parse(localStorage.getItem('custom-theme'))
             themes.custom = themeValues
-            setUserCreatedTheme(themeValues)
         }
     }, [])
 
@@ -723,14 +717,13 @@ const UserTheme = ({ children }) => {
                 theme,
                 webTheme,
                 font,
-                userCreatedTheme,
                 toggleCaretSpeed,
                 toggleTheme,
                 toggleFont,
-                setCustomTheme,
-                setUserCreatedTheme,
                 toggleViewSettings,
                 toggleCaretType,
+                handleSetCustomTheme,
+                handleResetTheme
             }}>
             <ThemeProvider theme={theme}>
                 <CssBaseline />

@@ -50,7 +50,7 @@ export default function AppearanceAccordion() {
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                 }}>
-                    <Typography>view</Typography>
+                    <Typography sx={{opacity: 0.45}}>view</Typography>
                 </Box>
                 <Stack
                     direction="row"

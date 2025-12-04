@@ -1,18 +1,18 @@
-import { devtools, persist, subscribeWithSelector  } from "zustand/middleware";
+import { devtools, persist  } from "zustand/middleware";
 import { shallow } from "zustand/shallow";
 import { themes } from "../../static/themes/themes.json";
 import { create } from "zustand";
 
 const themeStore = (set, get) => ({
   toggleCustom: false,
-  customTheme: themes["custom"],
-  backgroundPrimary: themes['custom'].backgroundPrimary.toUpperCase(),
-  backgroundSecondary: themes["custom"].backgroundSecondary.toUpperCase(),
-  textCaret: themes["custom"].textCaret.toUpperCase(),
-  textPrimary: themes["custom"].textPrimary.toUpperCase(),
-  textSecondary: themes["custom"].textSecondary.toUpperCase(),
-  errorColor: themes["custom"].errorColor.toUpperCase(),
-  select: themes["custom"].select.toUpperCase(),
+  customTheme: themes.custom,
+  backgroundPrimary: themes.custom.backgroundPrimary.toUpperCase(),
+  backgroundSecondary: themes.custom.backgroundSecondary.toUpperCase(),
+  textCaret: themes.custom.textCaret.toUpperCase(),
+  textPrimary: themes.custom.textPrimary.toUpperCase(),
+  textSecondary: themes.custom.textSecondary.toUpperCase(),
+  errorColor: themes.custom.errorColor.toUpperCase(),
+  select: themes.custom.select.toUpperCase(),
   themeType: null,
 
   actions: {
@@ -21,13 +21,13 @@ const themeStore = (set, get) => ({
         toggleCustom: boolean,
       }),
     setBackgroundColor: (color) =>
-      set({
+      set(() => ({
         backgroundPrimary: color,
-      }),
+      })),
     setBackgroundAltColor: (color) =>
-      set({
+      set(() => ({
         backgroundSecondary: color,
-      }),
+      })),
     setCaretColor: (color) =>
       set({
         textCaret: color,
@@ -50,25 +50,58 @@ const themeStore = (set, get) => ({
       }),
     getColors: () => {
       const {
-        backgroundPrimary, 
-        backgroundSecondary, 
-        textCaret, 
-        textPrimary, 
-        textSecondary, 
-        errorColor, 
+        backgroundPrimary,
+        backgroundSecondary,
+        textCaret,
+        textPrimary,
+        textSecondary,
+        errorColor,
         select,
-      } = get()
+      } = get();
 
       return {
-        backgroundPrimary, 
-        backgroundSecondary, 
-        textCaret, 
-        textPrimary, 
-        textSecondary, 
-        errorColor, 
+        backgroundPrimary,
+        backgroundSecondary,
+        textCaret,
+        textPrimary,
+        textSecondary,
+        errorColor,
         select,
-      }
-    }
+      };
+    },
+    resetTheme: () => {
+      const defaultTheme = {
+        backgroundPrimary: "#242423",
+        backgroundSecondary: "#333533",
+        textPrimary: "#cfdbd5",
+        textSecondary: "#f5cb5c",
+        textSub: "#525252",
+        errorColor: "#E63946",
+        textCaret: "#E8EDDF",
+        select: "#FFB7B7",
+        themeType: null,
+      };
+      themes['custom'] = defaultTheme
+    },
+    setTheme: () => {
+      const {
+        backgroundPrimary,
+        backgroundSecondary,
+        textCaret,
+        textPrimary,
+        textSecondary,
+        errorColor,
+        select,
+      } = get();
+      themes["custom"].backgroundPrimary = backgroundPrimary;
+      themes["custom"].backgroundSecondary = backgroundSecondary;
+      themes["custom"].textCaret = textCaret;
+      themes["custom"].textPrimary = textPrimary;
+      themes["custom"].textSecondary = textSecondary;
+      themes["custom"].errorColor = errorColor;
+      themes["custom"].select = select;
+
+    },
   },
 });
 
@@ -88,12 +121,11 @@ const useThemeStore = create(
         textAltColor: state.textAltColor,
         errorColor: state.errorColor,
         selectColor: state.selectColor,
+        customTheme: state.customTheme,
       }),
     },
     shallow
   )
 );
 export const useThemeStoreActions = () => useThemeStore((state) => state.actions)
-
-
 export default useThemeStore;

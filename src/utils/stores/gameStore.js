@@ -64,10 +64,11 @@ export const useGameStore = (set) => ({
       false,
       "setInputFocus"
     ),
-  setMode: (mode) =>
+  setMode: (mode, amount) =>
     set({
       mode: mode,
       customTest: false,
+      text: generateWords(amount ?? 50),
     }),
 
   //test mode options
@@ -76,6 +77,7 @@ export const useGameStore = (set) => ({
       selectedTime: option,
       time: option,
       customTest: false,
+      text: generateWords(),
     }),
   updateTimer: () => {
     set((state) => ({
@@ -95,6 +97,7 @@ export const useGameStore = (set) => ({
       selectedWordsAmount: amount,
       wordsAmount: amount,
       customTest: false,
+      text: generateWords(amount),
     }),
   setCustomWordsAmount: (amount) =>
     set({
@@ -154,6 +157,7 @@ export const useGameStore = (set) => ({
       extraCharsCount: 0,
       cursorPositionLeft: 5,
       cursorPositionTop: 5,
+      pointInTimeStats: [],
     })),
   nextTest: () =>
     set((state) => ({
@@ -184,6 +188,7 @@ export const useGameStore = (set) => ({
       extraCharsCount: 0,
       cursorPositionLeft: 5,
       cursorPositionTop: 5,
+      pointInTimeStats: [],
     })),
   repeatTest: () =>
     set((state) => ({
@@ -215,5 +220,6 @@ export const useGameStore = (set) => ({
       extraCharsCount: 0,
       cursorPositionLeft: 5,
       cursorPositionTop: 5,
+      pointInTimeStats: [],
     })),
 });

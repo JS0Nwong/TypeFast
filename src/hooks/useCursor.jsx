@@ -66,22 +66,24 @@ const useCursor = () => {
         const previousLetter = currentWordsLetterList[
             Math.min(currentLetterIndex - 1, currentWordsLetterList.length - 1)
         ]
-
+        
         // need to fix cursor backspace behavior
         const letterPosLeft =
-            (currentLetter
-                ? currentLetter.offsetLeft
-                : previousLetter.offsetLeft + previousLetter.offsetWidth) 
+        (currentLetter
+            ? currentLetter.offsetLeft
+            : previousLetter.offsetLeft + previousLetter.offsetWidth) 
             +
             (currentLetter
                 ? currentLetter.offsetWidth
                 : previousLetter.offsetWidth)
         
+        console.log(currentLetter?.offsetLeft)        
+
         const lettePosTop = 
             currentLetter ? 
             currentLetter?.offsetTop : 
             previousLetter?.offsetTop
-
+        
         const newTop = lettePosTop
         const newLeft = letterPosLeft - caretWidth / 2
 

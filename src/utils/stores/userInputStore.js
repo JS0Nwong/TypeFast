@@ -7,12 +7,13 @@ export const useUserInputStore = (set, get) => ({
   userInputWordHistory: {},
   prevInput: "",
   history: {},
-  
+  freeInput: "",
+
   setKeyPressed: (key) =>
     set({
       keyPressed: key,
     }),
-  setCurrentUserInput: (input) =>
+  useFreeInput: (input) =>
     set({
       currentUserInput: get().currentUserInput + input,
     }),
@@ -50,6 +51,10 @@ export const useUserInputStore = (set, get) => ({
   setHistory: (char) =>
     set({
       history: char,
+    }),
+  setFreeInput: (input) =>
+    set({
+      freeInput: input,
     }),
 
   // input utility setters

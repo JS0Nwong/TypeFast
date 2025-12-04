@@ -45,8 +45,10 @@ export default function Menubar() {
     mode,
     setMode,
     hideElements,
+    wordsAmount,
   } = useBoundStore((state) => ({
     mode: state.mode,
+    wordsAmount: state.wordsAmount,
     setMode: state.setMode,
     hideElements: state.hideElements,
   }))
@@ -65,27 +67,48 @@ export default function Menubar() {
         <MenuBox
           sx={{
             borderRadius: "4px",
-            p: 0.5,
+            p: 1,
             width: 'auto',
+            display: 'grid',
+            gridAutoFlow: 'column',
+            gap: '0.5rem',
+            transition: 'opacity 0.25s',
           }}>
           <Stack
             direction='row'
             spacing='auto'
             divider={
-              mode === 'zen' 
-              ? false 
-              : <Divider orientation="vertical" flexItem />
+              mode === 'zen'
+                ? false
+                : <Divider orientation="vertical" flexItem sx={{ height: 0.9 }} />
             }
             sx={{
-              transition: '0.25s',
+              transition: 'opacity 0.25s',
             }}
           >
-            {/* <motion.div
+            <motion.div
               initial={{
                 width: mode === 'zen' ? "auto" : '0',
               }}
               animate={{
                 width: mode === 'zen' ? "0" : 'auto',
+                transition: {
+                  height: {
+                    duration: 0.4,
+                  },
+                  opacity: {
+                    duration: 0.25,
+                    delay: 0.15,
+                  },
+                },
+              }}
+              exit={{
+                width: 0,
+                transition: {
+                  type: "tween",
+                  duration: 0.15,
+                  ease: "circIn",
+                },
               }}
               style={{
                 display: 'flex',
@@ -93,7 +116,8 @@ export default function Menubar() {
                 justifyContent: 'space-evenly',
                 width: '100%',
               }}
-            > */}
+            >
+
               {/* Text Options */}
               <Box sx={{
                 display: mode === 'zen' ? 'none' : 'flex',
@@ -126,14 +150,22 @@ export default function Menubar() {
                   Numbers
                 </Button>
               </Box>
-            {/* </motion.div> */}
+            </motion.div>
 
-            {/* <motion.div
+            <motion.div
               initial={{
                 width: mode === 'zen' ? "auto" : '0',
               }}
               animate={{
                 width: 'auto',
+              }}
+              exit={{
+                width: 0,
+                transition: {
+                  type: "tween",
+                  duration: 0.15,
+                  ease: "circIn",
+                },
               }}
               style={{
                 display: 'flex',
@@ -141,7 +173,7 @@ export default function Menubar() {
                 justifyContent: 'space-evenly',
                 width: '100%',
               }}
-            > */}
+            >
 
               {/* Test Modes */}
               <Box sx={{
@@ -161,7 +193,7 @@ export default function Menubar() {
                 <Button variant="text"
                   startIcon={<TitleIcon />}
                   sx={{ mr: 1, ml: 1, opacity: mode === 'words' ? "1" : "0.55" }}
-                  onClick={() => setMode('words')}
+                  onClick={() => setMode('words', wordsAmount)}
 
                 >
                   words
@@ -182,28 +214,36 @@ export default function Menubar() {
                   zen
                 </Button>
               </Box>
-            {/* </motion.div> */}
+            </motion.div>
 
 
-            {/* <motion.div
+            <motion.div
               initial={{
-                width: mode === 'zen' ? "auto" : '0',
+                width: mode === 'zen' ? "auto" : 0,
               }}
               animate={{
-                width: mode === 'zen' ? "0" : 'auto',
+                width: mode === 'zen' ? 0 : 'auto',
               }}
               transition={{
                 type: 'keyframes'
+              }}
+              exit={{
+                width: 0,
+                transition: {
+                  type: "tween",
+                  duration: 0.15,
+                  ease: "circIn",
+                },
               }}
               style={{
                 display: 'flex',
                 flexDirection: 'row',
                 justifyContent: 'space-evenly',
                 width: '100%',
-              }}> */}
+              }}>
               {/* Test Mode Options */}
               {renderSwitch(mode)}
-            {/* </motion.div> */}
+            </motion.div>
           </Stack>
         </MenuBox>
       </Box>

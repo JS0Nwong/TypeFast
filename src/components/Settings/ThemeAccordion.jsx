@@ -8,6 +8,8 @@ import {
     Button,
     Box,
 } from "@mui/material"
+import PaletteIcon from '@mui/icons-material/Palette';
+
 import { useClientSettings } from '../../hooks/useClientSettings'
 import { ThemeContext } from '../../hooks/useTheme';
 
@@ -43,9 +45,13 @@ export default function ThemeAccordion() {
                 <Box sx={{
                     display: 'flex',
                     flexDirection: 'row',
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between', 
                 }}>
-                    <Typography>theme</Typography>
+                    <Typography 
+                        sx={{display: 'flex', alignItems: 'center', opacity: 0.45}}>
+                            <PaletteIcon sx={{mr: 1}}/>
+                            theme
+                    </Typography>
                     <Box sx={{
                         display: 'flex',
                         flexDirection: 'row',
@@ -53,12 +59,12 @@ export default function ThemeAccordion() {
                         <Button
                             variant='contained'
                             onClick={() => setToggleCustom(false)}
-                            sx={{ mr: 1, pl: 2, pr: 2 }}
+                            sx={{ mr: 1, pl: 2, pr: 2, opacity: toggleCustom ? 0.45 : 1}}
                         >preset</Button>
                         <Button
                             variant='contained'
                             onClick={() => handleSetCustomTheme()}
-                            sx={{ mr: 1, pl: 2, pr: 2 }}
+                            sx={{ mr: 1, pl: 2, pr: 2, opacity: toggleCustom ? 1 : 0.45 }}
                         >custom</Button>
                     </Box>
                 </Box>
